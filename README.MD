@@ -1,16 +1,47 @@
-# React + Vite
+# Lumera
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este proyecto está construido con React y Vite, y utiliza Firebase Firestore como base de datos.
 
-Currently, two official plugins are available:
+## Arquitectura del Proyecto
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+La estructura del proyecto está organizada para separar las responsabilidades, mantener el código limpio y facilitar su escalabilidad:
 
-## React Compiler
+- **`src/assets/`**: Contiene los recursos visuales y estáticos como imágenes o íconos.
+- **`src/config/`**: Archivos de configuración general o integraciones externas del sistema. Destaca `firebase.ts` donde se inicializa la conexión con Firebase de forma centralizada.
+- **`src/services/`**: Concentra la capa de acceso a datos y comunicación con Firebase. Por ejemplo, `db.ts` incluye las funciones para realizar las operaciones CRUD (crear, leer, actualizar, borrar) en Firestore. 
+- **Componentes React**: El punto de entrada se encuentra en `main.jsx` junto al componente raíz de la UI `App.jsx`.
+- **Raíz del proyecto**: Destacan los archivos `.env` y `.env.example` para gestionar las variables de entorno sin exponer credenciales directamente en el código fuente.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Requisitos Previos
 
-## Expanding the ESLint configuration
+- Tener instalado [Node.js](https://nodejs.org/).
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Cómo Correr el Proyecto (Modo Desarrollo)
+
+Sigue estos pasos para levantar el servidor de desarrollo en tu máquina local:
+
+1. **Instalar las dependencias**
+   Dentro de la carpeta raíz del proyecto (`Lumera`), ejecuta:
+   ```bash
+   npm install
+   ```
+
+2. **Configurar las variables de entorno**
+   Haz una copia del archivo `.env.example` y renómbrala a `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+   Luego, rellena los valores faltantes en el archivo `.env` con las credenciales correctas de tu entorno en Firebase (API Key, Auth Domain, etc.).
+
+3. **Ejecutar el servidor local**
+   Inicia la aplicación en modo desarrollo (HMR habilitado):
+   ```bash
+   npm run dev
+   ```
+   La aplicación se podrá visualizar desde tu navegador abriendo [http://localhost:5173](http://localhost:5173).
+
+## Otros Comandos Útiles
+
+- `npm run build`: Genera el código optimizado para producción dentro de la carpeta `dist`.
+- `npm run preview`: Permite pre-visualizar el código de producción generado a nivel local.
+- `npm run lint`: Ejecuta auditoría de código con las reglas definidas en ESLint.
