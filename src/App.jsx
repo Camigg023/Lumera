@@ -118,4 +118,5 @@ function App() {
   )
 }
 
+console.log("API KEY:", import.meta.env.VITE_API_KEY);
 export default App
