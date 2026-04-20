@@ -12,8 +12,12 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await signIn(email, password);
-    onSuccess?.();
+    try {
+      await signIn(email, password);
+      onSuccess?.();
+    } catch {
+      // Error ya está en el estado 'error' del hook
+    }
   };
 
   return (

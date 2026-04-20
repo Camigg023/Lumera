@@ -6,7 +6,12 @@ function App() {
   const [screen, setScreen] = useState("home");
 
   if (screen === "login") {
-    return <LoginPage onBackToHome={() => setScreen("home")} />;
+    return (
+      <LoginPage
+        onBackToHome={() => setScreen("home")}
+        onLoginSuccess={() => setScreen("home")}
+      />
+    );
   }
 
   return <HomePage onNavigateToLogin={() => setScreen("login")} />;

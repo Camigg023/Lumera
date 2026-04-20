@@ -3,9 +3,11 @@ import { LoginForm } from "../components/LoginForm";
 export type LoginPageProps = {
   /** Volver al inicio sin recarga (misma app). */
   onBackToHome?: () => void;
+  /** Redirigir al home tras login exitoso. */
+  onLoginSuccess?: () => void;
 };
 
-export const LoginPage = ({ onBackToHome }: LoginPageProps) => {
+export const LoginPage = ({ onBackToHome, onLoginSuccess }: LoginPageProps) => {
   return (
     <div style={{ maxWidth: 420, margin: "40px auto" }}>
       {onBackToHome ? (
@@ -28,7 +30,7 @@ export const LoginPage = ({ onBackToHome }: LoginPageProps) => {
         </p>
       ) : null}
       <h1>Login</h1>
-      <LoginForm />
+      <LoginForm onSuccess={onLoginSuccess} />
     </div>
   );
 };
