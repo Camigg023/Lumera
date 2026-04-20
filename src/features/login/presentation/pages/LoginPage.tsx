@@ -6,9 +6,11 @@ export type LoginPageProps = {
   onBackToHome?: () => void;
   /** Redirigir al home tras login exitoso. */
   onLoginSuccess?: () => void;
+  /** Redirigir a la pantalla de registro. */
+  onNavigateToRegister?: () => void;
 };
 
-export const LoginPage = ({ onBackToHome, onLoginSuccess }: LoginPageProps) => {
+export const LoginPage = ({ onBackToHome, onLoginSuccess, onNavigateToRegister }: LoginPageProps) => {
   return (
     <div className={styles.page}>
       {/* Left side - Image */}
@@ -39,7 +41,18 @@ export const LoginPage = ({ onBackToHome, onLoginSuccess }: LoginPageProps) => {
           <LoginForm onSuccess={onLoginSuccess} />
           
           <div className={styles.links}>
-            <a href="#signup" className={styles.link}>Crear Cuenta</a>
+            {onNavigateToRegister ? (
+              <button
+                type="button"
+                onClick={onNavigateToRegister}
+                className={styles.link}
+                style={{ background: "none", border: "none", cursor: "pointer" }}
+              >
+                Crear Cuenta
+              </button>
+            ) : (
+              <a href="#signup" className={styles.link}>Crear Cuenta</a>
+            )}
             <a href="#recover" className={styles.link}>Recuperar cuenta</a>
           </div>
         </div>
