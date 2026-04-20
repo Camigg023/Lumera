@@ -8,9 +8,11 @@ export type LoginPageProps = {
   onLoginSuccess?: () => void;
   /** Redirigir a la pantalla de registro. */
   onNavigateToRegister?: () => void;
+  /** Redirigir a la pantalla de recuperación de contraseña. */
+  onNavigateToPasswordRecovery?: () => void;
 };
 
-export const LoginPage = ({ onBackToHome, onLoginSuccess, onNavigateToRegister }: LoginPageProps) => {
+export const LoginPage = ({ onBackToHome, onLoginSuccess, onNavigateToRegister, onNavigateToPasswordRecovery }: LoginPageProps) => {
   return (
     <div className={styles.page}>
       {/* Left side - Image */}
@@ -53,7 +55,18 @@ export const LoginPage = ({ onBackToHome, onLoginSuccess, onNavigateToRegister }
             ) : (
               <a href="#signup" className={styles.link}>Crear Cuenta</a>
             )}
-            <a href="#recover" className={styles.link}>Recuperar cuenta</a>
+            {onNavigateToPasswordRecovery ? (
+              <button
+                type="button"
+                onClick={onNavigateToPasswordRecovery}
+                className={styles.link}
+                style={{ background: "none", border: "none", cursor: "pointer" }}
+              >
+                Recuperar cuenta
+              </button>
+            ) : (
+              <a href="#recover" className={styles.link}>Recuperar cuenta</a>
+            )}
           </div>
         </div>
       </div>
