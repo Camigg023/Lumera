@@ -1,10 +1,10 @@
 .page {
   min-height: 100vh;
-  background: #f5f0eb;
+  background: #F9F9F9;
 }
 
 .header {
-  background: #f5a76c;
+  background: #F28C33;
   padding: 1rem 1.5rem;
 }
 
@@ -13,7 +13,7 @@
   font-size: 1.5rem;
   font-weight: 400;
   letter-spacing: 0.15em;
-  color: #2a2a2a;
+  color: #2D2D2D;
 }
 
 .container {
@@ -23,7 +23,7 @@
 
 .sidebar {
   width: 80px;
-  background: #f5a76c;
+  background: #F28C33;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -40,7 +40,7 @@
   border: none;
   cursor: pointer;
   padding: 0.5rem;
-  color: #333;
+  color: #2D2D2D;
   font-size: 0.7rem;
   transition: all 0.2s;
 }
@@ -90,8 +90,8 @@
   margin: 0 0 1rem 0;
   font-size: 0.95rem;
   font-weight: 600;
-  color: #333;
-  background: #f5d0a0;
+  color: #2D2D2D;
+  background: #F8B486;
   padding: 0.5rem 0.75rem;
   border-radius: 8px 8px 0 0;
   margin: -1rem -1rem 1rem -1rem;
@@ -114,7 +114,7 @@
 .iconBox {
   width: 48px;
   height: 48px;
-  background: #f5f0eb;
+  background: #F9F9F9;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -124,13 +124,13 @@
 
 .iconItem span {
   font-size: 0.75rem;
-  color: #666;
+  color: #666666;
 }
 
 .btnPrimary {
   width: 100%;
   padding: 0.75rem;
-  background: #f5a76c;
+  background: #FF8000;
   border: none;
   border-radius: 8px;
   color: white;
@@ -140,7 +140,7 @@
 }
 
 .btnPrimary:hover {
-  background: #e8985c;
+  background: #F28C33;
 }
 
 /* Map Card */
@@ -150,7 +150,7 @@
 
 .mapPlaceholder {
   height: 180px;
-  background: #e8e8e8;
+  background: #E8E8E8;
   border-radius: 8px;
   position: relative;
   display: flex;
@@ -168,14 +168,14 @@
 .mapAddress {
   margin: 0;
   font-size: 0.85rem;
-  color: #333;
+  color: #2D2D2D;
   text-align: center;
 }
 
 .mapVerified {
   margin: 0.25rem 0 0 0;
   font-size: 0.75rem;
-  color: #4a9;
+  color: #4CAF50;
 }
 
 /* Rewards Card */
@@ -192,13 +192,13 @@
 .levelText {
   margin: 0 0 0.5rem 0;
   font-size: 0.85rem;
-  color: #666;
+  color: #666666;
 }
 
 .pointsText {
   margin: 0.5rem 0 0 0;
   font-size: 0.85rem;
-  color: #666;
+  color: #666666;
 }
 
 /* Activity Card */
@@ -238,8 +238,8 @@
 }
 
 .statusTagGreen {
-  background: #c8e6c9;
-  color: #2e7d32;
+  background: #C8E6C9;
+  color: #2E7D32;
   padding: 0.15rem 0.5rem;
   border-radius: 12px;
   font-size: 0.7rem;
@@ -247,8 +247,8 @@
 }
 
 .statusTagOrange {
-  background: #ffe0b2;
-  color: #e65100;
+  background: #FFE0B2;
+  color: #E65100;
   padding: 0.15rem 0.5rem;
   border-radius: 12px;
   font-size: 0.7rem;
@@ -258,7 +258,7 @@
 .btnLink {
   background: none;
   border: none;
-  color: #f5a76c;
+  color: #F28C33;
   cursor: pointer;
   text-decoration: underline;
   margin-top: 0.75rem;
