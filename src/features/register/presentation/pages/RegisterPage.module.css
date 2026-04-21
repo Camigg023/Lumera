@@ -93,10 +93,9 @@
   color: #666666;
   text-decoration: underline;
   font-size: 0.95rem;
+  cursor: pointer;
   background: none;
   border: none;
-  cursor: pointer;
-  padding: 0;
 }
 
 .link:hover {

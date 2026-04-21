@@ -2,6 +2,8 @@ import { useState } from "react";
 import { HomePage } from "./features/home";
 import { LoginPage } from "./features/login";
 import { DashboardPage } from "./features/dashboard";
+import { RegisterPage } from "./features/register";
+import { PasswordRecoveryPage } from "./features/password-recovery";
 
 function App() {
   const [screen, setScreen] = useState("home");
@@ -11,6 +13,28 @@ function App() {
       <LoginPage
         onBackToHome={() => setScreen("home")}
         onLoginSuccess={() => setScreen("dashboard")}
+        onNavigateToRegister={() => setScreen("register")}
+        onNavigateToPasswordRecovery={() => setScreen("password-recovery")}
+      />
+    );
+  }
+
+  if (screen === "register") {
+    return (
+      <RegisterPage
+        onBackToHome={() => setScreen("home")}
+        onNavigateToLogin={() => setScreen("login")}
+        onRegisterSuccess={() => setScreen("dashboard")}
+      />
+    );
+  }
+
+  if (screen === "password-recovery") {
+    return (
+      <PasswordRecoveryPage
+        onBackToHome={() => setScreen("home")}
+        onNavigateToLogin={() => setScreen("login")}
+        onRecoverySuccess={() => setScreen("login")}
       />
     );
   }
