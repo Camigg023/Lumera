@@ -10,7 +10,6 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const { signIn, isLoading, error } = useLogin();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('donador');
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,18 +43,6 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
           className={styles.input}
           required
         />
-      </div>
-
-      <div className={styles.inputGroup}>
-        <select
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-          className={styles.select}
-        >
-          <option value="donador">Donador</option>
-          <option value="beneficiario">Beneficiario</option>
-          <option value="voluntario">Voluntario</option>
-        </select>
       </div>
 
       {error && <p className={styles.error}>{error}</p>}
