@@ -12,6 +12,27 @@ La estructura del proyecto está organizada para separar las responsabilidades, 
 - **Componentes React**: El punto de entrada se encuentra en `main.jsx` junto al componente raíz de la UI `App.jsx`.
 - **Raíz del proyecto**: Destacan los archivos `.env` y `.env.example` para gestionar las variables de entorno sin exponer credenciales directamente en el código fuente.
 
+## Paleta de Colores
+
+El proyecto utiliza una paleta de colores unificada que refleja la identidad visual de LUMERA. Los colores principales y su uso son:
+
+| Color | Código HEX | RGB | Uso |
+|-------|------------|-----|-----|
+| **Naranja principal (Brand)** | `#F28C33` | `rgb(242, 140, 51)` | Sidebars, gradientes, hover de botones |
+| **Naranja acción (Buttons)** | `#FF8000` | `rgb(255, 128, 0)` | Botones principales (Login, Registro, Recuperación) |
+| **Naranja suave (Card headers)** | `#F8B486` | `rgb(248, 180, 134)` | Títulos de tarjetas, cajón (crate) en páginas de autenticación |
+| **Texto oscuro** | `#2D2D2D` | `rgb(45, 45, 45)` | Títulos, labels, texto principal |
+| **Texto gris** | `#666666` | `rgb(102, 102, 102)` | Subtítulos, enlaces, placeholders |
+| **Bordes/líneas** | `#D9D9D9` | `rgb(217, 217, 217)` | Inputs, selects, separadores |
+| **Éxito (Success)** | `#4CAF50` | `rgb(76, 175, 80)` | Estados completados, etiquetas de verificación |
+| **Error** | `#E53935` | `rgb(229, 57, 53)` | Mensajes de error, validaciones |
+| **Fondo claro** | `#F9F9F9` | `rgb(249, 249, 249)` | Fondos de página, áreas secundarias |
+| **Fondo blanco** | `#FFFFFF` | `rgb(255, 255, 255)` | Fondos de formularios, tarjetas |
+
+### Variables CSS
+
+La paleta está definida en las variables CSS globales (`src/index.css`) y en los módulos de cada componente. Los colores de acento, texto y bordes se han actualizado para mantener consistencia en modo claro y oscuro.
+
 ## Requisitos Previos
 
 - Tener instalado [Node.js](https://nodejs.org/).
