@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styles from "./DashboardPage.module.css";
+import { ProfilePanel } from "../../../../features/profile/presentation/components/ProfilePanel";
 
 export type DashboardPageProps = {
   /** Cerrar sesión y volver al home/login. */
@@ -183,10 +184,7 @@ export function DashboardPage({ onLogout }: DashboardPageProps) {
           )}
 
           {activeTab === "perfil" && (
-            <div className={styles.placeholderPanel}>
-              <h2>Perfil del usuario</h2>
-              <p>Configuración de cuenta y preferencias.</p>
-            </div>
+            <ProfilePanel uid="user123" />
           )}
 
           {activeTab === "ayuda" && (

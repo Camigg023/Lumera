@@ -1,0 +1,137 @@
+.panel {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.title {
+  color: #2D2D2D;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #F8B486;
+  padding-bottom: 0.5rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-weight: 500;
+  color: #666666;
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #D9D9D9;
+  border-radius: 8px;
+  outline: none;
+  background-color: #FFFFFF;
+  color: #2D2D2D;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  border-color: #F28C33;
+  box-shadow: 0 0 0 2px rgba(242, 140, 51, 0.2);
+}
+
+.select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #D9D9D9;
+  border-radius: 8px;
+  outline: none;
+  background-color: #FFFFFF;
+  color: #2D2D2D;
+  cursor: pointer;
+}
+
+.select:focus {
+  border-color: #F28C33;
+}
+
+.checkboxGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.checkbox {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: #FF8000;
+}
+
+.buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.button {
+  flex: 1;
+  background: #FF8000;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.8rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.button:hover:not(:disabled) {
+  background: #F28C33;
+}
+
+.button:disabled {
+  background: #F8B486;
+  cursor: not-allowed;
+}
+
+.buttonSecondary {
+  background: #666666;
+}
+
+.buttonSecondary:hover:not(:disabled) {
+  background: #2D2D2D;
+}
+
+.loading {
+  text-align: center;
+  color: #666666;
+  font-style: italic;
+}
+
+.error {
+  color: #E53935;
+  background: #FFEBEE;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.success {
+  color: #2E7D32;
+  background: #E8F5E9;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
