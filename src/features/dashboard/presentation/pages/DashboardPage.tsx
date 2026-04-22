@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styles from "./DashboardPage.module.css";
 import { ProfilePanel } from "../../../../features/profile/presentation/components/ProfilePanel";
+import { ActivityList } from "../../../../features/user-activity/presentation/components/ActivityList";
 
 export type DashboardPageProps = {
   /** Cerrar sesión y volver al home/login. */
@@ -124,7 +125,7 @@ function TraceabilityCard() {
 }
 
 export function DashboardPage({ onLogout }: DashboardPageProps) {
-  const [activeTab, setActiveTab] = useState<"donador" | "perfil" | "ayuda">(
+  const [activeTab, setActiveTab] = useState<"donador" | "perfil" | "actividad" | "ayuda">(
     "donador"
   );
 
@@ -151,6 +152,13 @@ export function DashboardPage({ onLogout }: DashboardPageProps) {
           >
             <span>👤</span>
             <span>Perfil</span>
+          </button>
+          <button
+            className={`${styles.navButton} ${activeTab === "actividad" ? styles.active : ""}`}
+            onClick={() => setActiveTab("actividad")}
+          >
+            <span>📊</span>
+            <span>Actividad</span>
           </button>
           <button
             className={`${styles.navButton} ${activeTab === "ayuda" ? styles.active : ""}`}
@@ -185,6 +193,12 @@ export function DashboardPage({ onLogout }: DashboardPageProps) {
 
           {activeTab === "perfil" && (
             <ProfilePanel uid="user123" />
+          )}
+
+          {activeTab === "actividad" && (
+            <div className={styles.activityPanel}>
+              <ActivityList userId="user123" />
+            </div>
           )}
 
           {activeTab === "ayuda" && (
