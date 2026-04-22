@@ -6,3 +6,5 @@ export * from './domain/usecases/VerifyCompany';
 export * from './domain/usecases/ListCompanies';
 export * from './data/datasources/CompanyDataSource';
 export * from './data/repositories/CompanyRepositoryImpl';
+export * from './presentation/components/CompanyPanel';
+export * from './presentation/hooks/useCompany';
