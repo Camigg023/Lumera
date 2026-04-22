@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styles from "./DashboardPage.module.css";
 import { ProfilePanel } from "../../../../features/profile/presentation/components/ProfilePanel";
+import { CompanyPanel } from "../../../../features/company-profile/presentation/components/CompanyPanel";
 
 export type DashboardPageProps = {
   /** Cerrar sesión y volver al home/login. */
@@ -124,7 +125,7 @@ function TraceabilityCard() {
 }
 
 export function DashboardPage({ onLogout }: DashboardPageProps) {
-  const [activeTab, setActiveTab] = useState<"donador" | "perfil" | "ayuda">(
+  const [activeTab, setActiveTab] = useState<"donador" | "perfil" | "empresa" | "ayuda">(
     "donador"
   );
 
@@ -151,6 +152,13 @@ export function DashboardPage({ onLogout }: DashboardPageProps) {
           >
             <span>👤</span>
             <span>Perfil</span>
+          </button>
+          <button
+            className={`${styles.navButton} ${activeTab === "empresa" ? styles.active : ""}`}
+            onClick={() => setActiveTab("empresa")}
+          >
+            <span>🏢</span>
+            <span>Empresa</span>
           </button>
           <button
             className={`${styles.navButton} ${activeTab === "ayuda" ? styles.active : ""}`}
@@ -185,6 +193,12 @@ export function DashboardPage({ onLogout }: DashboardPageProps) {
 
           {activeTab === "perfil" && (
             <ProfilePanel uid="user123" />
+          )}
+
+          {activeTab === "empresa" && (
+            <div className={styles.companyPanel}>
+              <CompanyPanel userId="user123" isAdmin={false} />
+            </div>
           )}
 
           {activeTab === "ayuda" && (
