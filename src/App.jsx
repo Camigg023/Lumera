@@ -4,15 +4,15 @@ import { LoginPage } from "./features/login";
 import { DashboardPage } from "./features/dashboard";
 import { RegisterPage } from "./features/register";
 import { PasswordRecoveryPage } from "./features/password-recovery";
+import { CollectionPointsPage } from './features/collectionPoints';
 
 function App() {
-  const [screen, setScreen] = useState("home");
-
+ const [screen, setScreen] = useState("collection-points");
   if (screen === "login") {
     return (
       <LoginPage
         onBackToHome={() => setScreen("home")}
-        onLoginSuccess={() => setScreen("dashboard")}
+        onLoginSuccess={() => setScreen("collection-points")}
         onNavigateToRegister={() => setScreen("register")}
         onNavigateToPasswordRecovery={() => setScreen("password-recovery")}
       />
@@ -41,10 +41,12 @@ function App() {
 
   if (screen === "dashboard") {
     return (
-      <DashboardPage
-        onLogout={() => setScreen("home")}
-      />
+      <DashboardPage onLogout={() => setScreen("home")} />
     );
+  }
+
+  if (screen === "collection-points") {
+    return <CollectionPointsPage />;
   }
 
   return <HomePage onNavigateToLogin={() => setScreen("login")} />;
