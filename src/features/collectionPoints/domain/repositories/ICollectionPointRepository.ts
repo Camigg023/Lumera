@@ -1,4 +1,5 @@
-import type { CollectionPoint, CollectionPointFilter, RegionStats } from '../../../../domain/entities/CollectionPoint';
+import { CollectionPoint, CollectionPointFilter, RegionStats } from "../entities/colecctionPoints";
+
 
 export interface ICollectionPointRepository {
   getAll(): Promise<CollectionPoint[]>;

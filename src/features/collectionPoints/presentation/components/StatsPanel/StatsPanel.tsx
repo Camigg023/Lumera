@@ -1,4 +1,5 @@
-import type { RegionStats } from '../../../../../domain';
+
+import { RegionStats } from '../../../domain/entities/colecctionPoints';
 import styles from './StatsPanel.module.css';
 
 interface StatsPanelProps {

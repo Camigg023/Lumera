@@ -1,4 +1,5 @@
-import type { CollectionPoint } from '../../../../../domain';
+
+import { CollectionPoint } from '../../../domain/entities/colecctionPoints';
 import styles from './MapView.module.css';
 
 interface MapViewProps {

@@ -1,7 +1,5 @@
-// Desde usecase/GetCollectionPointsUseCase.ts
-import type { ICollectionPointRepository } from '../../../../domain/repositories/ICollectionPointRepository';
-//                                              ↑ sube 1 nivel desde usecase/
-import type { CollectionPoint, CollectionPointFilter } from '../../../../domain/entities/CollectionPoint';
+import { ICollectionPointRepository } from "../../domain";
+import { CollectionPoint, CollectionPointFilter } from "../../domain/entities/colecctionPoints";
 
 export class GetCollectionPointsUseCase {
   constructor(private readonly repository: ICollectionPointRepository) {}

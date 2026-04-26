@@ -1,9 +1,5 @@
-
-// Desde data/repositories/CollectionPointRepository.ts
-import type { CollectionPoint } from '../../../../../domain/entities/CollectionPoint';
-//                            ↑ sube 2 niveles desde data/repositories/
+import { CollectionPoint } from "../../../domain/entities/colecctionPoints";
 import styles from './CollectionPointCard.module.css';
-
 
 interface CollectionPointCardProps {
   point: CollectionPoint;

@@ -1,5 +1,5 @@
-import type { ICollectionPointRepository } from '../../../../domain/repositories/ICollectionPointRepository';
-import type { RegionStats } from '../../../../domain/entities/CollectionPoint';
+import { ICollectionPointRepository } from "../../domain";
+import { RegionStats } from "../../domain/entities/colecctionPoints";
 
 export class GetRegionStatsUseCase {
   constructor(private readonly repository: ICollectionPointRepository) {}

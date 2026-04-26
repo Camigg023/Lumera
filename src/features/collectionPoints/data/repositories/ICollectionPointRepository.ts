@@ -1,6 +1,6 @@
-import type { ICollectionPointRepository } from '../../domain/repositories/ICollectionPointRepository';
-import type { CollectionPoint, CollectionPointFilter, RegionStats } from '../../../../domain/entities/CollectionPoint';
-import { mockCollectionPoints, mockRegionStats } from '../datasource/CollectionPointDataSource';
+import { ICollectionPointRepository } from "../../domain";
+import { CollectionPoint, CollectionPointFilter, RegionStats } from "../../domain/entities/colecctionPoints";
+import { mockCollectionPoints, mockRegionStats } from "../datasource/CollectionPointDataSource";
 
 export class CollectionPointRepository implements ICollectionPointRepository {
   async getAll(): Promise<CollectionPoint[]> {

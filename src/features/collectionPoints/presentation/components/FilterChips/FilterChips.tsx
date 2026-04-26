@@ -1,4 +1,5 @@
-import type { CollectionPointFilter } from '../../../../../domain';
+
+import { CollectionPointFilter } from '../../../domain/entities/colecctionPoints';
 import styles from './FilterChips.module.css';
 
 interface FilterChip {

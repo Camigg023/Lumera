@@ -1,4 +1,5 @@
-import type { CollectionPoint, RegionStats } from '../../../../domain/entities/CollectionPoint';
+import { CollectionPoint, RegionStats } from "../../domain/entities/colecctionPoints";
+
 
 export const mockCollectionPoints: CollectionPoint[] = [
   {

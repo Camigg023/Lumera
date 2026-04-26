@@ -1,6 +1,4 @@
-// import type { CollectionPoint} from '../../../domain';
-// ✅ Corrección
-import type { CollectionPoint } from '../../../../../domain/entities/CollectionPoint';
+
 import { useCollectionPoints } from '../../hooks/useCollectionPoints';
 import { TopBar } from '../../components/topBar';
 import { FilterChips } from '../../components/FilterChips';
@@ -10,6 +8,7 @@ import { MapView } from '../../components/MapView';
 import { StatsPanel } from '../../components/StatsPanel';
 import { BottomNav } from '../../components/BottomNav';
 import styles from './collectionPointsPage.module.css';
+import { CollectionPoint } from '../../../domain/entities/colecctionPoints';
 
 // These would come from auth context in a real app
 const USER_AVATAR = 'https://lh3.googleusercontent.com/aida-public/AB6AXuA7GZDLANwax5cFa_bIIPfvNjoaVxo5_4uUOVtOC97pP4StzVtWrccUcDLx_HrLGHxidigGjrhITK3kuIVBtR1nybmTCu3tko5LREzsn2ftfyr2G3bls51qzafI9viVKd8dNj89oaTmeS5c-rmlPNUH8pAtaLC4iyH_pnueHpfqKrND4ovXxAPZZpFAOIc5U4Zcu8Ba3GQojMkCHOHdpiaFn66Vw2ln6pYn32PL8YsEjrKFAFMPu45TZ-FBhb22CktIFSc30ujJb5xo';
