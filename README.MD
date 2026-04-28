@@ -62,7 +62,7 @@ Sigue estos pasos para levantar el servidor de desarrollo en tu máquina local:
    ```bash
    npm run dev
    ```
-   La aplicación se podrá visualizar desde tu navegador abriendo [http://localhost:5173](http://localhost:5173).
+   La aplicación se podrá visualizar desde tu navegador abriendo [ñ](http://localhost:5173).
 
 ## Otros Comandos Útiles
 
