@@ -4,122 +4,84 @@
   width: 100%;
 }
 
-/* Left side - Image */
+/* IZQUIERDA - IMAGEN */
 .imageSide {
   flex: 1;
-  background: linear-gradient(135deg, #FFB366 0%, #F28C33 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: 80vh;
+
+  background-image: url("/img/crearcuenta.png");
+  background-size: cover;        /* 🔥 IGUAL QUE LOGIN */
+  background-repeat: no-repeat;
+  background-position: center bottom; /* 👈 ajustas el verde abajo */
+
   position: relative;
 }
 
-.imageContainer {
-  text-align: center;
-  padding: 2rem;
-}
-
-.foodEmoji {
-  display: block;
-  font-size: 8rem;
-  margin-bottom: 2rem;
-  color: white;
-}
-
-.crate {
-  width: 200px;
-  height: 160px;
-  background: #F8B486;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-}
-
-.barcode {
-  font-size: 3rem;
-  opacity: 0.8;
-  color: white;
-}
-
-/* Right side - Form */
+/* DERECHA */
 .formSide {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;
+  background: #ffffff;
   padding: 2rem;
 }
 
 .formContainer {
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
 }
 
+/* BOTÓN VOLVER */
 .backLink {
   background: none;
   border: none;
-  color: #666666;
+  color: #666;
   cursor: pointer;
   font-size: 0.9rem;
   margin-bottom: 1.5rem;
-  padding: 0;
 }
 
 .backLink:hover {
-  color: #2D2D2D;
+  color: #0F5132;
 }
 
+/* TÍTULO */
 .title {
   text-align: center;
   font-size: 2rem;
-  font-weight: 400;
-  color: #2D2D2D;
-  margin: 0 0 2rem 0;
+  font-weight: 500;
+  color: #0F5132;
+  margin-bottom: 2rem;
 }
 
+/* LINKS */
 .links {
   text-align: center;
   margin-top: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
 }
 
 .link {
-  color: #666666;
-  text-decoration: underline;
-  font-size: 0.95rem;
-  cursor: pointer;
   background: none;
   border: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 0.95rem;
 }
 
 .link:hover {
-  color: #F28C33;
+  color: #198754;
 }
 
-/* Responsive */
+/* RESPONSIVE */
 @media (max-width: 768px) {
   .page {
     flex-direction: column;
   }
 
   .imageSide {
-    min-height: 200px;
-    padding: 1rem;
-  }
-
-  .foodEmoji {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-  }
-
-  .crate {
-    width: 120px;
-    height: 100px;
+    height: 250px;
+    background-size: 80%;
+    background-position: center;
   }
 }

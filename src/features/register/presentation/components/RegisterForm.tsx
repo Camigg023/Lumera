@@ -2,83 +2,162 @@ import { useState } from 'react';
 import { useRegister } from '../hooks/useRegister';
 import styles from './RegisterForm.module.css';
 
-export type RegisterFormProps = {
-  onSuccess?: () => void;
-};
-
-export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
+export const RegisterForm = ({ onSuccess }: any) => {
   const { signUp, isLoading, error } = useRegister();
+
+  const [role, setRole] = useState<"donador" | "empresa" | "beneficiario">("donador");
+
+  // 🔹 CAMPOS GENERALES
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('donador');
+
+  // 🔹 EMPRESA
+  const [nit, setNit] = useState('');
+  const [capacidad, setCapacidad] = useState('');
+
+  // 🔹 BENEFICIARIO
+  const [cedula, setCedula] = useState('');
+
+  // 🔹 COMUNES
+  const [telefono, setTelefono] = useState('');
+  const [direccion, setDireccion] = useState('');
+  const [ciudad, setCiudad] = useState('');
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      await signUp(email, password, role, name);
-      onSuccess?.();
-    } catch {
-      // Error ya está en el estado 'error' del hook
-    }
+
+    const data = {
+      role,
+      name,
+      email,
+      password,
+      telefono,
+      direccion,
+      ciudad,
+      ...(role === "empresa" && { nit, capacidad }),
+      ...(role === "beneficiario" && { cedula }),
+    };
+
+    console.log("DATA ENVIADA:", data);
+
+    await signUp(email, password, role, name);
+
+    onSuccess?.();
   };
 
   return (
     <form onSubmit={onSubmit} className={styles.form}>
-      <div className={styles.inputGroup}>
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          type="text"
-          placeholder="Nombre completo"
-          className={styles.input}
-          required
-        />
-      </div>
 
-      <div className={styles.inputGroup}>
-        <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          type="email"
-          placeholder="Email"
-          className={styles.input}
-          required
-        />
-      </div>
-
-      <div className={styles.inputGroup}>
-        <input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          type="password"
-          placeholder="Password"
-          className={styles.input}
-          required
-        />
-      </div>
-
-      <div className={styles.inputGroup}>
-        <select
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-          className={styles.select}
+      {/* ROLES */}
+      <div className={styles.roles}>
+        <div
+          className={`${styles.roleCard} ${role === "donador" ? styles.active : ""}`}
+          onClick={() => setRole("donador")}
         >
-          <option value="donador">Donador</option>
-          <option value="beneficiario">Beneficiario</option>
-          <option value="voluntario">Voluntario</option>
-        </select>
+          🤝
+          <span>Donador</span>
+        </div>
+
+        <div
+          className={`${styles.roleCard} ${role === "empresa" ? styles.active : ""}`}
+          onClick={() => setRole("empresa")}
+        >
+          🏢
+          <span>Empresa</span>
+        </div>
+
+        <div
+          className={`${styles.roleCard} ${role === "beneficiario" ? styles.active : ""}`}
+          onClick={() => setRole("beneficiario")}
+        >
+          👨‍👩‍👧
+          <span>Beneficiario</span>
+        </div>
       </div>
+
+      <p className={styles.label}>INFORMACIÓN PERSONAL</p>
+
+      {/* NOMBRE */}
+      <input
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder={role === "empresa" ? "Nombre de la empresa" : "Nombre completo"}
+        className={styles.input}
+      />
+
+      {/* EMPRESA */}
+      {role === "empresa" && (
+        <>
+          <input
+            value={nit}
+            onChange={(e) => setNit(e.target.value)}
+            placeholder="NIT"
+            className={styles.input}
+          />
+
+          <input
+            value={capacidad}
+            onChange={(e) => setCapacidad(e.target.value)}
+            placeholder="Capacidad logística"
+            className={styles.input}
+          />
+        </>
+      )}
+
+      {/* BENEFICIARIO */}
+      {role === "beneficiario" && (
+        <input
+          value={cedula}
+          onChange={(e) => setCedula(e.target.value)}
+          placeholder="Cédula"
+          className={styles.input}
+        />
+      )}
+
+      {/* COMUNES */}
+      <input
+        value={telefono}
+        onChange={(e) => setTelefono(e.target.value)}
+        placeholder="Teléfono"
+        className={styles.input}
+      />
+
+      <input
+        value={direccion}
+        onChange={(e) => setDireccion(e.target.value)}
+        placeholder="Dirección"
+        className={styles.input}
+      />
+
+      <input
+        value={ciudad}
+        onChange={(e) => setCiudad(e.target.value)}
+        placeholder="Ciudad"
+        className={styles.input}
+      />
+
+      <input
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Correo"
+        className={styles.input}
+      />
+
+      <input
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        type="password"
+        placeholder="Contraseña"
+        className={styles.input}
+      />
 
       {error && <p className={styles.error}>{error}</p>}
 
-      <button
-        type="submit"
-        disabled={isLoading}
-        className={styles.button}
-      >
-        {isLoading ? 'Registrando...' : 'CREAR CUENTA'}
+      <button type="submit" className={styles.button}>
+        {isLoading ? 'Registrando...' : 'Registrar'}
       </button>
+
     </form>
   );
 };
