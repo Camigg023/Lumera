@@ -5,20 +5,35 @@ import { DashboardPage } from "./features/dashboard";
 import { RegisterPage } from "./features/register";
 import { PasswordRecoveryPage } from "./features/password-recovery";
 
-function App() {
-  const [screen, setScreen] = useState("home");
+// 👇 IMPORTA TUS DASHBOARDS
+import { DonadorDashboard } from "./features/accounts/dashboard/DonadorDashboard";
+import { EmpresaDashboard } from "./features/accounts/dashboard/EmpresaDashboard";
+import { BeneficiarioDashboard } from "./features/accounts/dashboard/BeneficiarioDashboard";
 
+function App() {
+  const [screen, setScreen] = useState("dashboard"); // esto es para ver los perfiles sin el firebase
+  //const [screen, setScreen] = useState("home"); //cambiarlo despues para ver el home
+
+  // 👇 ESTADO PARA EL ROL
+  const [role, setRole] = useState("donador"); // cambia para probar
+
+  // LOGIN
   if (screen === "login") {
     return (
       <LoginPage
         onBackToHome={() => setScreen("home")}
-        onLoginSuccess={() => setScreen("dashboard")}
+        onLoginSuccess={() => {
+          // 🔥 SIMULACIÓN DE ROL (cambia aquí para probar)
+          setRole("donador"); // "empresa" o "beneficiario"
+          setScreen("dashboard");
+        }}
         onNavigateToRegister={() => setScreen("register")}
         onNavigateToPasswordRecovery={() => setScreen("password-recovery")}
       />
     );
   }
 
+  // REGISTER
   if (screen === "register") {
     return (
       <RegisterPage
@@ -29,6 +44,7 @@ function App() {
     );
   }
 
+  // RECUPERAR CONTRASEÑA
   if (screen === "password-recovery") {
     return (
       <PasswordRecoveryPage
@@ -39,14 +55,25 @@ function App() {
     );
   }
 
+  // 🔥 DASHBOARD POR ROL
   if (screen === "dashboard") {
-    return (
-      <DashboardPage
-        onLogout={() => setScreen("home")}
-      />
-    );
+    if (role === "donador") {
+      return <DonadorDashboard />;
+    }
+
+    if (role === "empresa") {
+      return <EmpresaDashboard />;
+    }
+
+    if (role === "beneficiario") {
+      return <BeneficiarioDashboard />;
+    }
+
+    // fallback
+    return <DashboardPage onLogout={() => setScreen("home")} />;
   }
 
+  // HOME
   return <HomePage onNavigateToLogin={() => setScreen("login")} />;
 }
 
