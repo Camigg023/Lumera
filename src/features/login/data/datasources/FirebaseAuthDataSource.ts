@@ -25,9 +25,8 @@ export class FirebaseAuthDataSource {
         email: u.email,
         displayName: u.displayName,
         photoURL: u.photoURL,
-        name: userData.name,
-        role: userData.role,
-      };
+        ...userData
+      } as User;
     } catch (error) {
       throw new Error("Authentication failed: " + (error as Error).message);
     }

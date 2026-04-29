@@ -5,4 +5,10 @@ export type User = {
   photoURL?: string | null;
   name?: string;
   role?: string;
+  telefono?: string;
+  direccion?: string;
+  ciudad?: string;
+  nit?: string;
+  capacidad?: string;
+  cedula?: string;
 };
