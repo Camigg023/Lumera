@@ -39,6 +39,7 @@ export const LoginPage = ({ onBackToHome, onLoginSuccess, onNavigateToRegister, 
           )}
           
           <h1 className={styles.title}>Log In</h1>
+          <p className={styles.subtitle}>Bienvenido de nuevo a Lumera.</p>
           
           <LoginForm onSuccess={onLoginSuccess} />
           
