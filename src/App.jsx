@@ -7,7 +7,7 @@ import { PasswordRecoveryPage } from "./features/password-recovery";
 import { CollectionPointsPage } from './features/collectionPoints';
 
 function App() {
- const [screen, setScreen] = useState("collection-points");
+ const [screen, setScreen] = useState("home");
   if (screen === "login") {
     return (
       <LoginPage

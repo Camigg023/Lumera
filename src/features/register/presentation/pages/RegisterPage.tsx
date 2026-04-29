@@ -34,6 +34,7 @@ export const RegisterPage = ({ onBackToHome, onNavigateToLogin, onRegisterSucces
           )}
           
           <h1 className={styles.title}>Crear Cuenta</h1>
+          <p className={styles.subtitle}>Únete a Lumera y comienza a impactar vidas.</p>
           
           <RegisterForm onSuccess={onRegisterSuccess} />
           

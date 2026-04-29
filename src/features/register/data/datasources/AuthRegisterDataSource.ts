@@ -1,12 +1,10 @@
 import {
   createUserWithEmailAndPassword,
-  getAuth,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import app, { db } from "../../../../config/firebase";
+import { auth, db } from "../../../../config/firebase";
 
 export class AuthRegisterDataSource {
-  private readonly auth = getAuth(app);
 
   async signUpWithEmailPassword(
     email: string,
@@ -15,7 +13,7 @@ export class AuthRegisterDataSource {
     name: string
   ): Promise<void> {
     try {
-      const cred = await createUserWithEmailAndPassword(this.auth, email, password);
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
       const u = cred.user;
       
       await setDoc(doc(db, "users", u.uid), {
