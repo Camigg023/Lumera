@@ -3,4 +3,6 @@ export type User = {
   email: string | null;
   displayName?: string | null;
   photoURL?: string | null;
+  name?: string;
+  role?: string;
 };
