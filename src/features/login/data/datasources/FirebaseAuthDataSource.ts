@@ -1,26 +1,32 @@
 import {
   signOut as firebaseSignOut,
-  getAuth,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import app from "../../../../config/firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "../../../../config/firebase";
 import { User } from "../../domain/entities/User";
 
 export class FirebaseAuthDataSource {
-  private readonly auth = getAuth(app);
 
   async signInWithEmailPassword(
     email: string,
     password: string,
   ): Promise<User> {
     try {
-      const cred = await signInWithEmailAndPassword(this.auth, email, password);
+      const cred = await signInWithEmailAndPassword(auth, email, password);
       const u = cred.user;
+      
+      // Fetch additional data from Firestore
+      const userDoc = await getDoc(doc(db, "users", u.uid));
+      const userData = userDoc.exists() ? userDoc.data() : {};
+
       return {
         uid: u.uid,
         email: u.email,
         displayName: u.displayName,
         photoURL: u.photoURL,
+        name: userData.name,
+        role: userData.role,
       };
     } catch (error) {
       throw new Error("Authentication failed: " + (error as Error).message);
@@ -28,6 +34,6 @@ export class FirebaseAuthDataSource {
   }
 
   async signOut(): Promise<void> {
-    await firebaseSignOut(this.auth);
+    await firebaseSignOut(auth);
   }
 }
