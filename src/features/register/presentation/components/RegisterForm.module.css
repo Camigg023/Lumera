@@ -23,7 +23,25 @@
   box-sizing: border-box;
 }
 
-.input:focus, .select:focus {
+.input:focus {
+  border-color: #0F5132;
+  box-shadow: 0 0 0 2px rgba(242, 140, 51, 0.2);
+}
+
+.select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #D9D9D9;
+  border-radius: 8px;
+  outline: none;
+  background-color: #FFFFFF;
+  color: #2D2D2D;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.select:focus {
   border-color: #F28C33;
   background-color: white;
   box-shadow: 0 10px 20px rgba(242, 140, 51, 0.1), 0 0 0 4px rgba(242, 140, 51, 0.05);
@@ -38,7 +56,7 @@
 }
 
 .button {
-  background: linear-gradient(135deg, #FF8000 0%, #F28C33 100%);
+  background: #0F5132;
   color: white;
   border: none;
   border-radius: 12px;
@@ -53,13 +71,7 @@
 }
 
 .button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 15px 30px rgba(242, 140, 51, 0.3);
-  filter: brightness(1.05);
-}
-
-.button:active:not(:disabled) {
-  transform: translateY(0);
+  background: #0F5132;
 }
 
 .button:disabled {
@@ -67,4 +79,45 @@
   color: #aaa;
   box-shadow: none;
   cursor: not-allowed;
+}
+
+/* ROLES */
+.roles {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.roleCard {
+  flex: 1;
+  border: 2px solid #0F5132;
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s;
+  background: #fff;
+  font-size: 0.9rem;
+}
+
+.roleCard span {
+  display: block;
+  margin-top: 0.3rem;
+  font-weight: 500;
+}
+
+.roleCard:hover {
+  background: #FFF3E6;
+}
+
+.active {
+  background: #0F5132;
+  color: white;
+}
+
+/* LABEL */
+.label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
 }

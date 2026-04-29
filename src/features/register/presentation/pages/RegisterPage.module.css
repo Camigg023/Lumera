@@ -6,13 +6,16 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* Left side - Image */
+/* IZQUIERDA - IMAGEN */
 .imageSide {
-  flex: 1.2;
-  background: linear-gradient(135deg, #FFB366 0%, #F28C33 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  flex: 1;
+  height: 80vh;
+
+  background-image: url("/img/crearcuenta.png");
+  background-size: cover;        /* 🔥 IGUAL QUE LOGIN */
+  background-repeat: no-repeat;
+  background-position: center bottom; /* 👈 ajustas el verde abajo */
+
   position: relative;
   overflow: hidden;
 }
@@ -33,137 +36,71 @@
   to { transform: rotate(360deg); }
 }
 
-.imageContainer {
-  text-align: center;
-  padding: 2rem;
-  z-index: 1;
-}
-
-.foodEmoji {
-  display: block;
-  font-size: 8rem;
-  margin-bottom: 2rem;
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
-  animation: float 4s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-20px); }
-}
-
-.crate {
-  width: 240px;
-  height: 180px;
-  background: rgba(248, 180, 134, 0.9);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-}
-
-.barcode {
-  font-size: 4rem;
-  opacity: 0.9;
-}
-
-/* Right side - Form */
+/* DERECHA */
 .formSide {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;
-  padding: 3rem;
-  box-shadow: -10px 0 30px rgba(0,0,0,0.03);
+  background: #ffffff;
+  padding: 2rem;
 }
 
 .formContainer {
   width: 100%;
   max-width: 420px;
-  animation: fadeInRight 0.8s ease-out;
 }
 
-@keyframes fadeInRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
+/* BOTÓN VOLVER */
 .backLink {
   background: none;
   border: none;
-  color: #888;
+  color: #666;
   cursor: pointer;
-  font-size: 0.95rem;
-  margin-bottom: 2rem;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: color 0.2s, transform 0.2s;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
 }
 
 .backLink:hover {
-  color: #F28C33;
-  transform: translateX(-5px);
+  color: #0F5132;
 }
 
+/* TÍTULO */
 .title {
-  text-align: left;
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0 0 0.5rem 0;
-  letter-spacing: -0.5px;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 500;
+  color: #0F5132;
+  margin-bottom: 2rem;
 }
 
-.subtitle {
-  color: #666;
-  margin-bottom: 2.5rem;
-  font-size: 1.1rem;
-}
-
+/* LINKS */
 .links {
   text-align: center;
-  margin-top: 2.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  margin-top: 2rem;
 }
 
 .link {
-  color: #666;
-  text-decoration: none;
-  font-size: 1rem;
-  cursor: pointer;
   background: none;
   border: none;
-  transition: color 0.2s;
+  color: #666;
+  cursor: pointer;
+  font-size: 0.95rem;
 }
 
 .link:hover {
-  color: #F28C33;
-  text-decoration: underline;
+  color: #198754;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-  .imageSide {
-    display: none;
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .page {
+    flex-direction: column;
   }
-  
-  .formSide {
-    flex: 1;
-    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+
+  .imageSide {
+    height: 250px;
+    background-size: 80%;
+    background-position: center;
   }
 }
