@@ -12,7 +12,7 @@ import { EmpresaDashboard } from "./features/accounts/dashboard/EmpresaDashboard
 import { BeneficiarioDashboard } from "./features/accounts/dashboard/BeneficiarioDashboard";
 
 function App() {
-  const [screen, setScreen] = useState("dashboard"); // esto es para ver los perfiles sin el firebase
+  const [screen, setScreen] = useState("home"); // esto es para ver los perfiles sin el firebase
   //const [screen, setScreen] = useState("home"); //cambiarlo despues para ver el home
 
   // 👇 ESTADO PARA EL ROL
