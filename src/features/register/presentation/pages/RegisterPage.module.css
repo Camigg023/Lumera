@@ -9,12 +9,11 @@
 /* IZQUIERDA - IMAGEN */
 .imageSide {
   flex: 1;
-  height: 80vh;
 
   background-image: url("/img/crearcuenta.png");
-  background-size: cover;        /* 🔥 IGUAL QUE LOGIN */
   background-repeat: no-repeat;
-  background-position: center bottom; /* 👈 ajustas el verde abajo */
+  background-position: center;
+  background-size: cover;
 
   position: relative;
   overflow: hidden;
