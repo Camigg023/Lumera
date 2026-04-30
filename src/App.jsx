@@ -73,6 +73,10 @@ function App() {
     return <DashboardPage onLogout={() => setScreen("home")} />;
   }
 
+  if (screen === "traceability") {
+    return <DonationDetailPage />;
+  }
+
   // HOME
   return <HomePage onNavigateToLogin={() => setScreen("login")} />;
 }
