@@ -14,9 +14,9 @@ const MARKER_CONFIG = {
   inactive:    { icon: 'warehouse',          colorClass: 'markerMuted'     },
 } as const;
 
-export function MapView({ points, selectedRegion = 'Metropolitan Area', onUpdateResults }: MapViewProps) {
+export function MapView({ points, selectedRegion = 'Área Metropolitana', onUpdateResults }: MapViewProps) {
   return (
-    <section className={styles.container} aria-label="Collection points map">
+    <section className={styles.container} aria-label="Mapa de puntos de recolección">
       {/* Grid background */}
       <div className={styles.grid} aria-hidden="true" />
 
@@ -58,11 +58,11 @@ export function MapView({ points, selectedRegion = 'Metropolitan Area', onUpdate
       })}
 
       {/* Zoom controls */}
-      <div className={styles.controls} aria-label="Map controls">
+      <div className={styles.controls} aria-label="Controles del mapa">
         {[
-          { icon: 'add',         label: 'Zoom in'         },
-          { icon: 'remove',      label: 'Zoom out'        },
-          { icon: 'my_location', label: 'My location'     },
+          { icon: 'add',         label: 'Acercar'         },
+          { icon: 'remove',      label: 'Alejar'        },
+          { icon: 'my_location', label: 'Mi ubicación'     },
         ].map(({ icon, label }) => (
           <button key={icon} className={styles.controlBtn} aria-label={label}>
             <span className="material-symbols-outlined">{icon}</span>
@@ -77,12 +77,12 @@ export function MapView({ points, selectedRegion = 'Metropolitan Area', onUpdate
             <span className="material-symbols-outlined" style={{ color: '#ffffff' }}>map</span>
           </div>
           <div>
-            <p className={styles.regionLabel}>Selected Region</p>
+            <p className={styles.regionLabel}>Región Seleccionada</p>
             <p className={styles.regionName}>{selectedRegion}</p>
           </div>
         </div>
         <button className={styles.updateBtn} onClick={onUpdateResults}>
-          Update Results
+          Actualizar Resultados
         </button>
       </div>
     </section>

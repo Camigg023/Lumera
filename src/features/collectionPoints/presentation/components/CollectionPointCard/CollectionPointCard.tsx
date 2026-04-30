@@ -9,17 +9,17 @@ interface CollectionPointCardProps {
 
 const STATUS_CONFIG = {
   active: {
-    label: 'ACTIVE',
+    label: 'ACTIVO',
     containerClass: 'badgeActive',
     dotClass: 'dotActive',
   },
   high_demand: {
-    label: 'HIGH DEMAND',
+    label: 'ALTA DEMANDA',
     containerClass: 'badgeHighDemand',
     dotClass: 'dotHighDemand',
   },
   inactive: {
-    label: 'INACTIVE',
+    label: 'INACTIVO',
     containerClass: 'badgeInactive',
     dotClass: 'dotInactive',
   },
@@ -51,15 +51,15 @@ export function CollectionPointCard({ point, onDirections, onDetails }: Collecti
 
       <div className={styles.footer}>
         <div className={styles.distance}>
-          <span className={styles.distanceLabel}>Distance</span>
-          <span className={styles.distanceValue}>{point.distanceMiles} miles</span>
+          <span className={styles.distanceLabel}>Distancia</span>
+          <span className={styles.distanceValue}>{point.distanceMiles} millas</span>
         </div>
         <div className={styles.actions}>
           <button
             className={styles.iconBtn}
             onClick={() => onDirections(point)}
             disabled={isDisabled}
-            aria-label={`Get directions to ${point.name}`}
+            aria-label={`Obtener indicaciones para ${point.name}`}
             aria-disabled={isDisabled}
           >
             <span className="material-symbols-outlined">directions</span>
@@ -70,7 +70,7 @@ export function CollectionPointCard({ point, onDirections, onDetails }: Collecti
             disabled={isDisabled}
             aria-disabled={isDisabled}
           >
-            {isDisabled ? 'Closed' : 'Details'}
+            {isDisabled ? 'Cerrado' : 'Detalles'}
           </button>
         </div>
       </div>

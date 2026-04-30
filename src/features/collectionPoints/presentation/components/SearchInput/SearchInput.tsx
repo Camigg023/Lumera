@@ -6,7 +6,7 @@ interface SearchInputProps {
   placeholder?: string;
 }
 
-export function SearchInput({ value, onChange, placeholder = 'Enter street or neighborhood...' }: SearchInputProps) {
+export function SearchInput({ value, onChange, placeholder = 'Ingresa calle o barrio...' }: SearchInputProps) {
   return (
     <div className={styles.wrapper}>
       <span className={`material-symbols-outlined ${styles.icon}`}>search</span>
@@ -16,7 +16,7 @@ export function SearchInput({ value, onChange, placeholder = 'Enter street or ne
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        aria-label="Search collection points"
+        aria-label="Buscar puntos de recolección"
       />
     </div>
   );

@@ -37,9 +37,9 @@ export function CollectionPointsPage() {
           {/* ── Left column: controls + list ── */}
           <div className={styles.sidebar}>
             <div>
-              <h2 className={styles.heading}>Collection Points</h2>
+              <h2 className={styles.heading}>Puntos de Recolección</h2>
               <p className={styles.subheading}>
-                Find a nearby redistribution hub to deliver or claim surplus food.
+                Encuentra un centro de redistribución cercano para entregar o reclamar excedentes de comida.
               </p>
             </div>
 
@@ -48,10 +48,10 @@ export function CollectionPointsPage() {
 
             {/* Card list */}
             <div className={styles.cardList} role="list" aria-live="polite" aria-busy={isLoading}>
-              {isLoading && <p className={styles.stateMsg}>Loading points…</p>}
+              {isLoading && <p className={styles.stateMsg}>Cargando puntos…</p>}
               {error   && <p className={styles.errorMsg}>{error}</p>}
               {!isLoading && !error && points.length === 0 && (
-                <p className={styles.stateMsg}>No collection points found.</p>
+                <p className={styles.stateMsg}>No se encontraron puntos de recolección.</p>
               )}
               {!isLoading &&
                 points.map((point) => (
@@ -77,7 +77,7 @@ export function CollectionPointsPage() {
       <BottomNav />
 
       {/* FAB */}
-      <button className={styles.fab} aria-label="Add collection point">
+      <button className={styles.fab} aria-label="Agregar punto de recolección">
         <span className="material-symbols-outlined" style={{ fontSize: 30 }}>add_location</span>
       </button>
     </div>

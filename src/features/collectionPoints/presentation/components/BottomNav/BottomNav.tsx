@@ -8,15 +8,15 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { label: 'Explore',  icon: 'explore',             href: '#', active: true  },
-  { label: 'Donate',   icon: 'volunteer_activism',  href: '#'                },
-  { label: 'Impact',   icon: 'analytics',           href: '#'                },
-  { label: 'Profile',  icon: 'person',              href: '#'                },
+  { label: 'Explorar', icon: 'explore',             href: '#', active: true  },
+  { label: 'Donar',    icon: 'volunteer_activism',  href: '#'                },
+  { label: 'Impacto',  icon: 'analytics',           href: '#'                },
+  { label: 'Perfil',   icon: 'person',              href: '#'                },
 ];
 
 export function BottomNav() {
   return (
-    <nav className={styles.nav} aria-label="Bottom navigation">
+    <nav className={styles.nav} aria-label="Navegación inferior">
       {NAV_ITEMS.map(({ label, icon, href, active }) => (
         <a
           key={label}

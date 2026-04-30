@@ -46,7 +46,7 @@ export function useCollectionPoints(): UseCollectionPointsReturn {
         : await getCollectionPoints.execute(activeFilter);
       setPoints(data);
     } catch (err) {
-      setError('Failed to load collection points. Please try again.');
+      setError('No se pudieron cargar los puntos de recolección. Por favor, intenta de nuevo.');
     } finally {
       setIsLoading(false);
     }

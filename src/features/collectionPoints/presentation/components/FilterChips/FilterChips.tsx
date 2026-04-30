@@ -9,9 +9,9 @@ interface FilterChip {
 }
 
 const CHIPS: FilterChip[] = [
-  { value: 'nearby', label: 'Nearby', icon: 'near_me' },
-  { value: 'high_demand', label: 'High Demand', icon: 'trending_up' },
-  { value: 'recently_added', label: 'Recently Added', icon: 'new_releases' },
+  { value: 'nearby', label: 'Cercanos', icon: 'near_me' },
+  { value: 'high_demand', label: 'Alta Demanda', icon: 'trending_up' },
+  { value: 'recently_added', label: 'Recién Agregados', icon: 'new_releases' },
 ];
 
 interface FilterChipsProps {

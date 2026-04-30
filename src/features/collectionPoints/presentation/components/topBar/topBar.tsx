@@ -6,9 +6,9 @@ interface TopBarProps {
 }
 
 const NAV_LINKS = [
-  { label: 'Explore', active: true },
-  { label: 'Donate', active: false },
-  { label: 'Impact', active: false },
+  { label: 'Explorar', active: true },
+  { label: 'Donar', active: false },
+  { label: 'Impacto', active: false },
 ];
 
 export function TopBar({ userAvatarUrl }: TopBarProps) {
@@ -29,7 +29,7 @@ export function TopBar({ userAvatarUrl }: TopBarProps) {
           </nav>
           {userAvatarUrl && (
             <div className={styles.avatar}>
-              <img src={userAvatarUrl} alt="User Profile" className={styles.avatarImg} />
+              <img src={userAvatarUrl} alt="Perfil de Usuario" className={styles.avatarImg} />
             </div>
           )}
         </div>
