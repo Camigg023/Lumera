@@ -27,8 +27,22 @@ export class AuthRegisterDataSource {
 
       await setDoc(doc(db, "users", u.uid), userData);
 
-    } catch (error) {
-      throw new Error("Registration failed: " + (error as Error).message);
+    } catch (error: any) {
+      console.error("Error original de Firebase:", error);
+      
+      let errorMessage = "Fallo en el registro";
+      
+      if (error.message?.includes("CONFIGURATION_NOT_FOUND")) {
+        errorMessage = "El método de autenticación por Email/Contraseña no está habilitado en Firebase Console. Por favor, ve a Authentication > Sign-in method y habilítalo.";
+      } else if (error.code === "auth/email-already-in-use") {
+        errorMessage = "Este correo electrónico ya está registrado.";
+      } else if (error.code === "auth/weak-password") {
+        errorMessage = "La contraseña es muy débil. Debe tener al menos 6 caracteres.";
+      } else {
+        errorMessage = `Error: ${error.message || "Error desconocido"}`;
+      }
+      
+      throw new Error(errorMessage);
     }
   }
 }
