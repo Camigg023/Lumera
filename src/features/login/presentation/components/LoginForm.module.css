@@ -69,6 +69,8 @@
   cursor: pointer;
   transition: all 0.25s ease;
   width: 100%;
+  box-shadow: 0 10px 20px rgba(242, 140, 51, 0.2);
+  letter-spacing: 0.5px;
 }
 
 /* HOVER PRO */
