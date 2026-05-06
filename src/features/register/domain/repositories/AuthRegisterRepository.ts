@@ -1,8 +1,5 @@
+import { RegisterData } from '../entities/RegisterData';
+
 export interface AuthRegisterRepository {
-  signUpWithEmailPassword(
-    email: string,
-    password: string,
-    role: string,
-    name: string
-  ): Promise<void>;
+  signUpWithEmailPassword(data: RegisterData): Promise<void>;
 }

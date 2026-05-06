@@ -25,7 +25,6 @@ export const RegisterPage = ({ onBackToHome, onNavigateToLogin, onRegisterSucces
           )}
 
           <h1 className={styles.title}>Crear Cuenta</h1>
-
           <RegisterForm onSuccess={onRegisterSuccess} />
 
           <div className={styles.links}>

@@ -2,19 +2,37 @@
   display: flex;
   min-height: 100vh;
   width: 100%;
+  background-color: #f8f9fa;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* IZQUIERDA - IMAGEN */
 .imageSide {
   flex: 1;
-  height: 80vh;
 
   background-image: url("/img/crearcuenta.png");
-  background-size: cover;        /* 🔥 IGUAL QUE LOGIN */
   background-repeat: no-repeat;
-  background-position: center bottom; /* 👈 ajustas el verde abajo */
+  background-position: center;
+  background-size: cover;
 
   position: relative;
+  overflow: hidden;
+}
+
+.imageSide::before {
+  content: '';
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  top: -25%;
+  left: -25%;
+  animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* DERECHA */
