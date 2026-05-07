@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { AuthRegisterDataSource } from '../../data/datasources/AuthRegisterDataSource';
 import { AuthRegisterRepositoryImpl } from '../../data/repositories/AuthRegisterRepositoryImpl';
 import { SignUpWithEmailPassword } from '../../domain/usecases/SignUpWithEmailPassword';
+import { RegisterData } from '../../domain/entities/RegisterData';
 
 export const useRegister = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,11 +14,11 @@ export const useRegister = () => {
     return new SignUpWithEmailPassword(repo);
   }, []);
 
-  const signUp = async (email: string, password: string, role: string, name: string) => {
+  const signUp = async (data: RegisterData) => {
     setIsLoading(true);
     setError(null);
     try {
-      await useCase.execute(email, password, role, name);
+      await useCase.execute(data);
     } catch (e: any) {
       setError(e?.message ?? 'Registration error');
       throw e;
