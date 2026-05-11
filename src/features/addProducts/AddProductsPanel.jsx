@@ -5,17 +5,20 @@ import { guardarDonacion } from '../../services/donationService';
 
 /**
  * Panel principal para agregar productos a una donación.
- * Permite agregar productos uno por uno, ver la lista, eliminar productos
- * y enviar todo a Firebase.
+ *
+ * @param {{ onDonacionGuardada?: () => void }} props
+ *   - onDonacionGuardada: Callback opcional para navegar después de guardar
  */
-export default function AddProductsPanel() {
+export default function AddProductsPanel({ onDonacionGuardada }) {
   const [productos, setProductos] = useState([]);
   const [guardando, setGuardando] = useState(false);
-  const [mensaje, setMensaje] = useState(null); // { tipo: 'exito' | 'error', texto: string }
+  const [mensaje, setMensaje] = useState(null);
+  const [ultimaDonacion, setUltimaDonacion] = useState(null);
 
   const agregarProducto = (producto) => {
     setProductos((prev) => [...prev, producto]);
     setMensaje(null);
+    setUltimaDonacion(null);
   };
 
   const eliminarProducto = (index) => {
@@ -32,8 +35,13 @@ export default function AddProductsPanel() {
     setMensaje(null);
 
     try {
-      const id = await guardarDonacion(productos);
-      setMensaje({ tipo: 'exito', texto: `Donación registrada exitosamente (ID: ${id.slice(0, 8)}...)` });
+      const resultado = await guardarDonacion(productos);
+      setUltimaDonacion(resultado);
+      setMensaje({
+        tipo: 'exito',
+        texto: `Donación registrada exitosamente`,
+        codigo: resultado.codigoUnico,
+      });
       setProductos([]);
     } catch (err) {
       console.error('[AddProductsPanel] Error al guardar:', err);
@@ -59,34 +67,70 @@ export default function AddProductsPanel() {
       </header>
 
       {/* Formulario para agregar producto */}
-      <ProductForm onAgregar={agregarProducto} />
+      {!ultimaDonacion && <ProductForm onAgregar={agregarProducto} />}
 
-      {/* Mensaje de éxito/error */}
-      {mensaje && (
-        <div
-          className={`flex items-center gap-3 px-5 py-4 rounded-2xl border ${
-            mensaje.tipo === 'exito'
-              ? 'bg-green-50 text-green-700 border-green-200'
-              : 'bg-error-container text-on-error-container border-error-container'
-          }`}
-        >
-          <span className={`material-symbols-outlined text-lg ${mensaje.tipo === 'exito' ? 'text-green-600' : 'text-error'}`}>
-            {mensaje.tipo === 'exito' ? 'check_circle' : 'error'}
-          </span>
+      {/* Mensaje de éxito con código */}
+      {mensaje?.tipo === 'exito' && (
+        <div className="bg-green-50 rounded-3xl p-8 border border-green-200 space-y-6 text-center">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-green-100 flex items-center justify-center">
+            <span className="material-symbols-outlined text-4xl text-green-600">check_circle</span>
+          </div>
+          <div>
+            <h3 className="text-h3 font-h3 text-green-800 mb-2">¡Donación registrada!</h3>
+            <p className="text-sm text-green-700">Presenta este código en el centro de acopio:</p>
+          </div>
+
+          {/* Código destacado */}
+          <div className="inline-block bg-white px-8 py-4 rounded-2xl border-2 border-green-300 shadow-sm">
+            <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Código único</p>
+            <p className="font-mono font-bold text-3xl tracking-[0.25em] text-indigo-700">
+              {mensaje.codigo}
+            </p>
+          </div>
+
+          <p className="text-xs text-green-600">
+            Código guardado en tu historial de donaciones
+          </p>
+
+          {/* Acciones post-guardado */}
+          <div className="flex gap-3 pt-2">
+            <button
+              onClick={() => {
+                setUltimaDonacion(null);
+                setMensaje(null);
+              }}
+              className="flex-1 h-12 bg-white border-2 border-indigo-200 text-primary font-semibold rounded-2xl hover:bg-indigo-50 transition-all cursor-pointer"
+            >
+              Seguir agregando
+            </button>
+            {onDonacionGuardada && (
+              <button
+                onClick={onDonacionGuardada}
+                className="flex-1 h-12 bg-gradient-to-r from-primary to-primary-container text-white font-semibold rounded-2xl shadow-md shadow-indigo-200 hover:scale-[1.02] transition-all cursor-pointer flex items-center justify-center gap-2"
+              >
+                <span className="material-symbols-outlined">home</span>
+                Ir al inicio
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Mensaje de error */}
+      {mensaje?.tipo === 'error' && (
+        <div className="flex items-center gap-3 px-5 py-4 rounded-2xl border bg-error-container text-on-error-container border-error-container">
+          <span className="material-symbols-outlined text-error">error</span>
           <p className="text-sm font-medium">{mensaje.texto}</p>
         </div>
       )}
 
-      {/* Lista de productos agregados */}
-      {productos.length > 0 && (
-        <div className="space-y-5 animate-slide-up">
-          {/* Header de la lista */}
+      {/* Lista de productos (solo si no hay donación recién guardada) */}
+      {productos.length > 0 && !ultimaDonacion && (
+        <div className="space-y-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-primary-container">list_alt</span>
-              <h3 className="font-h3 text-h3 text-on-surface">
-                Productos agregados
-              </h3>
+              <h3 className="font-h3 text-h3 text-on-surface">Productos agregados</h3>
               <span className="bg-primary-container/10 text-primary text-xs font-semibold px-2.5 py-0.5 rounded-full">
                 {productos.length}
               </span>
@@ -106,7 +150,6 @@ export default function AddProductsPanel() {
             </div>
           </div>
 
-          {/* Items de la lista */}
           <div className="space-y-2">
             {productos.map((producto, index) => (
               <ProductListItem
@@ -118,17 +161,6 @@ export default function AddProductsPanel() {
             ))}
           </div>
 
-          {/* Resumen móvil */}
-          <div className="sm:hidden flex items-center justify-between px-4 py-3 bg-surface-container-low rounded-2xl">
-            <p className="text-sm text-on-surface-variant">
-              <span className="font-semibold text-on-surface">{productos.length}</span> productos
-            </p>
-            <p className="text-sm font-semibold text-primary">
-              {totalUnidades} und · {totalPeso.toFixed(2)} kg
-            </p>
-          </div>
-
-          {/* Botón guardar en Firebase */}
           <button
             onClick={guardarProductos}
             disabled={guardando}
