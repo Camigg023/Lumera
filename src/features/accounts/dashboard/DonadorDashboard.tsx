@@ -1,56 +1,11 @@
 import { useState } from "react";
 import { DonadorProfile } from "../pages/DonadorProfile";
+import CodeValidator from "../../codeValidation/components/CodeValidator";
+import DonationHistory from "../../codeValidation/DonationHistory";
 import styles from "./DonadorDashboard.module.css";
 
 export function DonadorDashboard() {
   const [view, setView] = useState("inicio");
-  const [creando, setCreando] = useState(false);
-
-  const [donaciones, setDonaciones] = useState({
-    bebidas: 0,
-    granos: 0,
-    enlatados: 0,
-    energia: 0,
-  });
-
-  const sumar = (tipo: keyof typeof donaciones) => {
-    if (!creando) return;
-
-    setDonaciones((prev) => ({
-      ...prev,
-      [tipo]: prev[tipo] + 1,
-    }));
-  };
-
-  const restar = (tipo: keyof typeof donaciones) => {
-    if (!creando) return;
-
-    setDonaciones((prev) => ({
-      ...prev,
-      [tipo]: prev[tipo] > 0 ? prev[tipo] - 1 : 0,
-    }));
-  };
-
-  const reset = () => {
-    setDonaciones({
-      bebidas: 0,
-      granos: 0,
-      enlatados: 0,
-      energia: 0,
-    });
-  };
-
-  const guardar = () => {
-    console.log("Donación guardada:", donaciones);
-    reset();
-    setCreando(false);
-  };
-
-  const total =
-    donaciones.bebidas +
-    donaciones.granos +
-    donaciones.enlatados +
-    donaciones.energia;
 
   return (
     <div className={styles.layout}>
@@ -61,7 +16,8 @@ export function DonadorDashboard() {
 
         <nav className={styles.menu}>
           <p onClick={() => setView("inicio")}>🏠 Inicio</p>
-          <p onClick={() => setView("donaciones")}>📦 Donaciones</p>
+          <p onClick={() => setView("donaciones")}>📦 Mis donaciones</p>
+          <p onClick={() => setView("validar")}>✅ Validar código</p>
           <p onClick={() => setView("perfil")}>👤 Perfil</p>
         </nav>
       </aside>
@@ -71,91 +27,44 @@ export function DonadorDashboard() {
 
         {/* INICIO */}
         {view === "inicio" && (
-          <>
-            <div className={styles.header}>
-              <h1 className={styles.title}>Registrar donación 🍱</h1>
-              <p className={styles.subtitle}>
-                Total productos: {total}
-              </p>
+          <div className="max-w-2xl mx-auto text-center py-12">
+            <div className="w-24 h-24 mx-auto rounded-3xl bg-indigo-50 flex items-center justify-center mb-6">
+              <span className="material-symbols-outlined text-5xl text-indigo-600">volunteer_activism</span>
             </div>
+            <h1 className="text-2xl font-bold text-gray-800 mb-3">
+              Bienvenido, Donador
+            </h1>
+            <p className="text-gray-500 mb-8 max-w-md mx-auto">
+              Cada donación cuenta. Revisa tus códigos de donación o valida una entrega en el punto de acopio.
+            </p>
 
-            {!creando && (
+            <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
               <button
-                className={styles.primaryCard}
-                onClick={() => setCreando(true)}
+                onClick={() => setView("donaciones")}
+                className="h-14 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white font-semibold rounded-2xl shadow-lg shadow-indigo-200 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
-                ➕ Nueva donación
+                <span className="material-symbols-outlined">inventory_2</span>
+                Mis donaciones
               </button>
-            )}
-
-            {creando && (
-              <>
-                <div className={styles.grid}>
-
-                  <div className={styles.card}>
-                    🥤 Bebidas
-                    <div className={styles.counter}>
-                      <button onClick={() => restar("bebidas")}>-</button>
-                      <span>{donaciones.bebidas}</span>
-                      <button onClick={() => sumar("bebidas")}>+</button>
-                    </div>
-                  </div>
-
-                  <div className={styles.card}>
-                    🌾 Granos
-                    <div className={styles.counter}>
-                      <button onClick={() => restar("granos")}>-</button>
-                      <span>{donaciones.granos}</span>
-                      <button onClick={() => sumar("granos")}>+</button>
-                    </div>
-                  </div>
-
-                  <div className={styles.card}>
-                    🥫 Enlatados
-                    <div className={styles.counter}>
-                      <button onClick={() => restar("enlatados")}>-</button>
-                      <span>{donaciones.enlatados}</span>
-                      <button onClick={() => sumar("enlatados")}>+</button>
-                    </div>
-                  </div>
-
-                  <div className={styles.card}>
-                    ⚡ Energía
-                    <div className={styles.counter}>
-                      <button onClick={() => restar("energia")}>-</button>
-                      <span>{donaciones.energia}</span>
-                      <button onClick={() => sumar("energia")}>+</button>
-                    </div>
-                  </div>
-
-                </div>
-
-                <button
-                  className={styles.saveButton}
-                  onClick={guardar}
-                >
-                  💾 Guardar donación
-                </button>
-              </>
-            )}
-          </>
+              <button
+                onClick={() => setView("validar")}
+                className="h-14 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold rounded-2xl shadow-lg shadow-emerald-200 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span className="material-symbols-outlined">qr_code_scanner</span>
+                Validar código
+              </button>
+            </div>
+          </div>
         )}
 
-        {/* DONACIONES */}
+        {/* MIS DONACIONES - Historial con códigos */}
         {view === "donaciones" && (
-          <>
-            <h1 className={styles.title}>Resumen de donaciones 📦</h1>
+          <DonationHistory userId="demo-user-001" />
+        )}
 
-            <div className={styles.summaryCard}>
-              <p>🥤 Bebidas: {donaciones.bebidas}</p>
-              <p>🌾 Granos: {donaciones.granos}</p>
-              <p>🥫 Enlatados: {donaciones.enlatados}</p>
-              <p>⚡ Energía: {donaciones.energia}</p>
-
-              <hr />
-              <h3>Total: {total}</h3>
-            </div>
-          </>
+        {/* VALIDAR CÓDIGO - Para puntos de acopio */}
+        {view === "validar" && (
+          <CodeValidator />
         )}
 
         {/* PERFIL */}
