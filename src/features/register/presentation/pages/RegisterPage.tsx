@@ -4,7 +4,7 @@ import styles from "./RegisterPage.module.css";
 export type RegisterPageProps = {
   onBackToHome?: () => void;
   onNavigateToLogin?: () => void;
-  onRegisterSuccess?: () => void;
+  onRegisterSuccess?: (role?: string) => void;
 };
 
 export const RegisterPage = ({ onBackToHome, onNavigateToLogin, onRegisterSuccess }: RegisterPageProps) => {
