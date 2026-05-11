@@ -25,46 +25,44 @@ export function DonadorDashboard() {
 
         {/* INICIO */}
         {view === "inicio" && (
-          <div className="max-w-2xl mx-auto text-center py-12">
-            <div className="w-24 h-24 mx-auto rounded-3xl bg-indigo-50 flex items-center justify-center mb-6">
-              <span className="material-symbols-outlined text-5xl text-indigo-600">volunteer_activism</span>
-            </div>
-            <h1 className="text-2xl font-bold text-gray-800 mb-3">
-              Bienvenido, Donador
-            </h1>
-            <p className="text-gray-500 mb-8 max-w-md mx-auto">
-              Cada donación cuenta. Encuentra el centro de acopio más cercano para entregar tus productos.
-            </p>
-
-            <div className="grid grid-cols-1 gap-4 max-w-sm mx-auto">
-              <button
-                onClick={() => setView("acopio")}
-                className="h-14 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white font-semibold rounded-2xl shadow-lg shadow-indigo-200 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <span className="material-symbols-outlined">near_me</span>
-                Encontrar centro de acopio
-              </button>
+          <div className="max-w-2xl mx-auto space-y-8 py-6">
+            {/* Bienvenida */}
+            <div className="text-center">
+              <div className="w-20 h-20 mx-auto rounded-3xl bg-indigo-50 flex items-center justify-center mb-4">
+                <span className="material-symbols-outlined text-4xl text-indigo-600">volunteer_activism</span>
+              </div>
+              <h1 className="text-2xl font-bold text-gray-800 mb-2">
+                Bienvenido, Donador
+              </h1>
+              <p className="text-gray-500 max-w-md mx-auto">
+                Cada donación cuenta. Revisa el centro de acopio más cercano para entregar tus productos.
+              </p>
             </div>
 
             {/* Stats rápidas */}
-            <div className="grid grid-cols-3 gap-4 mt-12 max-w-lg mx-auto">
-              <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+            <div className="grid grid-cols-3 gap-4 max-w-lg mx-auto">
+              <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm text-center">
                 <p className="text-2xl font-bold text-indigo-600">0</p>
                 <p className="text-xs text-gray-500 mt-1">Donaciones</p>
               </div>
-              <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+              <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm text-center">
                 <p className="text-2xl font-bold text-indigo-600">0</p>
                 <p className="text-xs text-gray-500 mt-1">Productos</p>
               </div>
-              <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+              <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm text-center">
                 <p className="text-2xl font-bold text-indigo-600">0 kg</p>
                 <p className="text-xs text-gray-500 mt-1">Donados</p>
               </div>
             </div>
+
+            {/* Centro de acopio cercano — auto-detectado */}
+            <div className="max-w-lg mx-auto">
+              <NearbyAcopio autoDetectar={true} />
+            </div>
           </div>
         )}
 
-        {/* CENTRO DE ACOPIO */}
+        {/* CENTRO DE ACOPIO — vista completa */}
         {view === "acopio" && (
           <div className="max-w-xl mx-auto space-y-6">
             <div>
@@ -73,7 +71,7 @@ export function DonadorDashboard() {
                 Encuentra el punto más cercano para entregar tus donaciones
               </p>
             </div>
-            <NearbyAcopio />
+            <NearbyAcopio autoDetectar={true} />
           </div>
         )}
 

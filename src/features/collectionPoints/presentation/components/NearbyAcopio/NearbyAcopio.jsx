@@ -1,38 +1,48 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { obtenerUbicacionActual, encontrarMasCercano } from '../../../../../services/geolocationService';
 import { CollectionPointRepository } from '../../../data/repositories/ICollectionPointRepository';
 
 /**
  * Componente que encuentra y muestra el centro de acopio más cercano
  * usando la geolocalización del navegador.
+ *
+ * @param {{ autoDetectar?: boolean }} props
+ *   - autoDetectar: Si es true, busca automáticamente al montar el componente
  */
-export default function NearbyAcopio() {
+export default function NearbyAcopio({ autoDetectar = false }) {
   const [cargando, setCargando] = useState(false);
   const [punto, setPunto] = useState(null);
   const [error, setError] = useState('');
   const [buscado, setBuscado] = useState(false);
+  const montado = useRef(true);
 
-  const handleBuscar = async () => {
+  useEffect(() => {
+    return () => { montado.current = false; };
+  }, []);
+
+  const handleBuscar = useCallback(async () => {
     setCargando(true);
     setError('');
     setPunto(null);
     setBuscado(true);
 
-    // 1. Obtener ubicación del usuario
     const ubicacion = await obtenerUbicacionActual();
 
     if (!ubicacion) {
-      setError(
-        'No pudimos obtener tu ubicación. Asegúrate de permitir el acceso a la ubicación en tu navegador.'
-      );
-      setCargando(false);
+      if (montado.current) {
+        setError(
+          'No pudimos obtener tu ubicación. Asegúrate de permitir el acceso a la ubicación en tu navegador.'
+        );
+        setCargando(false);
+      }
       return;
     }
 
-    // 2. Obtener puntos de acopio
     try {
       const repo = new CollectionPointRepository();
       const puntos = await repo.getAll();
+
+      if (!montado.current) return;
 
       if (puntos.length === 0) {
         setError('No hay centros de acopio disponibles en este momento.');
@@ -40,7 +50,6 @@ export default function NearbyAcopio() {
         return;
       }
 
-      // 3. Encontrar el más cercano
       const masCercano = encontrarMasCercano(ubicacion, puntos);
 
       if (!masCercano) {
@@ -51,14 +60,24 @@ export default function NearbyAcopio() {
 
       setPunto(masCercano);
     } catch (err) {
-      console.error('[NearbyAcopio] Error:', err);
-      setError('Error al consultar los centros de acopio. Intenta de nuevo.');
+      if (montado.current) {
+        console.error('[NearbyAcopio] Error:', err);
+        setError('Error al consultar los centros de acopio. Intenta de nuevo.');
+      }
     } finally {
-      setCargando(false);
+      if (montado.current) {
+        setCargando(false);
+      }
     }
-  };
+  }, []);
 
-  /** Abre Google Maps con la ruta al punto de acopio */
+  // Auto-detección al montar el componente
+  useEffect(() => {
+    if (autoDetectar && !buscado) {
+      handleBuscar();
+    }
+  }, [autoDetectar, buscado, handleBuscar]);
+
   const abrirMapa = () => {
     if (!punto) return;
     const url = `https://www.google.com/maps/dir/?api=1&destination=${punto.coordenadas.lat},${punto.coordenadas.lng}`;
@@ -81,32 +100,45 @@ export default function NearbyAcopio() {
         <div>
           <h3 className="font-semibold text-on-surface">Centro de acopio más cercano</h3>
           <p className="text-xs text-outline">
-            Encuentra dónde entregar tus productos donados
+            {autoDetectar && cargando && !punto
+              ? 'Buscando centros cercanos...'
+              : 'Lugar recomendado para entregar tus donaciones'}
           </p>
         </div>
       </div>
 
-      {/* Botón buscar */}
-      <button
-        onClick={handleBuscar}
-        disabled={cargando}
-        className="w-full h-12 bg-primary hover:bg-primary-container disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold rounded-2xl transition-all active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2 shadow-md shadow-indigo-200"
-      >
-        {cargando ? (
-          <>
-            <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-            </svg>
-            Buscando ubicación...
-          </>
-        ) : (
-          <>
-            <span className="material-symbols-outlined">my_location</span>
-            Encontrar centro de acopio
-          </>
-        )}
-      </button>
+      {/* Skeleton loading para auto-detección */}
+      {autoDetectar && cargando && !punto && !error && (
+        <div className="flex items-center justify-center gap-3 py-8 bg-white rounded-3xl border border-outline-variant/40 animate-pulse">
+          <svg className="animate-spin h-6 w-6 text-primary" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          </svg>
+          <p className="text-sm text-outline">Detectando tu ubicación...</p>
+        </div>
+      )}
+
+      {/* Botón manual (solo si no está en auto-detección o si falló) */}
+      {!autoDetectar && !punto && !cargando && (
+        <button
+          onClick={handleBuscar}
+          className="w-full h-12 bg-primary hover:bg-primary-container disabled:bg-gray-300 text-white font-semibold rounded-2xl transition-all active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2 shadow-md shadow-indigo-200"
+        >
+          <span className="material-symbols-outlined">my_location</span>
+          Encontrar centro de acopio
+        </button>
+      )}
+
+      {/* Botón re-intentar si auto-detección falló */}
+      {autoDetectar && error && !cargando && (
+        <button
+          onClick={handleBuscar}
+          className="w-full h-12 bg-primary hover:bg-primary-container text-white font-semibold rounded-2xl transition-all active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2 shadow-md shadow-indigo-200"
+        >
+          <span className="material-symbols-outlined">refresh</span>
+          Reintentar
+        </button>
+      )}
 
       {/* Error */}
       {error && (
@@ -114,14 +146,6 @@ export default function NearbyAcopio() {
           <span className="material-symbols-outlined text-error text-lg mt-0.5">error</span>
           <div>
             <p className="text-on-error-container text-sm font-medium">{error}</p>
-            {!buscado && (
-              <button
-                onClick={handleBuscar}
-                className="text-xs text-on-error-container underline mt-1 cursor-pointer"
-              >
-                Reintentar
-              </button>
-            )}
           </div>
         </div>
       )}
@@ -129,7 +153,6 @@ export default function NearbyAcopio() {
       {/* Resultado: punto de acopio más cercano */}
       {punto && (
         <div className="bg-white rounded-3xl p-6 border border-outline-variant/40 shadow-sm animate-fade-in space-y-4">
-          {/* Header del punto */}
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-2xl bg-primary-container/10 flex items-center justify-center">
@@ -146,7 +169,6 @@ export default function NearbyAcopio() {
             </div>
           </div>
 
-          {/* Detalles */}
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-surface-container-low rounded-xl p-3 text-center">
               <p className="text-xs text-outline">Distancia</p>
@@ -158,7 +180,6 @@ export default function NearbyAcopio() {
             </div>
           </div>
 
-          {/* Acciones */}
           <div className="flex gap-2">
             <button
               onClick={abrirMapa}
