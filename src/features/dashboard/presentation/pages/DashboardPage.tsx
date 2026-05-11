@@ -1,7 +1,7 @@
 import { useState } from "react";
-import styles from "./DashboardPage.module.css";
+import { CompanyPanel } from "../../../../features/company-profile/presentation/components/CompanyPanel";
 import { ProfilePanel } from "../../../../features/profile/presentation/components/ProfilePanel";
-import { ActivityList } from "../../../../features/user-activity/presentation/components/ActivityList";
+import styles from "./DashboardPage.module.css";
 
 export type DashboardPageProps = {
   /** Cerrar sesión y volver al home/login. */
@@ -42,7 +42,9 @@ function MapCard() {
       <div className={styles.mapPlaceholder}>
         <div className={styles.mapPin}>📍</div>
         <p className={styles.mapAddress}>Calle 10 # 43A - 15, Medellín</p>
-        <p className={styles.mapVerified}>✅ Ubicación para empresas verificada</p>
+        <p className={styles.mapVerified}>
+          ✅ Ubicación para empresas verificada
+        </p>
       </div>
       <button className={styles.btnPrimary}>Ver puntos de entrega</button>
     </div>
@@ -72,19 +74,25 @@ function ActivityCard() {
       <div className={styles.activityRow}>
         <span>💰</span>
         <div>
-          <p>Total Donado: <strong>250 kg</strong></p>
+          <p>
+            Total Donado: <strong>250 kg</strong>
+          </p>
         </div>
       </div>
       <div className={styles.activityRow}>
         <span>🎁</span>
         <div>
-          <p>Donaciones: <strong>15</strong></p>
+          <p>
+            Donaciones: <strong>15</strong>
+          </p>
         </div>
       </div>
       <div className={styles.activityRow}>
         <span>⚡</span>
         <div>
-          <p>Nivel de Prioridad de Recolección: <strong>ALTO</strong></p>
+          <p>
+            Nivel de Prioridad de Recolección: <strong>ALTO</strong>
+          </p>
         </div>
       </div>
     </div>
@@ -114,10 +122,7 @@ function TraceabilityCard() {
           <span className={styles.statusTagGreen}>Aceptado</span>
         </div>
       </div>
-      <button
-        className={styles.btnLink}
-        onClick={() => setExpanded(!expanded)}
-      >
+      <button className={styles.btnLink} onClick={() => setExpanded(!expanded)}>
         {expanded ? "Ver menos" : "Ver más"}
       </button>
     </div>
@@ -125,9 +130,9 @@ function TraceabilityCard() {
 }
 
 export function DashboardPage({ onLogout }: DashboardPageProps) {
-  const [activeTab, setActiveTab] = useState<"donador" | "perfil" | "actividad" | "ayuda">(
-    "donador"
-  );
+  const [activeTab, setActiveTab] = useState<
+    "donador" | "perfil" | "empresa" | "ayuda"
+  >("donador");
 
   return (
     <div className={styles.page}>
@@ -154,11 +159,11 @@ export function DashboardPage({ onLogout }: DashboardPageProps) {
             <span>Perfil</span>
           </button>
           <button
-            className={`${styles.navButton} ${activeTab === "actividad" ? styles.active : ""}`}
-            onClick={() => setActiveTab("actividad")}
+            className={`${styles.navButton} ${activeTab === "empresa" ? styles.active : ""}`}
+            onClick={() => setActiveTab("empresa")}
           >
-            <span>📊</span>
-            <span>Actividad</span>
+            <span>🏢</span>
+            <span>Empresa</span>
           </button>
           <button
             className={`${styles.navButton} ${activeTab === "ayuda" ? styles.active : ""}`}
@@ -191,13 +196,11 @@ export function DashboardPage({ onLogout }: DashboardPageProps) {
             </div>
           )}
 
-          {activeTab === "perfil" && (
-            <ProfilePanel uid="user123" />
-          )}
+          {activeTab === "perfil" && <ProfilePanel uid="user123" />}
 
-          {activeTab === "actividad" && (
-            <div className={styles.activityPanel}>
-              <ActivityList userId="user123" />
+          {activeTab === "empresa" && (
+            <div className={styles.companyPanel}>
+              <CompanyPanel userId="user123" isAdmin={false} />
             </div>
           )}
 
