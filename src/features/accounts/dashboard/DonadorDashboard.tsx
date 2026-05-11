@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { DonadorProfile } from "../pages/DonadorProfile";
+import AddProductsPanel from "../../addProducts/AddProductsPanel";
 import styles from "./DonadorDashboard.module.css";
 
 export function DonadorDashboard() {
@@ -62,6 +63,7 @@ export function DonadorDashboard() {
         <nav className={styles.menu}>
           <p onClick={() => setView("inicio")}>🏠 Inicio</p>
           <p onClick={() => setView("donaciones")}>📦 Donaciones</p>
+          <p onClick={() => setView("productos")}>📦 Productos</p>
           <p onClick={() => setView("perfil")}>👤 Perfil</p>
         </nav>
       </aside>
@@ -139,6 +141,11 @@ export function DonadorDashboard() {
               </>
             )}
           </>
+        )}
+
+        {/* PRODUCTOS - NUEVA FEATURE */}
+        {view === "productos" && (
+          <AddProductsPanel />
         )}
 
         {/* DONACIONES */}

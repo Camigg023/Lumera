@@ -1,3 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #F28C33;
+  --color-primary-dark: #D97706;
+  --color-btn: #FF8000;
+  --color-btn-hover: #E67300;
+  --color-texto: #2D2D2D;
+  --color-exito: #4CAF50;
+  --color-error: #E53935;
+}
+
 :root {
   --text: #666666;
   --text-h: #2D2D2D;
