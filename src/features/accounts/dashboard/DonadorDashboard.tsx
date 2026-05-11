@@ -130,7 +130,7 @@ export function DonadorDashboard() {
         )}
 
         {/* ========== NUEVA DONACIÓN ========== */}
-        {view === "nueva-donacion" && <AddProductsPanel />}
+        {view === "nueva-donacion" && <AddProductsPanel onDonacionGuardada={() => setView("inicio")} />}
 
         {/* ========== DONAR / ACOPIO ========== */}
         {view === "donar" && (
