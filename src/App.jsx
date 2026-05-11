@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "./config/firebase";
 
 import { HomePage } from "./features/home";
 import { LoginPage } from "./features/login";
@@ -7,66 +10,121 @@ import { RegisterPage } from "./features/register";
 import { PasswordRecoveryPage } from "./features/password-recovery";
 import { validateFirebaseConnection } from "./services/firebaseConnectionService";
 
-// Dashboards y Páginas por Rol
+// Dashboards por Rol
 import { DonadorDashboard } from "./features/accounts/dashboard/DonadorDashboard";
 import { EmpresaDashboard } from "./features/accounts/dashboard/EmpresaDashboard";
 import { BeneficiarioDashboard } from "./features/accounts/dashboard/BeneficiarioDashboard";
-import { DonacionConfirmada } from "./features/accounts/dashboard/DonacionConfirmada";
-import { ProgramarDonacion } from "./features/accounts/dashboard/ProgramarDonacion";
-import { Trazabilidad } from "./features/accounts/dashboard/Trazabilidad";
-import { DonationDetailPage } from "./features/traceability/presentation/pages/DonationDetailPage/DonationDetailPage";
+
+// Configuración centralizada de rutas
+import { isValidRole } from "./config/routes";
+
+// Mapeo de roles a componentes dashboard
+const DASHBOARD_COMPONENTS = {
+  donador: DonadorDashboard,
+  empresa: EmpresaDashboard,
+  beneficiario: BeneficiarioDashboard,
+};
+
+/** @typedef {'loading'|'home'|'login'|'register'|'password-recovery'|'dashboard'} AppState */
 
 function App() {
-  const [screen, setScreen] = useState("home");
-  const [role, setRole] = useState("donador");
+  const [appState, setAppState] = useState("loading");
+  const [role, setRole] = useState(null);
+  const [connectionOk, setConnectionOk] = useState(false);
 
-  const [connectionStatus, setConnectionStatus] = useState({
-    loading: true,
-    error: null,
-    warning: null
-  });
-
+  // ─── 1. VALIDAR CONEXIÓN FIREBASE ───
   useEffect(() => {
-    const checkConnection = async () => {
-      const result = await validateFirebaseConnection();
-      if (!result.success) {
-        setConnectionStatus({
-          loading: false,
-          error: result.error,
-          warning: null
-        });
+    validateFirebaseConnection().then((result) => {
+      if (result.success) {
+        setConnectionOk(true);
       } else {
-        setConnectionStatus({
-          loading: false,
-          error: null,
-          warning: result.warning || null
-        });
-        if (result.warning) {
-          console.warn("[Firebase] Connected with warnings:", result.warning);
-        }
+        // Si falla la conexión, mostramos error (manejado abajo)
+        setConnectionOk(false);
+        setAppState("error");
       }
-    };
-
-    checkConnection();
+    });
   }, []);
 
-  if (connectionStatus.loading) {
+  // ─── 2. RESTAURAR SESIÓN AL CARGAR ───
+  useEffect(() => {
+    if (!connectionOk) return;
+
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        // ✅ Hay sesión activa en Firebase → leer rol desde Firestore
+        try {
+          const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
+          const userData = userDoc.exists() ? userDoc.data() : {};
+          const userRole = userData.role || "donador";
+
+          if (isValidRole(userRole)) {
+            setRole(userRole);
+            setAppState("dashboard");
+          } else {
+            console.warn(`[App] Rol inválido en Firestore: "${userRole}".`);
+            setAppState("home");
+          }
+        } catch (err) {
+          console.error("[App] Error al leer perfil del usuario:", err);
+          setAppState("home");
+        }
+      } else {
+        // ❌ No hay sesión → mostrar home
+        setAppState("home");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [connectionOk]);
+
+  // ─── 3. HANDLERS DE NAVEGACIÓN ───
+
+  const goToHome = () => setAppState("home");
+  const goToLogin = () => setAppState("login");
+  const goToRegister = () => setAppState("register");
+  const goToPasswordRecovery = () => setAppState("password-recovery");
+  const goToDashboard = () => setAppState("dashboard");
+
+  /**
+   * Se llama después de login/registro exitoso.
+   * Recibe el rol del usuario desde Firestore.
+   */
+  const onAuthSuccess = (userRole) => {
+    if (isValidRole(userRole)) {
+      setRole(userRole);
+      setAppState("dashboard");
+    } else {
+      console.warn(`[App] Rol inválido en auth success: "${userRole}"`);
+      setAppState("dashboard");
+    }
+  };
+
+  const onLogout = () => {
+    setRole(null);
+    setAppState("home");
+  };
+
+  // ─── RENDER POR ESTADO ───
+
+  // Carga inicial
+  if (appState === "loading") {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
         <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p className="text-gray-600 font-medium">Validando conexión con Firebase...</p>
+        <p className="text-gray-600 font-medium">Validando sesión...</p>
       </div>
     );
   }
 
-  if (connectionStatus.error) {
+  // Error de conexión Firebase
+  if (!connectionOk) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-red-50 p-6 text-center">
         <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md border border-red-100">
           <div className="text-5xl mb-4">⚠️</div>
           <h2 className="text-2xl font-bold text-red-800 mb-2">Error de Conexión</h2>
-          <p className="text-gray-600 mb-6">{connectionStatus.error}</p>
-          <button 
+          <p className="text-gray-600 mb-6">No se pudo conectar con Firebase.</p>
+          <button
             onClick={() => window.location.reload()}
             className="w-full py-3 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition-colors shadow-lg shadow-red-200"
           >
@@ -77,108 +135,58 @@ function App() {
     );
   }
 
-  if (screen === "login") {
+  // Home (público)
+  if (appState === "home") {
+    return <HomePage onNavigateToLogin={goToLogin} />;
+  }
 
+  // Login
+  if (appState === "login") {
     return (
       <LoginPage
-        onBackToHome={() => setScreen("home")}
-        onLoginSuccess={() => {
-          // 🔥 SIMULACIÓN DE ROL (cambia aquí para probar)
-          setRole("donador"); // "empresa" o "beneficiario"
-          setScreen("dashboard");
-        }}
-        onNavigateToRegister={() => setScreen("register")}
-        onNavigateToPasswordRecovery={() => setScreen("password-recovery")}
+        onBackToHome={goToHome}
+        onLoginSuccess={(userRole) => onAuthSuccess(userRole)}
+        onNavigateToRegister={goToRegister}
+        onNavigateToPasswordRecovery={goToPasswordRecovery}
       />
     );
-
   }
 
-  // REGISTER
-  if (screen === "register") {
-
+  // Register
+  if (appState === "register") {
     return (
       <RegisterPage
-        onBackToHome={() => setScreen("home")}
-        onNavigateToLogin={() => setScreen("login")}
-        onRegisterSuccess={() => setScreen("dashboard")}
+        onBackToHome={goToHome}
+        onNavigateToLogin={goToLogin}
+        onRegisterSuccess={(userRole) => onAuthSuccess(userRole)}
       />
     );
-
   }
 
-  if (screen === "password-recovery") {
-
+  // Recuperar contraseña
+  if (appState === "password-recovery") {
     return (
       <PasswordRecoveryPage
-        onBackToHome={() => setScreen("home")}
-        onNavigateToLogin={() => setScreen("login")}
-        onRecoverySuccess={() => setScreen("login")}
+        onBackToHome={goToHome}
+        onNavigateToLogin={goToLogin}
+        onRecoverySuccess={goToLogin}
       />
     );
-
   }
 
-  if (screen === "dashboard") {
-
-    // DONADOR
-    if (role === "donador") {
-      return <DonadorDashboard />;
+  // Dashboard (requiere sesión)
+  if (appState === "dashboard") {
+    if (role && isValidRole(role)) {
+      const DashboardComponent = DASHBOARD_COMPONENTS[role];
+      return <DashboardComponent />;
     }
 
-    // BENEFICIARIO
-    if (role === "beneficiario") {
-      return <BeneficiarioDashboard />;
-    }
-
-    // CONFIRMACIÓN
-    if (role === "confirmacion") {
-      return <DonacionConfirmada />;
-    }
-
-    // PROGRAMAR
-    if (role === "programar") {
-      return <ProgramarDonacion />;
-    }
-
-    // TRAZABILIDAD
-    if (role === "trazabilidad") {
-      return <Trazabilidad />;
-    }
-
-    // FALLBACK
-    if (role === "donador") {
-      return <DonadorDashboard />;
-    }
-
-    if (role === "empresa") {
-      return <EmpresaDashboard />;
-    }
-
-    if (role === "beneficiario") {
-      return <BeneficiarioDashboard />;
-    }
-
-    // fallback
-    return <DashboardPage onLogout={() => setScreen("home")} />;
+    console.warn(`[App] Rol inválido en dashboard: "${role}".`);
+    return <DashboardPage onLogout={onLogout} />;
   }
 
-  if (screen === "traceability") {
-    return <DonationDetailPage />;
-
-  }
-
-  // HOME
-  return (
-    <>
-      {connectionStatus.warning && (
-        <div className="bg-yellow-100 text-yellow-800 px-4 py-2 text-center text-sm font-medium border-b border-yellow-200 sticky top-0 z-50">
-          ⚠️ {connectionStatus.warning}
-        </div>
-      )}
-      <HomePage onNavigateToLogin={() => setScreen("login")} />
-    </>
-  );
+  // Fallback
+  return <HomePage onNavigateToLogin={goToLogin} />;
 }
 
 export default App;

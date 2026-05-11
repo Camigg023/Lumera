@@ -3,7 +3,7 @@ import { useLogin } from '../hooks/useLogin';
 import styles from './LoginForm.module.css';
 
 export type LoginFormProps = {
-  onSuccess?: () => void;
+  onSuccess?: (role?: string) => void;
 };
 
 export const LoginForm = ({ onSuccess }: LoginFormProps) => {
@@ -14,8 +14,8 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await signIn(email, password);
-      onSuccess?.();
+      const user = await signIn(email, password);
+      onSuccess?.(user?.role);
     } catch {
       // Error ya está en el estado 'error' del hook
     }
