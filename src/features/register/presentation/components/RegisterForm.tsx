@@ -43,7 +43,7 @@ export const RegisterForm = ({ onSuccess }: any) => {
 
     await signUp(data);
 
-    onSuccess?.();
+    onSuccess?.(role);
   };
 
   return (
