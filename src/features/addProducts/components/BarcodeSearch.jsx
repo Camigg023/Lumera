@@ -13,7 +13,7 @@ import { buscarPorCodigoBarras } from '../../../services/openFoodFactsService';
 export default function BarcodeSearch({ onSeleccionar }) {
   const [barcode, setBarcode] = useState('');
   const [buscando, setBuscando] = useState(false);
-  const [resultado, setResultado] = useState(null); // { encontrado, producto, error }
+  const [resultado, setResultado] = useState(null); // { encontrado, producto, error, statusVerbose }
   const [mostrarCard, setMostrarCard] = useState(false);
   const inputRef = useRef(null);
 
@@ -37,10 +37,12 @@ export default function BarcodeSearch({ onSeleccionar }) {
 
   /**
    * Maneja el evento de tecla Enter en el input.
+   * Llama a la búsqueda sin disparar el submit del formulario padre.
    */
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
+      e.stopPropagation();
       handleBuscar();
     }
   };
@@ -79,8 +81,11 @@ export default function BarcodeSearch({ onSeleccionar }) {
         Código de barras
       </label>
 
-      {/* Input + Botón buscar */}
-      <div className="flex gap-2">
+      {/* Input + Botón buscar — envueltos en un form propio para aislar el Enter */}
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className="flex gap-2"
+      >
         <input
           ref={inputRef}
           type="text"
@@ -113,14 +118,14 @@ export default function BarcodeSearch({ onSeleccionar }) {
             </>
           )}
         </button>
-      </div>
+      </form>
 
       {/* Tarjeta de resultado de la búsqueda */}
       {mostrarCard && (
         <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-lg animate-fade-in">
           {resultado?.encontrado && resultado.producto ? (
+            /* ✅ Producto encontrado */
             <div className="space-y-3">
-              {/* Header del producto encontrado */}
               <div className="flex items-start gap-3">
                 {/* Imagen del producto */}
                 <div className="w-16 h-16 rounded-lg bg-gray-100 flex-shrink-0 overflow-hidden border border-gray-200">
@@ -187,9 +192,14 @@ export default function BarcodeSearch({ onSeleccionar }) {
               </div>
             </div>
           ) : resultado?.error ? (
-            /* Error de conexión */
+            /* ❌ Error de conexión/HTTP */
             <div className="text-center py-2">
               <p className="text-[#E53935] text-sm font-medium">⚠️ {resultado.error}</p>
+              {resultado.statusVerbose && (
+                <p className="text-xs text-gray-400 mt-1">
+                  Detalle: {resultado.statusVerbose}
+                </p>
+              )}
               <button
                 type="button"
                 onClick={cerrar}
@@ -199,11 +209,16 @@ export default function BarcodeSearch({ onSeleccionar }) {
               </button>
             </div>
           ) : (
-            /* Producto no encontrado */
+            /* ❌ Producto no encontrado en Open Food Facts */
             <div className="text-center py-2">
               <p className="text-gray-500 text-sm">
                 ❌ Producto no encontrado en Open Food Facts
               </p>
+              {resultado?.statusVerbose && (
+                <p className="text-xs text-gray-400 mt-1">
+                  API dice: "{resultado.statusVerbose}"
+                </p>
+              )}
               <p className="text-xs text-gray-400 mt-1">
                 Puedes ingresar los datos manualmente en el formulario
               </p>

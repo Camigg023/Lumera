@@ -1,7 +1,7 @@
 /**
  * Servicio para consultar la API pública de Open Food Facts.
  * Busca información de productos a partir de su código de barras.
- * 
+ *
  * Documentación: https://openfoodfacts.github.io/openfoodfacts-server/api/
  * Endpoint: https://world.openfoodfacts.org/api/v2/product/{barcode}.json
  */
@@ -21,6 +21,8 @@ const API_BASE = 'https://world.openfoodfacts.org/api/v2';
  * @property {string|null} producto.marca - Marca del producto
  * @property {string|null} producto.cantidadTexto - Texto raw de cantidad (ej. "1 kg")
  * @property {string|null} error - Mensaje de error si algo falla
+ * @property {string|null} statusVerbose - Mensaje descriptivo del estado (ej. "product not found")
+ * @property {number|null} statusCode - Código de estado devuelto por la API
  */
 
 /**
@@ -42,6 +44,8 @@ export async function buscarPorCodigoBarras(barcode) {
       encontrado: false,
       producto: null,
       error: 'Ingresa un código de barras',
+      statusVerbose: null,
+      statusCode: null,
     };
   }
 
@@ -61,7 +65,9 @@ export async function buscarPorCodigoBarras(barcode) {
       return {
         encontrado: false,
         producto: null,
-        error: `Error al consultar API (${response.status})`,
+        error: `Error HTTP al consultar Open Food Facts (código ${response.status})`,
+        statusVerbose: `HTTP ${response.status} ${response.statusText}`,
+        statusCode: response.status,
       };
     }
 
@@ -73,6 +79,8 @@ export async function buscarPorCodigoBarras(barcode) {
         encontrado: false,
         producto: null,
         error: null, // No es un error, simplemente no se encontró
+        statusVerbose: data.status_verbose || 'product not found',
+        statusCode: data.status,
       };
     }
 
@@ -90,18 +98,28 @@ export async function buscarPorCodigoBarras(barcode) {
         imagen: product.image_url || product.image_small_url || null,
         marca: product.brands || null,
         cantidadTexto: product.quantity || null,
-        // Guardamos también datos raw por si se necesitan
-        categorias: product.categories || null,
-        nutriScore: product.nutrition_grades || null,
       },
       error: null,
+      statusVerbose: 'product found',
+      statusCode: data.status,
     };
   } catch (err) {
     console.error('[OpenFoodFacts] Error en la consulta:', err);
+
+    // Detectamos errores de red/CORS específicamente
+    let mensajeError = 'Error de conexión. Verifica tu internet e intenta de nuevo.';
+    if (err.name === 'TypeError' && err.message?.includes('fetch')) {
+      mensajeError = 'No se pudo conectar con Open Food Facts. Revisa tu conexión a internet.';
+    } else if (err.name === 'AbortError') {
+      mensajeError = 'La consulta tardó demasiado. Intenta de nuevo.';
+    }
+
     return {
       encontrado: false,
       producto: null,
-      error: 'Error de conexión. Verifica tu internet e intenta de nuevo.',
+      error: mensajeError,
+      statusVerbose: err.message || 'network error',
+      statusCode: null,
     };
   }
 }

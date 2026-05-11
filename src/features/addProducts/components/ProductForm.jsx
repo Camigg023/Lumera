@@ -48,10 +48,9 @@ export default function ProductForm({ onAgregar }) {
 
   /**
    * Valida y agrega un producto a la lista.
+   * Se ejecuta SOLO con clic en el botón, nunca con Enter.
    */
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
+  const handleSubmit = () => {
     const { codigoBarras, nombre, pesoUnidad, cantidad } = form;
 
     // Validaciones
@@ -86,7 +85,7 @@ export default function ProductForm({ onAgregar }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-md p-6 space-y-4 border border-gray-100">
+    <div className="bg-white rounded-2xl shadow-md p-6 space-y-4 border border-gray-100">
       <h3 className="text-lg font-semibold text-[#2D2D2D] flex items-center gap-2">
         📦 Nuevo producto
       </h3>
@@ -151,13 +150,14 @@ export default function ProductForm({ onAgregar }) {
         </p>
       )}
 
-      {/* Botón agregar */}
+      {/* Botón agregar — type="button" para que NUNCA haga submit con Enter */}
       <button
-        type="submit"
+        type="button"
+        onClick={handleSubmit}
         className="w-full py-3 bg-[#FF8000] hover:bg-[#E67300] text-white font-semibold rounded-xl shadow-md shadow-orange-200 transition-all active:scale-[0.98] cursor-pointer"
       >
         ➕ Agregar producto
       </button>
-    </form>
+    </div>
   );
 }
