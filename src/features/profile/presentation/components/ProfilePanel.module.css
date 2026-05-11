@@ -8,10 +8,10 @@
 }
 
 .title {
-  color: #2D2D2D;
+  color: var(--color-on-surface);
   font-size: 1.8rem;
   margin-bottom: 1.5rem;
-  border-bottom: 2px solid #F8B486;
+  border-bottom: 2px solid var(--color-surface-container-high);
   padding-bottom: 0.5rem;
 }
 
@@ -29,41 +29,41 @@
 
 .label {
   font-weight: 500;
-  color: #666666;
+  color: var(--color-outline);
 }
 
 .input {
   width: 100%;
   padding: 0.75rem 1rem;
   font-size: 1rem;
-  border: 1px solid #D9D9D9;
+  border: 1px solid var(--color-outline-variant);
   border-radius: 8px;
   outline: none;
   background-color: #FFFFFF;
-  color: #2D2D2D;
+  color: var(--color-on-surface);
   transition: border-color 0.2s, box-shadow 0.2s;
   box-sizing: border-box;
 }
 
 .input:focus {
-  border-color: #F28C33;
-  box-shadow: 0 0 0 2px rgba(242, 140, 51, 0.2);
+  border-color: var(--color-primary-container);
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
 }
 
 .select {
   width: 100%;
   padding: 0.75rem 1rem;
   font-size: 1rem;
-  border: 1px solid #D9D9D9;
+  border: 1px solid var(--color-outline-variant);
   border-radius: 8px;
   outline: none;
   background-color: #FFFFFF;
-  color: #2D2D2D;
+  color: var(--color-on-surface);
   cursor: pointer;
 }
 
 .select:focus {
-  border-color: #F28C33;
+  border-color: var(--color-primary-container);
 }
 
 .checkboxGroup {
@@ -75,7 +75,7 @@
 .checkbox {
   width: 1.25rem;
   height: 1.25rem;
-  accent-color: #FF8000;
+  accent-color: var(--color-primary);
 }
 
 .buttons {
@@ -86,7 +86,7 @@
 
 .button {
   flex: 1;
-  background: #FF8000;
+  background: var(--color-primary);
   color: white;
   border: none;
   border-radius: 8px;
@@ -98,39 +98,39 @@
 }
 
 .button:hover:not(:disabled) {
-  background: #F28C33;
+  background: var(--color-primary-container);
 }
 
 .button:disabled {
-  background: #F8B486;
+  background: var(--color-outline-variant);
   cursor: not-allowed;
 }
 
 .buttonSecondary {
-  background: #666666;
+  background: var(--color-outline);
 }
 
 .buttonSecondary:hover:not(:disabled) {
-  background: #2D2D2D;
+  background: var(--color-on-surface);
 }
 
 .loading {
   text-align: center;
-  color: #666666;
+  color: var(--color-outline);
   font-style: italic;
 }
 
 .error {
-  color: #E53935;
-  background: #FFEBEE;
+  color: var(--color-error);
+  background: var(--color-error-container);
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1rem;
 }
 
 .success {
-  color: #2E7D32;
-  background: #E8F5E9;
+  color: #22c55e;
+  background: #f0fdf4;
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1rem;

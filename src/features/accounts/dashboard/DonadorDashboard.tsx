@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { DonadorProfile } from "../pages/DonadorProfile";
-import CodeValidator from "../../codeValidation/components/CodeValidator";
-import DonationHistory from "../../codeValidation/DonationHistory";
+import AddProductsPanel from "../../addProducts/AddProductsPanel";
 import styles from "./DonadorDashboard.module.css";
 
 export function DonadorDashboard() {
@@ -16,8 +15,7 @@ export function DonadorDashboard() {
 
         <nav className={styles.menu}>
           <p onClick={() => setView("inicio")}>🏠 Inicio</p>
-          <p onClick={() => setView("donaciones")}>📦 Mis donaciones</p>
-          <p onClick={() => setView("validar")}>✅ Validar código</p>
+          <p onClick={() => setView("nueva-donacion")}>📦 Nueva donación</p>
           <p onClick={() => setView("perfil")}>👤 Perfil</p>
         </nav>
       </aside>
@@ -27,44 +25,45 @@ export function DonadorDashboard() {
 
         {/* INICIO */}
         {view === "inicio" && (
-          <div className="max-w-2xl mx-auto text-center py-12">
-            <div className="w-24 h-24 mx-auto rounded-3xl bg-indigo-50 flex items-center justify-center mb-6">
-              <span className="material-symbols-outlined text-5xl text-indigo-600">volunteer_activism</span>
+          <div className="max-w-2xl mx-auto text-center py-12 animate-fade-in">
+            <div className="w-24 h-24 mx-auto rounded-3xl bg-surface-container-low flex items-center justify-center mb-6">
+              <span className="material-symbols-outlined text-5xl text-primary">volunteer_activism</span>
             </div>
-            <h1 className="text-2xl font-bold text-gray-800 mb-3">
+            <h1 className="text-h2 font-h2 text-on-surface mb-3">
               Bienvenido, Donador
             </h1>
-            <p className="text-gray-500 mb-8 max-w-md mx-auto">
-              Cada donación cuenta. Revisa tus códigos de donación o valida una entrega en el punto de acopio.
+            <p className="text-body-md text-outline mb-8 max-w-md mx-auto">
+              Cada donación cuenta. Agrega los productos que deseas donar y ayúdanos a llevarlos a quienes más lo necesitan.
             </p>
+            <button
+              onClick={() => setView("nueva-donacion")}
+              className="h-14 px-10 bg-gradient-to-r from-primary to-primary-container text-white font-bold text-body-md rounded-2xl shadow-lg shadow-indigo-200 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 mx-auto cursor-pointer"
+            >
+              <span className="material-symbols-outlined">add_circle</span>
+              Nueva donación
+            </button>
 
-            <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-              <button
-                onClick={() => setView("donaciones")}
-                className="h-14 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white font-semibold rounded-2xl shadow-lg shadow-indigo-200 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <span className="material-symbols-outlined">inventory_2</span>
-                Mis donaciones
-              </button>
-              <button
-                onClick={() => setView("validar")}
-                className="h-14 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold rounded-2xl shadow-lg shadow-emerald-200 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <span className="material-symbols-outlined">qr_code_scanner</span>
-                Validar código
-              </button>
+            {/* Stats rápidas */}
+            <div className="grid grid-cols-3 gap-4 mt-12 max-w-lg mx-auto">
+              <div className="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/40">
+                <p className="text-2xl font-bold text-primary">0</p>
+                <p className="text-xs text-outline mt-1">Donaciones</p>
+              </div>
+              <div className="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/40">
+                <p className="text-2xl font-bold text-primary">0</p>
+                <p className="text-xs text-outline mt-1">Productos</p>
+              </div>
+              <div className="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/40">
+                <p className="text-2xl font-bold text-primary">0 kg</p>
+                <p className="text-xs text-outline mt-1">Donados</p>
+              </div>
             </div>
           </div>
         )}
 
-        {/* MIS DONACIONES - Historial con códigos */}
-        {view === "donaciones" && (
-          <DonationHistory userId="demo-user-001" />
-        )}
-
-        {/* VALIDAR CÓDIGO - Para puntos de acopio */}
-        {view === "validar" && (
-          <CodeValidator />
+        {/* NUEVA DONACIÓN - AddProductsPanel */}
+        {view === "nueva-donacion" && (
+          <AddProductsPanel />
         )}
 
         {/* PERFIL */}
