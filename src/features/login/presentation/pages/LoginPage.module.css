@@ -2,19 +2,17 @@
   height: 100vh;
   display: flex;
   font-family: Inter, sans-serif;
-  background: #eef2ef;
+  background: var(--color-surface);
 }
 
-/* 🖼️ LEFT IMAGE */
+/* LEFT IMAGE */
 .left {
   flex: 1.2;
   height: 100vh;
-
   background-image: url("/img/loginimg.png");
-  background-size: cover;        /* 🔥 clave: llena todo */
+  background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-
   position: relative;
   overflow: hidden;
 }
@@ -55,12 +53,12 @@
 
 /* TEXT */
 .card h2 {
-  color: #064e3b;
+  color: var(--color-primary);
   margin-bottom: 5px;
 }
 
 .subtitle {
-  color: #6b7280;
+  color: var(--color-outline);
   margin-bottom: 1.5rem;
 }
 
@@ -75,7 +73,7 @@
 .links button {
   background: none;
   border: none;
-  color: #166534;
+  color: var(--color-primary-container);
   cursor: pointer;
   font-size: 0.9rem;
 }

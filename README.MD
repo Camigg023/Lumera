@@ -45,7 +45,7 @@ Sigue estos pasos para levantar el servidor de desarrollo en tu máquina local:
    Dentro de la carpeta raíz del proyecto (`Lumera`), ejecuta:
 
    ```bash
-   npm install
+   pnpm install
    ```
 
 2. **Configurar las variables de entorno**
@@ -60,12 +60,12 @@ Sigue estos pasos para levantar el servidor de desarrollo en tu máquina local:
 3. **Ejecutar el servidor local**
    Inicia la aplicación en modo desarrollo (HMR habilitado):
    ```bash
-   npm run dev
+   pnpm run dev
    ```
    La aplicación se podrá visualizar desde tu navegador abriendo [ñ](http://localhost:5173).
 
 ## Otros Comandos Útiles
 
-- `npm run build`: Genera el código optimizado para producción dentro de la carpeta `dist`.
-- `npm run preview`: Permite pre-visualizar el código de producción generado a nivel local.
-- `npm run lint`: Ejecuta auditoría de código con las reglas definidas en ESLint.
+- `pnpm run build`: Genera el código optimizado para producción dentro de la carpeta `dist`.
+- `pnpm run preview`: Permite pre-visualizar el código de producción generado a nivel local.
+- `pnpm run lint`: Ejecuta auditoría de código con las reglas definidas en ESLint.
