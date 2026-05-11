@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import BarcodeSearch from './BarcodeSearch';
 
-/**
- * Campos iniciales vacíos para el formulario de producto.
- */
 const initialState = {
   codigoBarras: '',
   nombre: '',
@@ -21,21 +18,12 @@ export default function ProductForm({ onAgregar }) {
   const [form, setForm] = useState({ ...initialState });
   const [error, setError] = useState('');
 
-  /**
-   * Maneja el cambio en cualquier campo del formulario.
-   */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
     setError('');
   };
 
-  /**
-   * Callback cuando el usuario selecciona un producto desde la búsqueda
-   * por código de barras. Auto-completa los campos del formulario.
-   *
-   * @param {{ nombre: string, codigoBarras: string, pesoUnidad: number|null }} producto
-   */
   const handleSeleccionarProducto = (producto) => {
     setForm((prev) => ({
       ...prev,
@@ -46,14 +34,9 @@ export default function ProductForm({ onAgregar }) {
     setError('');
   };
 
-  /**
-   * Valida y agrega un producto a la lista.
-   * Se ejecuta SOLO con clic en el botón, nunca con Enter.
-   */
   const handleSubmit = () => {
     const { codigoBarras, nombre, pesoUnidad, cantidad } = form;
 
-    // Validaciones
     if (!codigoBarras.trim() || !nombre.trim() || !pesoUnidad || !cantidad) {
       setError('Todos los campos son obligatorios');
       return;
@@ -72,7 +55,6 @@ export default function ProductForm({ onAgregar }) {
       return;
     }
 
-    // Agregar producto
     onAgregar({
       codigoBarras: codigoBarras.trim(),
       nombre: nombre.trim(),
@@ -80,83 +62,95 @@ export default function ProductForm({ onAgregar }) {
       cantidad: cant,
     });
 
-    // Resetear formulario
     setForm({ ...initialState });
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-6 space-y-4 border border-gray-100">
-      <h3 className="text-lg font-semibold text-[#2D2D2D] flex items-center gap-2">
-        📦 Nuevo producto
-      </h3>
+    <div className="bg-surface-container-lowest rounded-3xl p-8 shadow-sm border border-outline-variant/40 space-y-8">
+      {/* Sección: Código de barras */}
+      <section>
+        <BarcodeSearch onSeleccionar={handleSeleccionarProducto} />
+      </section>
 
-      {/* Búsqueda por código de barras (Open Food Facts) */}
-      <BarcodeSearch onSeleccionar={handleSeleccionarProducto} />
-
-      {/* Nombre del producto */}
-      <div>
-        <label className="block text-sm font-medium text-gray-600 mb-1 text-left">
-          Nombre del producto
+      {/* Sección: Nombre del producto */}
+      <section className="space-y-2">
+        <label className="font-label-sm text-label-sm text-outline uppercase tracking-[0.05em] block">
+          2. Nombre del producto
         </label>
-        <input
-          type="text"
-          name="nombre"
-          value={form.nombre}
-          onChange={handleChange}
-          placeholder="Ej. Arroz blanco"
-          className="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#F28C33] focus:border-transparent transition"
-        />
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        {/* Peso por unidad */}
-        <div>
-          <label className="block text-sm font-medium text-gray-600 mb-1 text-left">
-            Peso por unidad (kg)
-          </label>
+        <div className="relative">
+          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-xl pointer-events-none">
+            inventory
+          </span>
           <input
-            type="number"
-            name="pesoUnidad"
-            value={form.pesoUnidad}
+            type="text"
+            name="nombre"
+            value={form.nombre}
             onChange={handleChange}
-            placeholder="Ej. 1.5"
-            step="0.01"
-            min="0"
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#F28C33] focus:border-transparent transition"
+            placeholder="Ej. Arroz blanco"
+            className="w-full h-12 pl-10 pr-4 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface text-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all placeholder:text-outline/60"
           />
         </div>
+      </section>
 
-        {/* Cantidad */}
-        <div>
-          <label className="block text-sm font-medium text-gray-600 mb-1 text-left">
-            Cantidad
+      {/* Sección: Peso y Cantidad */}
+      <section className="grid grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label className="font-label-sm text-label-sm text-outline uppercase tracking-[0.05em] block">
+            <span className="tracking-[0.7px]">3. Peso por unidad (kg)</span>
           </label>
-          <input
-            type="number"
-            name="cantidad"
-            value={form.cantidad}
-            onChange={handleChange}
-            placeholder="Ej. 10"
-            min="1"
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#F28C33] focus:border-transparent transition"
-          />
+          <div className="relative">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-xl pointer-events-none">
+              scale
+            </span>
+            <input
+              type="number"
+              name="pesoUnidad"
+              value={form.pesoUnidad}
+              onChange={handleChange}
+              placeholder="Ej. 1.5"
+              step="0.01"
+              min="0"
+              className="w-full h-12 pl-10 pr-4 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface text-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all placeholder:text-outline/60"
+            />
+          </div>
         </div>
-      </div>
+        <div className="space-y-2">
+          <label className="font-label-sm text-label-sm text-outline uppercase tracking-[0.05em] block">
+            4. Cantidad
+          </label>
+          <div className="relative">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-xl pointer-events-none">
+              package
+            </span>
+            <input
+              type="number"
+              name="cantidad"
+              value={form.cantidad}
+              onChange={handleChange}
+              placeholder="Ej. 10"
+              min="1"
+              className="w-full h-12 pl-10 pr-4 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface text-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all placeholder:text-outline/60"
+            />
+          </div>
+        </div>
+      </section>
 
       {/* Mensaje de error */}
       {error && (
-        <p className="text-[#E53935] text-sm font-medium flex items-center gap-1">
-          <span>⚠️</span> {error}
-        </p>
+        <div className="flex items-center gap-2 px-4 py-3 bg-error-container rounded-xl">
+          <span className="material-symbols-outlined text-error text-lg">error</span>
+          <p className="text-on-error-container text-sm font-medium">{error}</p>
+        </div>
       )}
 
-      {/* Botón agregar — type="button" para que NUNCA haga submit con Enter */}
+      {/* Botón: Agregar producto */}
       <button
         type="button"
         onClick={handleSubmit}
-        className="w-full py-3 bg-[#FF8000] hover:bg-[#E67300] text-white font-semibold rounded-xl shadow-md shadow-orange-200 transition-all active:scale-[0.98] cursor-pointer"
+        className="w-full h-14 bg-gradient-to-r from-primary to-primary-container text-white font-bold text-body-md rounded-2xl shadow-lg shadow-indigo-200 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
       >
-        ➕ Agregar producto
+        <span className="material-symbols-outlined">add_circle</span>
+        Agregar producto
       </button>
     </div>
   );
