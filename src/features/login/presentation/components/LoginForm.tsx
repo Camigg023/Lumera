@@ -52,7 +52,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
         disabled={isLoading}
         className={styles.button}
       >
-        {isLoading ? 'Ingresando...' : 'LOGIN'}
+        {isLoading ? 'Ingresando...' : 'Iniciar sesión'}
       </button>
     </form>
   );

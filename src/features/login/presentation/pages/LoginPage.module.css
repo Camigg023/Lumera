@@ -1,126 +1,83 @@
 .page {
+  height: 100vh;
   display: flex;
-  min-height: 100vh;
-  width: 100%;
+  font-family: Inter, sans-serif;
+  background: #eef2ef;
 }
 
-/* Left side - Image */
-.imageSide {
-  flex: 1;
-  background: linear-gradient(135deg, #FFB366 0%, #F28C33 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* 🖼️ LEFT IMAGE */
+.left {
+  flex: 1.2;
+  height: 100vh;
+
+  background-image: url("/img/loginimg.png");
+  background-size: cover;        /* 🔥 clave: llena todo */
+  background-repeat: no-repeat;
+  background-position: center;
+
   position: relative;
 }
 
-.imageContainer {
-  text-align: center;
-  padding: 2rem;
-}
-
-.foodEmoji {
-  display: block;
-  font-size: 8rem;
-  margin-bottom: 2rem;
-  color: white;
-}
-
-.crate {
-  width: 200px;
-  height: 160px;
-  background: #F8B486;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-}
-
-.barcode {
-  font-size: 3rem;
-  opacity: 0.8;
-  color: white;
-}
-
-/* Right side - Form */
-.formSide {
+/* RIGHT SIDE */
+.right {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;
-  padding: 2rem;
 }
 
-.formContainer {
-  width: 100%;
-  max-width: 400px;
+/* CARD */
+.card {
+  width: 380px;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  padding: 2.5rem;
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
 }
 
-.backLink {
-  background: none;
-  border: none;
-  color: #666666;
-  cursor: pointer;
-  font-size: 0.9rem;
+/* TEXT */
+.card h2 {
+  color: #064e3b;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  color: #6b7280;
   margin-bottom: 1.5rem;
-  padding: 0;
 }
 
-.backLink:hover {
-  color: #2D2D2D;
-}
-
-.title {
-  text-align: center;
-  font-size: 2rem;
-  font-weight: 400;
-  color: #2D2D2D;
-  margin: 0 0 2rem 0;
-}
-
+/* LINKS */
 .links {
-  text-align: center;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 10px;
 }
 
-.link {
-  color: #666666;
-  text-decoration: underline;
-  font-size: 0.95rem;
+.links button {
   background: none;
   border: none;
+  color: #166534;
   cursor: pointer;
-  padding: 0;
+  font-size: 0.9rem;
 }
 
-.link:hover {
-  color: #F28C33;
+.links button:hover {
+  text-decoration: underline;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* RESPONSIVE */
+@media (max-width: 900px) {
   .page {
     flex-direction: column;
   }
 
-  .imageSide {
-    min-height: 200px;
-    padding: 1rem;
+  .left {
+    display: none;
   }
 
-  .foodEmoji {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-  }
-
-  .crate {
-    width: 120px;
-    height: 100px;
+  .right {
+    height: 100vh;
   }
 }
