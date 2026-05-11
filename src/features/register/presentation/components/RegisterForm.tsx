@@ -41,7 +41,7 @@ export const RegisterForm = ({ onSuccess }: any) => {
 
     console.log("DATA ENVIADA:", data);
 
-    await signUp(email, password, role, name);
+    await signUp(data);
 
     onSuccess?.();
   };
