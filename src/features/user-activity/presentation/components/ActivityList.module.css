@@ -8,10 +8,10 @@
 }
 
 .title {
-  color: #2D2D2D;
+  color: var(--color-on-surface);
   font-size: 1.8rem;
   margin-bottom: 1.5rem;
-  border-bottom: 2px solid #F8B486;
+  border-bottom: 2px solid var(--color-surface-container-high);
   padding-bottom: 0.5rem;
 }
 
@@ -31,7 +31,7 @@
 }
 
 .item:hover {
-  background-color: #FFF9F3;
+  background-color: var(--color-surface-container-low);
 }
 
 .icon {
@@ -42,9 +42,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #F8B486;
+  background-color: var(--color-surface-container-high);
   border-radius: 50%;
-  color: #2D2D2D;
+  color: var(--color-on-surface);
 }
 
 .content {
@@ -53,7 +53,7 @@
 
 .description {
   margin: 0 0 0.5rem 0;
-  color: #2D2D2D;
+  color: var(--color-on-surface);
   font-weight: 500;
 }
 
@@ -61,13 +61,13 @@
   display: flex;
   gap: 1rem;
   font-size: 0.9rem;
-  color: #666666;
+  color: var(--color-outline);
   margin-bottom: 0.5rem;
 }
 
 .type {
   text-transform: capitalize;
-  background-color: #F0F0F0;
+  background-color: var(--color-surface-container-low);
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
 }
@@ -81,14 +81,14 @@
   flex-wrap: wrap;
   gap: 0.5rem;
   font-size: 0.85rem;
-  color: #666666;
+  color: var(--color-outline);
 }
 
 .metadataItem {
-  background-color: #F5F5F5;
+  background-color: var(--color-surface-container-low);
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
-  border-left: 3px solid #F28C33;
+  border-left: 3px solid var(--color-primary-container);
 }
 
 .loading,
@@ -97,12 +97,12 @@
   text-align: center;
   padding: 3rem;
   font-size: 1.1rem;
-  color: #666666;
+  color: var(--color-outline);
 }
 
 .error {
-  color: #FF5252;
-  background-color: #FFEBEE;
+  color: var(--color-error);
+  background-color: var(--color-error-container);
   border-radius: 8px;
   padding: 1.5rem;
 }
