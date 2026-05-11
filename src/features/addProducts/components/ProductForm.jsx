@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import BarcodeSearch from './BarcodeSearch';
 
 /**
  * Campos iniciales vacíos para el formulario de producto.
@@ -12,7 +13,8 @@ const initialState = {
 
 /**
  * Formulario para agregar un producto a la donación.
- * 
+ * Incluye búsqueda por código de barras vía Open Food Facts.
+ *
  * @param {{ onAgregar: (producto: import('../../../services/donationService').Producto) => void }} props
  */
 export default function ProductForm({ onAgregar }) {
@@ -25,6 +27,22 @@ export default function ProductForm({ onAgregar }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+    setError('');
+  };
+
+  /**
+   * Callback cuando el usuario selecciona un producto desde la búsqueda
+   * por código de barras. Auto-completa los campos del formulario.
+   *
+   * @param {{ nombre: string, codigoBarras: string, pesoUnidad: number|null }} producto
+   */
+  const handleSeleccionarProducto = (producto) => {
+    setForm((prev) => ({
+      ...prev,
+      codigoBarras: producto.codigoBarras,
+      nombre: producto.nombre,
+      pesoUnidad: producto.pesoUnidad ? String(producto.pesoUnidad) : '',
+    }));
     setError('');
   };
 
@@ -73,22 +91,10 @@ export default function ProductForm({ onAgregar }) {
         📦 Nuevo producto
       </h3>
 
-      {/* Código de barras */}
-      <div>
-        <label className="block text-sm font-medium text-gray-600 mb-1 text-left">
-          Código de barras
-        </label>
-        <input
-          type="text"
-          name="codigoBarras"
-          value={form.codigoBarras}
-          onChange={handleChange}
-          placeholder="Ej. 7501234567890"
-          className="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm text-[#2D2D2D] focus:outline-none focus:ring-2 focus:ring-[#F28C33] focus:border-transparent transition"
-        />
-      </div>
+      {/* Búsqueda por código de barras (Open Food Facts) */}
+      <BarcodeSearch onSeleccionar={handleSeleccionarProducto} />
 
-      {/* Nombre */}
+      {/* Nombre del producto */}
       <div>
         <label className="block text-sm font-medium text-gray-600 mb-1 text-left">
           Nombre del producto
