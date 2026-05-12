@@ -112,22 +112,27 @@ export function DonadorProfile() {
   }
 
   return (
-    <div className={styles.card}>
-      <Toaster 
-        position="top-center" 
-        toastOptions={{
-          duration: 3000,
-          style: {
-            borderRadius: '12px',
-            background: '#333',
-            color: '#fff',
-          },
-        }} 
-      />
-      
+    <div className={`${styles.card} overflow-hidden`}>
       <h2 className={styles.cardTitle}>
         <UserIcon size={24} /> Mi Perfil
       </h2>
+
+      <div className="flex items-center gap-4 mb-8 p-4 bg-primary/5 rounded-2xl border border-primary/10">
+        <div className="relative">
+          {currentUser?.photoURL ? (
+            <img src={currentUser.photoURL} alt="Avatar" className="w-16 h-16 rounded-full border-2 border-primary object-cover" />
+          ) : (
+            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary text-2xl font-bold">
+              {name.charAt(0) || currentUser?.displayName?.charAt(0) || "U"}
+            </div>
+          )}
+          <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 border-2 border-white rounded-full"></div>
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-on-surface font-bold text-lg truncate">{name || "Usuario Lumera"}</p>
+          <p className="text-on-surface-variant text-sm truncate">{currentUser?.email}</p>
+        </div>
+      </div>
 
       <div className={styles.formGroup}>
         <label className={styles.label}>Nombre Completo</label>

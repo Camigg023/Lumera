@@ -81,7 +81,7 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
   };
 
   return (
-    <div className={`${styles.layout} bg-background`}>
+    <div className={`${styles.layout} bg-background min-h-screen w-full`}>
       <Toaster position="top-right" />
       
       <main className={styles.main}>
@@ -164,78 +164,88 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
           {view === "inicio" && (
             <div className="max-w-7xl mx-auto px-5 md:px-10 mt-4 space-y-12 animate-fade-in pb-20">
               {/* Header de bienvenida */}
-              <section className="flex flex-col md:flex-row items-center justify-between gap-6 bg-white p-8 rounded-3xl border border-outline-variant/40 shadow-sm">
+              <section className="flex items-center justify-between gap-6 bg-white p-6 rounded-3xl border border-outline-variant/40 shadow-sm">
                 <div className="flex items-center gap-6">
-                  <div className="w-20 h-20 rounded-2xl bg-primary-container/10 flex items-center justify-center text-primary">
-                    <span className="material-symbols-outlined text-4xl">volunteer_activism</span>
+                  <div className="w-16 h-16 rounded-2xl bg-primary-container/10 flex items-center justify-center text-primary shrink-0">
+                    <span className="material-symbols-outlined text-3xl">volunteer_activism</span>
                   </div>
                   <div>
-                    <h1 className="text-h2 font-h2 text-on-surface">Bienvenido de nuevo, {auth.currentUser?.displayName?.split(' ')[0] || "Donador"}</h1>
-                    <p className="text-body-md text-on-surface-variant">Tu contribución está haciendo la diferencia hoy.</p>
+                    <h1 className="text-h2 font-h2 text-on-surface">Bienvenido, {auth.currentUser?.displayName?.split(' ')[0] || "Donador"}</h1>
+                    <p className="text-body-md text-on-surface-variant line-clamp-1">Tu contribución está haciendo la diferencia hoy.</p>
                   </div>
                 </div>
                 <button
                   onClick={() => setView("nueva-donacion")}
-                  className="h-14 px-8 bg-primary text-white font-bold rounded-2xl shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
+                  className="h-12 px-6 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer shrink-0"
                 >
-                  <PackagePlus size={20} />
+                  <PackagePlus size={18} />
                   Nueva Donación
                 </button>
               </section>
 
-              {/* Stats Rápidas */}
-              <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-white rounded-3xl p-8 border border-outline-variant/30 shadow-sm group hover:border-primary/30 transition-colors">
-                  <div className="w-12 h-12 rounded-xl bg-primary-fixed/30 flex items-center justify-center text-primary mb-4">
-                    <History size={24} />
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Columna Izquierda: Mi Perfil */}
+                <div className="lg:col-span-1">
+                  <div className="sticky top-24">
+                    <DonadorProfile />
                   </div>
-                  <p className="text-4xl font-bold text-on-surface mb-1">{stats.donaciones}</p>
-                  <p className="text-sm font-medium text-on-surface-variant uppercase tracking-wider">Donaciones totales</p>
                 </div>
-                <div className="bg-white rounded-3xl p-8 border border-outline-variant/30 shadow-sm group hover:border-primary/30 transition-colors">
-                  <div className="w-12 h-12 rounded-xl bg-secondary-fixed/30 flex items-center justify-center text-secondary mb-4">
-                    <PackagePlus size={24} />
-                  </div>
-                  <p className="text-4xl font-bold text-on-surface mb-1">{stats.productos}</p>
-                  <p className="text-sm font-medium text-on-surface-variant uppercase tracking-wider">Productos entregados</p>
-                </div>
-                <div className="bg-white rounded-3xl p-8 border border-outline-variant/30 shadow-sm group hover:border-primary/30 transition-colors">
-                  <div className="w-12 h-12 rounded-xl bg-tertiary-fixed/30 flex items-center justify-center text-tertiary mb-4">
-                    <span className="material-symbols-outlined text-2xl">weight</span>
-                  </div>
-                  <p className="text-4xl font-bold text-on-surface mb-1">{stats.kg.toFixed(1)} <span className="text-xl font-semibold">kg</span></p>
-                  <p className="text-sm font-medium text-on-surface-variant uppercase tracking-wider">Peso total donado</p>
-                </div>
-              </section>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Centros de acopio cercanos */}
-                <section className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-h3 font-h3 text-on-surface">Puntos de Acopio Cercanos</h3>
-                    <button className="text-primary text-sm font-bold hover:underline">Ver mapa completo</button>
-                  </div>
-                  <NearbyAcopio autoDetectar={true} />
-                </section>
+                {/* Columna Derecha: Stats y Más */}
+                <div className="lg:col-span-2 space-y-8">
+                  {/* Stats Rápidas */}
+                  <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <div className="bg-white rounded-3xl p-8 border border-outline-variant/30 shadow-sm group hover:border-primary/30 transition-colors">
+                      <div className="w-12 h-12 rounded-xl bg-primary-fixed/30 flex items-center justify-center text-primary mb-4">
+                        <History size={24} />
+                      </div>
+                      <p className="text-4xl font-bold text-on-surface mb-1">{stats.donaciones}</p>
+                      <p className="text-sm font-medium text-on-surface-variant uppercase tracking-wider">Donaciones totales</p>
+                    </div>
+                    <div className="bg-white rounded-3xl p-8 border border-outline-variant/30 shadow-sm group hover:border-primary/30 transition-colors">
+                      <div className="w-12 h-12 rounded-xl bg-secondary-fixed/30 flex items-center justify-center text-secondary mb-4">
+                        <PackagePlus size={24} />
+                      </div>
+                      <p className="text-4xl font-bold text-on-surface mb-1">{stats.productos}</p>
+                      <p className="text-sm font-medium text-on-surface-variant uppercase tracking-wider">Productos entregados</p>
+                    </div>
+                    <div className="bg-white rounded-3xl p-8 border border-outline-variant/30 shadow-sm group hover:border-primary/30 transition-colors md:col-span-2 xl:col-span-1">
+                      <div className="w-12 h-12 rounded-xl bg-tertiary-fixed/30 flex items-center justify-center text-tertiary mb-4">
+                        <span className="material-symbols-outlined text-2xl">weight</span>
+                      </div>
+                      <p className="text-4xl font-bold text-on-surface mb-1">{stats.kg.toFixed(1)} <span className="text-xl font-semibold">kg</span></p>
+                      <p className="text-sm font-medium text-on-surface-variant uppercase tracking-wider">Peso total donado</p>
+                    </div>
+                  </section>
 
-                {/* Tutorial Rápido */}
-                <section className="bg-surface-container-lowest rounded-3xl p-8 border border-outline-variant/40 space-y-8">
-                  <h3 className="text-h3 font-h3 text-on-surface">¿Cómo funciona?</h3>
-                  <div className="space-y-6">
-                    <div className="flex gap-4">
-                      <div className="w-10 h-10 rounded-full bg-primary-container text-primary flex items-center justify-center shrink-0 font-bold">1</div>
-                      <p className="text-on-surface-variant">Registra los productos que quieres donar en la pestaña <b>"Nueva Donación"</b>.</p>
+                  {/* Centros de acopio cercanos */}
+                  <section className="space-y-6">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-h3 font-h3 text-on-surface">Puntos de Acopio Cercanos</h3>
+                      <button className="text-primary text-sm font-bold hover:underline">Ver mapa completo</button>
                     </div>
-                    <div className="flex gap-4">
-                      <div className="w-10 h-10 rounded-full bg-primary-container text-primary flex items-center justify-center shrink-0 font-bold">2</div>
-                      <p className="text-on-surface-variant">Obtén tu <b>código QR único</b> generado automáticamente para tu donación.</p>
+                    <NearbyAcopio autoDetectar={true} />
+                  </section>
+
+                  {/* Tutorial Rápido */}
+                  <section className="bg-surface-container-lowest rounded-3xl p-8 border border-outline-variant/40 space-y-8">
+                    <h3 className="text-h3 font-h3 text-on-surface">¿Cómo funciona?</h3>
+                    <div className="space-y-6">
+                      <div className="flex gap-4">
+                        <div className="w-10 h-10 rounded-full bg-primary-container text-primary flex items-center justify-center shrink-0 font-bold">1</div>
+                        <p className="text-on-surface-variant">Registra los productos que quieres donar en la pestaña <b>"Nueva Donación"</b>.</p>
+                      </div>
+                      <div className="flex gap-4">
+                        <div className="w-10 h-10 rounded-full bg-primary-container text-primary flex items-center justify-center shrink-0 font-bold">2</div>
+                        <p className="text-on-surface-variant">Obtén tu <b>código QR único</b> generado automáticamente para tu donación.</p>
+                      </div>
+                      <div className="flex gap-4">
+                        <div className="w-10 h-10 rounded-full bg-primary-container text-primary flex items-center justify-center shrink-0 font-bold">3</div>
+                        <p className="text-on-surface-variant">Lleva tus productos al <b>centro de acopio</b> y muestra tu código al personal.</p>
+                      </div>
                     </div>
-                    <div className="flex gap-4">
-                      <div className="w-10 h-10 rounded-full bg-primary-container text-primary flex items-center justify-center shrink-0 font-bold">3</div>
-                      <p className="text-on-surface-variant">Lleva tus productos al <b>centro de acopio</b> y muestra tu código al personal.</p>
-                    </div>
-                  </div>
-                </section>
+                  </section>
+                </div>
               </div>
             </div>
           )}
