@@ -1,5 +1,6 @@
 import {
   createUserWithEmailAndPassword,
+  sendEmailVerification,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../../../config/firebase";
@@ -11,6 +12,9 @@ export class AuthRegisterDataSource {
     try {
       const cred = await createUserWithEmailAndPassword(auth, data.email, data.password!);
       const u = cred.user;
+
+      // Enviar correo de verificación
+      await sendEmailVerification(u);
       
       const userData = {
         uid: u.uid,
