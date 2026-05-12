@@ -1,27 +1,94 @@
 import { useState } from "react";
 import { DonadorProfile } from "../pages/DonadorProfile";
-import AddProductsPanel from "../../addProducts/AddProductsPanel";
+import { 
+  Bell, 
+  Search, 
+  HelpCircle, 
+  User, 
+  LogOut,
+  LayoutDashboard,
+  PackagePlus,
+  Settings,
+  Heart
+} from "lucide-react";
 import styles from "./DonadorDashboard.module.css";
 
-export function DonadorDashboard() {
+export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
   const [view, setView] = useState("inicio");
 
   return (
     <div className={styles.layout}>
-      
-      {/* SIDEBAR */}
-      <aside className={styles.sidebar}>
-        <h2 className={styles.logo}>LUMERA</h2>
-
-        <nav className={styles.menu}>
-          <p onClick={() => setView("inicio")}>🏠 Inicio</p>
-          <p onClick={() => setView("nueva-donacion")}>📦 Nueva donación</p>
-          <p onClick={() => setView("perfil")}>👤 Perfil</p>
-        </nav>
-      </aside>
-
       {/* MAIN */}
       <main className={styles.main}>
+        {/* TOP NAVBAR */}
+        <header className={styles.topbar}>
+          <div className={styles.logoSection}>
+            <h2 className={styles.logo}>LUMERA</h2>
+            <span className={styles.roleBadge}>DONADOR</span>
+          </div>
+
+          <nav className={styles.topMenu}>
+            <button 
+              className={`${styles.topMenuItem} ${view === "inicio" ? styles.active : ""}`}
+              onClick={() => setView("inicio")}
+            >
+              <LayoutDashboard size={20} />
+              <span>Inicio</span>
+            </button>
+            
+            <button 
+              className={`${styles.topMenuItem} ${view === "nueva-donacion" ? styles.active : ""}`}
+              onClick={() => setView("nueva-donacion")}
+            >
+              <PackagePlus size={20} />
+              <span>Nueva donación</span>
+            </button>
+
+            <button 
+              className={`${styles.topMenuItem} ${view === "perfil" ? styles.active : ""}`}
+              onClick={() => setView("perfil")}
+            >
+              <User size={20} />
+              <span>Mi Perfil</span>
+            </button>
+
+            <button 
+              className={`${styles.topMenuItem} ${view === "configuracion" ? styles.active : ""}`}
+              onClick={() => setView("configuracion")}
+            >
+              <Settings size={20} />
+              <span>Configuración</span>
+            </button>
+          </nav>
+
+          <div className={styles.topActions}>
+            <div className={styles.searchBox}>
+              <Search size={18} className={styles.searchIcon} />
+              <input type="text" placeholder="Buscar..." />
+            </div>
+
+            <button className={styles.iconBtn} aria-label="Notificaciones">
+              <Bell size={20} />
+              <span className={styles.notifBadge}></span>
+            </button>
+            
+            <div className={styles.userProfile}>
+              <div className={styles.userInfo}>
+                <span className={styles.userName}>Oscar Correa</span>
+              </div>
+              <img 
+                src="https://i.pravatar.cc/150?u=oscar" 
+                alt="Profile" 
+                className={styles.avatar} 
+              />
+              <button className={styles.logoutIconBtn} onClick={onLogout} title="Cerrar sesión">
+                <LogOut size={18} />
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <div className={styles.contentWrapper}>
 
         {/* INICIO */}
         {view === "inicio" && (
@@ -61,14 +128,10 @@ export function DonadorDashboard() {
           </div>
         )}
 
-        {/* NUEVA DONACIÓN - AddProductsPanel */}
-        {view === "nueva-donacion" && (
-          <AddProductsPanel />
-        )}
-
         {/* PERFIL */}
         {view === "perfil" && <DonadorProfile />}
 
+        </div>
       </main>
     </div>
   );
