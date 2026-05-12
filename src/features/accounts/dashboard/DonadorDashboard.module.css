@@ -1,43 +1,234 @@
+/* MAIN LAYOUT */
 .layout {
   display: flex;
+  flex-direction: column;
   min-height: 100vh;
-  background: var(--color-surface);
+  background: var(--lumera-bg-secondary);
+  color: var(--lumera-text);
+  font-family: var(--sans);
 }
 
-/* SIDEBAR */
-.sidebar {
-  width: 260px;
-  background: var(--color-surface-container-lowest);
-  border-right: 1px solid var(--color-surface-container-high);
-  padding: 2rem 1.2rem;
+.main {
+  flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 0; /* Prevent flex overflow */
+  width: 100%;
+}
+
+/* TOP NAVBAR */
+.topbar {
+  height: 72px;
+  background: var(--lumera-bg);
+  border-bottom: 1px solid var(--lumera-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.logoSection {
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
 }
 
 .logo {
-  font-size: 1.4rem;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--lumera-primary);
+  letter-spacing: -0.5px;
+  margin: 0;
+  line-height: 1;
+}
+
+.roleBadge {
+  font-size: 0.6rem;
   font-weight: 700;
-  color: var(--color-primary);
-  margin-bottom: 2rem;
+  color: var(--lumera-text-muted);
+  letter-spacing: 1px;
+  margin-top: 0.15rem;
 }
 
-.menu p {
-  padding: 0.9rem 1rem;
-  border-radius: 10px;
-  margin: 0.3rem 0;
-  cursor: pointer;
-  color: var(--color-on-surface-variant);
-  transition: 0.2s;
-}
-
-.menu p:hover {
-  background: var(--color-surface-container-low);
-  transform: translateX(4px);
-  color: var(--color-primary);
-}
-
-/* MAIN */
-.main {
+.topMenu {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   flex: 1;
-  padding: 2.5rem;
+  justify-content: center;
+  margin: 0 2rem;
+}
+
+.topMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  color: var(--lumera-text-secondary);
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.topMenuItem:hover {
+  background: var(--lumera-bg-secondary);
+  color: var(--lumera-primary);
+}
+
+.topMenuItem.active {
+  background: var(--lumera-primary-light);
+  color: var(--lumera-primary);
+  font-weight: 600;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  background: var(--lumera-bg-secondary);
+  border: 1px solid var(--lumera-border);
+  border-radius: 12px;
+  padding: 0 1rem;
+  width: 320px;
+  height: 40px;
+  transition: border-color 0.2s;
+}
+
+.searchBox:focus-within {
+  border-color: var(--lumera-primary);
+}
+
+.searchIcon {
+  color: var(--lumera-text-muted);
+}
+
+.searchBox input {
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0 0.75rem;
+  width: 100%;
+  font-size: 0.9rem;
+  color: var(--lumera-text);
+}
+
+.topActions {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.iconBtn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  color: var(--lumera-text-secondary);
+  background: transparent;
+  border: 1px solid var(--lumera-border);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.iconBtn:hover {
+  background: var(--lumera-bg-tertiary);
+  color: var(--lumera-primary);
+  border-color: var(--lumera-primary-border);
+}
+
+.notifBadge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  background: var(--lumera-error);
+  border-radius: 50%;
+  border: 2px solid var(--lumera-bg);
+}
+
+.userProfile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-left: 1.25rem;
+  border-left: 1px solid var(--lumera-border);
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.userName {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--lumera-text);
+  line-height: 1.2;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--lumera-bg-tertiary);
+}
+
+.logoutIconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: var(--lumera-text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-left: 0.25rem;
+}
+
+.logoutIconBtn:hover {
+  color: var(--lumera-error);
+  background: rgba(229, 57, 53, 0.05);
+}
+
+.contentWrapper {
+  padding: 2rem;
+  flex: 1;
+  overflow-y: auto;
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 80px;
+  }
+  .sidebarHeader h2, .roleBadge, .menuItem span, .sidebarFooter span, .userInfo {
+    display: none;
+  }
+  .sidebarHeader {
+    padding: 1.5rem 0;
+    display: flex;
+    justify-content: center;
+  }
+  .menuItem {
+    justify-content: center;
+    padding: 1rem;
+  }
+  .searchBox {
+    width: 200px;
+  }
 }
