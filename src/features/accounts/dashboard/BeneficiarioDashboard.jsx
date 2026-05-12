@@ -89,10 +89,10 @@ export function BeneficiarioDashboard({ onLogout }) {
     );
   }, [beneficiary, isProfileComplete]);
 
-  // Redirigir al registro si necesita configurar el perfil
+  // Si necesita configurar perfil, mostramos vista informativa en lugar de redirigir
   useEffect(() => {
-    if (beneficiary && needsProfileSetup && view !== 'registro' && view !== 'perfil') {
-      setView('registro');
+    if (beneficiary && needsProfileSetup && view !== 'registro' && view !== 'perfil' && view !== 'inicio') {
+      setView('inicio');
     }
   }, [beneficiary, needsProfileSetup, view]);
 
@@ -201,12 +201,28 @@ export function BeneficiarioDashboard({ onLogout }) {
     );
   }
 
-  // ─── VISTA: CONFIGURACIÓN DE PERFIL (PENDIENTE/RECHAZADO) ───
-  // Muestra el formulario en grid: izquierda datos, derecha ubicación + docs
+  // ─── VISTA INFORMATIVA: PERFIL PENDIENTE O RECHAZADO ───
+  // Muestra información del usuario en lugar del formulario de registro
+  // Layout: izquierda (avatar + datos), derecha (ubicación), abajo (beneficios), centro (mercado por reclamar)
 
   if (needsProfileSetup && beneficiary) {
+    // Obtener iniciales para el avatar
+    const initials = beneficiary.fullName
+      ? beneficiary.fullName.split(' ').map(n => n.charAt(0)).join('').slice(0, 2).toUpperCase()
+      : '??';
+
+    // Etiqueta del tipo de beneficiario
+    const typeLabel = (() => {
+      const labels = { persona_natural: 'Persona Natural', cabeza_familia: 'Cabeza de Familia', adulto_mayor: 'Adulto Mayor', otro: 'Otro' };
+      return labels[beneficiary.beneficiaryType] || beneficiary.beneficiaryType;
+    })();
+
+    // Buscar solicitudes entregadas pendientes de reclamar
+    const pendingClaims = helpRequests.filter(r => r.status === 'entregada');
+    const hasPendingClaim = pendingClaims.length > 0;
+
     return (
-      <div className={styles.layout} role="application" aria-label="Configuración de perfil">
+      <div className={styles.layout} role="application" aria-label="Panel de beneficiario">
         <header className={styles.topbar}>
           <div className={styles.logoSection}>
             <h2 className={styles.logo}>LUMERA</h2>
@@ -233,22 +249,6 @@ export function BeneficiarioDashboard({ onLogout }) {
         </header>
 
         <main id="main-content" className={styles.contentWrapper} role="main">
-          {/* Banner según estado */}
-          {beneficiary.verificationStatus === 'rejected' && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-800">
-              <strong>❌ Perfil rechazado.</strong>
-              {beneficiary.verificationNotes && (
-                <span className="block mt-1">Motivo: {beneficiary.verificationNotes}</span>
-              )}
-              <span className="block mt-1">Corrige tus datos y sube los documentos requeridos para volver a enviar tu solicitud.</span>
-            </div>
-          )}
-          {beneficiary.verificationStatus === 'pending' && beneficiary.documents.length > 0 && (
-            <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-800">
-              ⏳ Tus datos están siendo revisados por nuestro equipo. Mientras tanto puedes editar tu información si es necesario.
-            </div>
-          )}
-
           {/* Error */}
           {error && (
             <div className="mb-6 p-3 rounded-lg text-sm flex items-center gap-2" style={{ backgroundColor: 'var(--color-error)', color: 'var(--color-on-error)' }} role="alert">
@@ -256,28 +256,284 @@ export function BeneficiarioDashboard({ onLogout }) {
             </div>
           )}
 
-          {/* Formulario en grid */}
-          <BeneficiaryRegisterForm
-            onSave={handleSaveProfile}
-            onUploadDocument={handleUploadDocument}
-            isSaving={beneficiaryLoading}
-            isUploading={beneficiaryLoading}
-            isEditMode={isProfileComplete}
-            initialData={
-              isProfileComplete
-                ? {
-                    fullName: beneficiary.fullName,
-                    documentId: beneficiary.documentId,
-                    address: beneficiary.address,
-                    city: beneficiary.city,
-                    phone: beneficiary.phone,
-                    beneficiaryType: beneficiary.beneficiaryType,
-                    latitude: beneficiary.latitude,
-                    longitude: beneficiary.longitude,
-                  }
-                : undefined
-            }
-          />
+          {/* ─── BLOQUE: BENEFICIO / MERCADO POR RECLAMAR (CENTRO) ─── */}
+          {hasPendingClaim && (
+            <div className="mb-6 animate-slide-up">
+              <div className="p-6 rounded-2xl border-2 border-emerald-300 bg-gradient-to-br from-emerald-50 to-green-50 shadow-lg shadow-emerald-100/50">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                    <span className="text-3xl">🎁</span>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-emerald-900">¡Tienes un beneficio por reclamar!</h3>
+                    <p className="text-sm text-emerald-700 mt-1">
+                      {pendingClaims.length === 1
+                        ? 'Una de tus solicitudes ha sido entregada. Acércate al punto de acopio para reclamar tu mercado.'
+                        : `${pendingClaims.length} de tus solicitudes están listas para reclamar.`}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      const first = pendingClaims[0];
+                      setSelectedDelivery(first);
+                      setView('detalle-entrega');
+                    }}
+                    className="px-6 py-3 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 active:scale-95 transition-all shadow-md shadow-emerald-200 whitespace-nowrap cursor-pointer"
+                  >
+                    Ver detalle
+                  </button>
+                </div>
+                {/* Lista de mercados pendientes */}
+                {pendingClaims.length > 1 && (
+                  <div className="mt-4 pt-4 border-t border-emerald-200">
+                    <p className="text-xs font-medium text-emerald-600 mb-2">MERCADOS PENDIENTES:</p>
+                    <div className="space-y-2">
+                      {pendingClaims.map((claim, idx) => (
+                        <div key={claim.id} className="flex items-center justify-between p-3 bg-white/60 rounded-xl">
+                          <div className="flex items-center gap-3">
+                            <span className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-sm font-bold text-emerald-700">
+                              {idx + 1}
+                            </span>
+                            <div>
+                              <p className="text-sm font-medium text-emerald-900">{claim.totalKg} kg · {claim.items?.length || 0} productos</p>
+                              <p className="text-xs text-emerald-600">Código: {claim.deliveryCode || '---'}</p>
+                            </div>
+                          </div>
+                          <span className="text-xs font-medium px-3 py-1 rounded-full bg-emerald-100 text-emerald-700">
+                            {new Date(claim.receivedAt || claim.updatedAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ─── BLOQUE SUPERIOR: DOS COLUMNAS ─── */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            {/* COLUMNA IZQUIERDA: Avatar + Información personal */}
+            <div className="p-6 rounded-2xl" style={{ backgroundColor: 'var(--color-surface-container-lowest)', border: '1px solid var(--color-outline-variant)' }}>
+              <div className="flex items-start gap-5">
+                {/* Avatar con iniciales */}
+                <div
+                  className="w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-bold flex-shrink-0 shadow-md"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-container))',
+                    color: 'var(--color-on-primary)',
+                  }}
+                >
+                  {initials}
+                </div>
+
+                {/* Información */}
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-xl font-bold truncate" style={{ color: 'var(--color-on-surface)' }}>
+                    {beneficiary.fullName}
+                  </h3>
+                  <div className="mt-3 space-y-2">
+                    <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-on-surface-variant)' }}>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.468.767 2.943 1.868m-2.943-1.868A2.5 2.5 0 0010 16.5V17" />
+                      </svg>
+                      <span className="truncate">{beneficiary.documentId}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-on-surface-variant)' }}>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      </svg>
+                      <span>{beneficiary.phone}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-on-surface-variant)' }}>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                      </svg>
+                      <span>{typeLabel}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Estado de verificación */}
+              <div className="mt-5 pt-4" style={{ borderTop: '1px solid var(--color-outline-variant)' }}>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium" style={{ color: 'var(--color-on-surface-variant)' }}>Estado de verificación</span>
+                  {beneficiary.verificationStatus === 'pending' && (
+                    <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                      Pendiente
+                    </span>
+                  )}
+                  {beneficiary.verificationStatus === 'rejected' && (
+                    <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+                      Rechazado
+                    </span>
+                  )}
+                </div>
+                {beneficiary.verificationStatus === 'rejected' && beneficiary.verificationNotes && (
+                  <p className="mt-2 text-xs text-red-600 bg-red-50 p-2 rounded-lg">
+                    Motivo: {beneficiary.verificationNotes}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* COLUMNA DERECHA: Ubicación */}
+            <div className="p-6 rounded-2xl" style={{ backgroundColor: 'var(--color-surface-container-lowest)', border: '1px solid var(--color-outline-variant)' }}>
+              <h4 className="text-sm font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--color-on-surface-variant)' }}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Ubicación de residencia
+              </h4>
+
+              <div className="space-y-3">
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-outline)' }}>Dirección</p>
+                  <p className="text-sm font-medium mt-0.5" style={{ color: 'var(--color-on-surface)' }}>{beneficiary.address}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-outline)' }}>Ciudad</p>
+                  <p className="text-sm font-medium mt-0.5" style={{ color: 'var(--color-on-surface)' }}>{beneficiary.city}</p>
+                </div>
+                {beneficiary.latitude && beneficiary.longitude && (
+                  <div>
+                    <p className="text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-outline)' }}>Coordenadas</p>
+                    <p className="text-sm font-medium mt-0.5 font-mono" style={{ color: 'var(--color-on-surface)' }}>
+                      {beneficiary.latitude.toFixed(4)}, {beneficiary.longitude.toFixed(4)}
+                    </p>
+                    {/* Mini mapa estático placeholder */}
+                    <div
+                      className="mt-3 h-28 rounded-xl flex items-center justify-center overflow-hidden"
+                      style={{ backgroundColor: 'var(--color-surface-container-high)' }}
+                    >
+                      <div className="text-center">
+                        <span className="text-2xl">📍</span>
+                        <p className="text-xs mt-1" style={{ color: 'var(--color-outline)' }}>
+                          {beneficiary.latitude.toFixed(4)}, {beneficiary.longitude.toFixed(4)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* ─── BLOQUE INFERIOR: BENEFICIOS OBTENIDOS ─── */}
+          <div className="p-6 rounded-2xl" style={{ backgroundColor: 'var(--color-surface-container-lowest)', border: '1px solid var(--color-outline-variant)' }}>
+            <h4 className="text-sm font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--color-on-surface-variant)' }}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+              Beneficios obtenidos
+            </h4>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="p-4 rounded-xl text-center" style={{ backgroundColor: 'var(--color-surface-container-high)' }}>
+                <p className="text-2xl font-bold" style={{ color: 'var(--color-primary)' }}>
+                  {completedDeliveries.length}
+                </p>
+                <p className="text-xs mt-1" style={{ color: 'var(--color-outline)' }}>Entregas recibidas</p>
+              </div>
+              <div className="p-4 rounded-xl text-center" style={{ backgroundColor: 'var(--color-surface-container-high)' }}>
+                <p className="text-2xl font-bold" style={{ color: 'var(--color-primary)' }}>
+                  {totalKgReceived} kg
+                </p>
+                <p className="text-xs mt-1" style={{ color: 'var(--color-outline)' }}>Total recibido</p>
+              </div>
+              <div className="p-4 rounded-xl text-center" style={{ backgroundColor: 'var(--color-surface-container-high)' }}>
+                <p className="text-2xl font-bold" style={{ color: 'var(--color-primary)' }}>
+                  {helpRequests.length}
+                </p>
+                <p className="text-xs mt-1" style={{ color: 'var(--color-outline)' }}>Solicitudes totales</p>
+              </div>
+              <div className="p-4 rounded-xl text-center" style={{ backgroundColor: 'var(--color-surface-container-high)' }}>
+                <p className="text-2xl font-bold" style={{ color: 'var(--color-primary)' }}>
+                  {activeRequests.length}
+                </p>
+                <p className="text-xs mt-1" style={{ color: 'var(--color-outline)' }}>Solicitudes activas</p>
+              </div>
+            </div>
+
+            {/* Barra de progreso de beneficios */}
+            {totalKgReceived > 0 && (
+              <div className="mt-4">
+                <div className="flex items-center justify-between text-xs mb-1.5" style={{ color: 'var(--color-on-surface-variant)' }}>
+                  <span>Progreso de beneficios</span>
+                  <span>{totalKgReceived} kg</span>
+                </div>
+                <div
+                  className="h-2.5 rounded-full overflow-hidden"
+                  style={{ backgroundColor: 'var(--color-surface-container-high)' }}
+                >
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{
+                      width: `${Math.min((totalKgReceived / 100) * 100, 100)}%`,
+                      background: 'linear-gradient(90deg, var(--color-primary), var(--color-secondary))',
+                    }}
+                  />
+                </div>
+                <p className="text-xs mt-1" style={{ color: 'var(--color-outline)' }}>
+                  Meta: 100 kg
+                </p>
+              </div>
+            )}
+
+            {/* Banner informativo según estado */}
+            {beneficiary.verificationStatus === 'pending' && (
+              <div className="mt-5 p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-800 flex items-start gap-3">
+                <span className="text-lg flex-shrink-0">⏳</span>
+                <div>
+                  <p className="font-semibold">Perfil en revisión</p>
+                  <p className="mt-0.5 text-amber-700">
+                    Tus datos están siendo verificados por nuestro equipo. Mientras tanto puedes ver tu información y dar seguimiento a tus beneficios.
+                  </p>
+                </div>
+              </div>
+            )}
+            {beneficiary.verificationStatus === 'rejected' && (
+              <div className="mt-5 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-800 flex items-start gap-3">
+                <span className="text-lg flex-shrink-0">❌</span>
+                <div>
+                  <p className="font-semibold">Perfil rechazado</p>
+                  <p className="mt-0.5 text-red-700">
+                    {beneficiary.verificationNotes && <span>Motivo: {beneficiary.verificationNotes}. </span>}
+                    Para volver a enviar tu solicitud, corrige tus datos y sube los documentos requeridos.
+                  </p>
+                  <button
+                    onClick={() => setView('registro')}
+                    className="mt-3 px-5 py-2 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 active:scale-95 transition-all cursor-pointer"
+                  >
+                    Editar perfil
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Botón flotante para editar perfil (visible siempre) */}
+          <div className="mt-6 text-center">
+            <button
+              onClick={() => setView('registro')}
+              className="px-8 py-3 rounded-xl text-sm font-semibold transition-all active:scale-95 cursor-pointer"
+              style={{
+                backgroundColor: 'var(--color-primary)',
+                color: 'var(--color-on-primary)',
+              }}
+            >
+              <span className="flex items-center gap-2 justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                {isProfileComplete ? 'Editar mi perfil' : 'Completar mi perfil'}
+              </span>
+            </button>
+          </div>
         </main>
       </div>
     );
