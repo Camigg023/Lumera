@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { DonadorProfile } from "../pages/DonadorProfile";
-import { 
-  Bell, 
-  Search, 
-  HelpCircle, 
-  User, 
+import NearbyAcopio from "../../collectionPoints/presentation/components/NearbyAcopio/NearbyAcopio";
+import {
+  Bell,
+  Search,
+  HelpCircle,
+  User,
   LogOut,
   LayoutDashboard,
   PackagePlus,
@@ -89,22 +90,6 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
         </header>
 
         <div className={styles.contentWrapper}>
-
-        {/* INICIO */}
-        {view === "inicio" && (
-          <div className="max-w-2xl mx-auto text-center py-12 animate-fade-in">
-            <div className="w-24 h-24 mx-auto rounded-3xl bg-surface-container-low flex items-center justify-center mb-6">
-              <span className="material-symbols-outlined text-5xl text-primary">volunteer_activism</span>
-            </div>
-            <button className="w-10 h-10 rounded-full overflow-hidden border-2 border-indigo-100 transition-transform active:scale-95">
-              <img alt="Perfil" className="w-full h-full object-cover"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDq1llL5eUXQjiRoXxV099IXQ7L2DlROgk8sBIAFoACzFUfdc5XH9wFSoDnigl0FN2pJvE9R7L8U8zM00jIjo8lmFxXcya9w2FTxanNiN4zVUq4MdLJnu1eMMWvPfrryVfdGsFHeIWLLWyj8Dbw5NRWDKINi8nvw0fQK961QvokkZrhNP3RMPUhgZPC6AoZ6n2yA5ouk8UcrqT1IxacM0C-pahbLLMD8G0LzM5-IthbT6fgmkC7gJsXYGYrXg1P9Jm1dJI2-SYw93-Q" />
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-5 md:px-10 mt-8 space-y-12">
         {/* ========== INICIO ========== */}
         {view === "inicio" && (
           <>
