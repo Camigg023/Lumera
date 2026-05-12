@@ -2,6 +2,8 @@ import { useState } from 'react';
 import ProductForm from './components/ProductForm';
 import ProductListItem from './components/ProductListItem';
 import { guardarDonacion } from '../../services/donationService';
+import { auth } from '../../config/firebase';
+import CodeDisplay from '../codeValidation/components/CodeDisplay';
 
 /**
  * Panel principal para agregar productos a una donación.
@@ -32,12 +34,13 @@ export default function AddProductsPanel() {
     setMensaje(null);
 
     try {
-      const id = await guardarDonacion(productos);
-      setMensaje({ tipo: 'exito', texto: `Donación registrada exitosamente (ID: ${id.slice(0, 8)}...)` });
+      const userId = auth.currentUser?.uid;
+      const { id, codigoUnico } = await guardarDonacion(productos, userId);
+      setMensaje({ tipo: 'exito', texto: `Donación registrada exitosamente.`, codigo: codigoUnico });
       setProductos([]);
     } catch (err) {
       console.error('[AddProductsPanel] Error al guardar:', err);
-      setMensaje({ tipo: 'error', texto: 'Error al guardar la donación. Intenta de nuevo.' });
+      setMensaje({ tipo: 'error', texto: err.message || 'Error al guardar la donación. Intenta de nuevo.' });
     } finally {
       setGuardando(false);
     }
@@ -50,7 +53,7 @@ export default function AddProductsPanel() {
     <div className="space-y-8">
       {/* Encabezado */}
       <header>
-        <h1 className="font-h1 text-h1 text-on-surface mb-2">
+        <h1 className="font-h1 text-h1 mb-2 bg-gradient-to-r from-primary to-indigo-600 bg-clip-text text-transparent">
           Food Validator &amp; Registration
         </h1>
         <p className="text-body-md text-outline">
@@ -62,18 +65,42 @@ export default function AddProductsPanel() {
       <ProductForm onAgregar={agregarProducto} />
 
       {/* Mensaje de éxito/error */}
-      {mensaje && (
-        <div
-          className={`flex items-center gap-3 px-5 py-4 rounded-2xl border ${
-            mensaje.tipo === 'exito'
-              ? 'bg-green-50 text-green-700 border-green-200'
-              : 'bg-error-container text-on-error-container border-error-container'
-          }`}
-        >
-          <span className={`material-symbols-outlined text-lg ${mensaje.tipo === 'exito' ? 'text-green-600' : 'text-error'}`}>
-            {mensaje.tipo === 'exito' ? 'check_circle' : 'error'}
-          </span>
+      {mensaje && mensaje.tipo === 'error' && (
+        <div className="flex items-center gap-3 px-5 py-4 rounded-2xl border bg-error-container text-on-error-container border-error-container">
+          <span className="material-symbols-outlined text-lg text-error">error</span>
           <p className="text-sm font-medium">{mensaje.texto}</p>
+        </div>
+      )}
+
+      {mensaje && mensaje.tipo === 'exito' && (
+        <div className="bg-green-50 rounded-3xl p-8 border border-green-200 text-center animate-fade-in flex flex-col items-center">
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+            <span className="material-symbols-outlined text-4xl text-green-600">check_circle</span>
+          </div>
+          <h2 className="text-2xl font-bold text-green-800 mb-2">¡Donación registrada!</h2>
+          <p className="text-green-700 mb-6 max-w-md">
+            Lleva tus productos al centro de acopio más cercano y presenta este código.
+          </p>
+          
+          <CodeDisplay codigo={mensaje.codigo} estado="pendiente" tamaño="lg" />
+          
+          <div className="mt-8 flex flex-col sm:flex-row items-center gap-4">
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent(`¡Hola! Voy a realizar una donación en Lumera. Mi código único es: ${mensaje.codigo}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 h-12 px-6 bg-[#25D366] text-white font-bold rounded-xl hover:bg-[#128C7E] transition-colors w-full sm:w-auto"
+            >
+              <span className="material-symbols-outlined">share</span>
+              Compartir por WhatsApp
+            </a>
+            <button
+              onClick={() => setMensaje(null)}
+              className="flex items-center justify-center h-12 px-6 bg-white text-green-800 font-bold rounded-xl border border-green-200 hover:bg-green-100 transition-colors w-full sm:w-auto cursor-pointer"
+            >
+              Nueva Donación
+            </button>
+          </div>
         </div>
       )}
 

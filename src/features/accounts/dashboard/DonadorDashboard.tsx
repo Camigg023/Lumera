@@ -1,24 +1,89 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { auth, db } from "../../../config/firebase";
+import { onSnapshot, collection, query, where } from "firebase/firestore";
 import { DonadorProfile } from "../pages/DonadorProfile";
-import { 
-  Bell, 
-  Search, 
-  HelpCircle, 
-  User, 
+// @ts-ignore
+import AddProductsPanel from "../../addProducts/AddProductsPanel";
+// @ts-ignore
+import DonationHistory from "../../codeValidation/DonationHistory";
+// @ts-ignore
+import NearbyAcopio from "../../collectionPoints/presentation/components/NearbyAcopio/NearbyAcopio";
+import {
+  Bell,
+  Search,
+  User,
   LogOut,
   LayoutDashboard,
   PackagePlus,
   Settings,
-  Heart
+  History
 } from "lucide-react";
 import styles from "./DonadorDashboard.module.css";
+import toast, { Toaster } from 'react-hot-toast';
 
 export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
   const [view, setView] = useState("inicio");
+  const [stats, setStats] = useState({ donaciones: 0, productos: 0, kg: 0 });
+
+  useEffect(() => {
+    const userId = auth.currentUser?.uid;
+    if (!userId) return;
+
+    // Escuchar en tiempo real las donaciones del usuario
+    const q = query(collection(db, "donations"), where("userId", "==", userId));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      let totalDonaciones = snapshot.size;
+      let totalProductos = 0;
+      let totalKg = 0;
+
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "modified") {
+          const docData = change.doc.data();
+          if (docData.estado === "entregado" || docData.estado === "validado") {
+            toast.success(`¡Tu donación ${docData.codigoUnico} ha sido entregada exitosamente!`, {
+              duration: 6000,
+              icon: '🎉'
+            });
+            if ("Notification" in window && Notification.permission === "granted") {
+              new Notification("¡Donación entregada!", {
+                body: `Tu donación ${docData.codigoUnico} ha sido recibida en el centro de acopio.`,
+                icon: "/favicon.ico"
+              });
+            }
+          }
+        }
+      });
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        totalProductos += data.totalProductos || 0;
+        const kgDoc = data.productos?.reduce((acc: number, p: any) => acc + (p.pesoUnidad * p.cantidad), 0) || 0;
+        totalKg += kgDoc;
+      });
+
+      setStats({
+        donaciones: totalDonaciones,
+        productos: totalProductos,
+        kg: totalKg
+      });
+    });
+
+    if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
+      Notification.requestPermission();
+    }
+
+    return () => unsubscribe();
+  }, [auth.currentUser]);
+
+  const handleLogout = () => {
+    auth.signOut();
+    if (onLogout) onLogout();
+  };
 
   return (
-    <div className={styles.layout}>
-      {/* MAIN */}
+    <div className={`${styles.layout} bg-surface `}>
+      <Toaster position="top-right" />
+
       <main className={styles.main}>
         {/* TOP NAVBAR */}
         <header className={styles.topbar}>
@@ -28,15 +93,15 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
           </div>
 
           <nav className={styles.topMenu}>
-            <button 
+            <button
               className={`${styles.topMenuItem} ${view === "inicio" ? styles.active : ""}`}
               onClick={() => setView("inicio")}
             >
               <LayoutDashboard size={20} />
               <span>Inicio</span>
             </button>
-            
-            <button 
+
+            <button
               className={`${styles.topMenuItem} ${view === "nueva-donacion" ? styles.active : ""}`}
               onClick={() => setView("nueva-donacion")}
             >
@@ -44,20 +109,12 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
               <span>Nueva donación</span>
             </button>
 
-            <button 
-              className={`${styles.topMenuItem} ${view === "perfil" ? styles.active : ""}`}
-              onClick={() => setView("perfil")}
+            <button
+              className={`${styles.topMenuItem} ${view === "mis-donaciones" ? styles.active : ""}`}
+              onClick={() => setView("mis-donaciones")}
             >
-              <User size={20} />
-              <span>Mi Perfil</span>
-            </button>
-
-            <button 
-              className={`${styles.topMenuItem} ${view === "configuracion" ? styles.active : ""}`}
-              onClick={() => setView("configuracion")}
-            >
-              <Settings size={20} />
-              <span>Configuración</span>
+              <History size={20} />
+              <span>Mis donaciones</span>
             </button>
           </nav>
 
@@ -71,17 +128,23 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
               <Bell size={20} />
               <span className={styles.notifBadge}></span>
             </button>
-            
+
             <div className={styles.userProfile}>
               <div className={styles.userInfo}>
-                <span className={styles.userName}>Oscar Correa</span>
+                <span className={styles.userName}>{auth.currentUser?.displayName || "Usuario"}</span>
               </div>
-              <img 
-                src="https://i.pravatar.cc/150?u=oscar" 
-                alt="Profile" 
-                className={styles.avatar} 
-              />
-              <button className={styles.logoutIconBtn} onClick={onLogout} title="Cerrar sesión">
+              {auth.currentUser?.photoURL ? (
+                <img
+                  src={auth.currentUser.photoURL}
+                  alt="Profile"
+                  className={styles.avatar}
+                />
+              ) : (
+                <div className={`${styles.avatar} flex items-center justify-center bg-indigo-100 text-primary font-bold`}>
+                  {auth.currentUser?.displayName?.charAt(0) || "U"}
+                </div>
+              )}
+              <button className={styles.logoutIconBtn} onClick={handleLogout} title="Cerrar sesión">
                 <LogOut size={18} />
               </button>
             </div>
@@ -89,131 +152,150 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
         </header>
 
         <div className={styles.contentWrapper}>
+          {/* INICIO */}
+          {view === "inicio" && (
+            <div className="max-w-7xl mx-auto px-5 md:px-10 mt-4 space-y-12 animate-fade-in pb-20">
+              {/* Header de bienvenida */}
+              <section className="flex items-center justify-between gap-4 bg-white px-6 py-5 rounded-3xl border border-outline-variant/40 shadow-sm">
+                <div className="w-12 h-12 rounded-xl bg-primary-container/10 flex items-center justify-center text-primary shrink-0">
+                  <span className="material-symbols-outlined text-2xl">volunteer_activism</span>
+                </div>
 
-        {/* INICIO */}
-        {view === "inicio" && (
-          <div className="max-w-2xl mx-auto text-center py-12 animate-fade-in">
-            <div className="w-24 h-24 mx-auto rounded-3xl bg-surface-container-low flex items-center justify-center mb-6">
-              <span className="material-symbols-outlined text-5xl text-primary">volunteer_activism</span>
-            </div>
-            <button className="w-10 h-10 rounded-full overflow-hidden border-2 border-indigo-100 transition-transform active:scale-95">
-              <img alt="Perfil" className="w-full h-full object-cover"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDq1llL5eUXQjiRoXxV099IXQ7L2DlROgk8sBIAFoACzFUfdc5XH9wFSoDnigl0FN2pJvE9R7L8U8zM00jIjo8lmFxXcya9w2FTxanNiN4zVUq4MdLJnu1eMMWvPfrryVfdGsFHeIWLLWyj8Dbw5NRWDKINi8nvw0fQK961QvokkZrhNP3RMPUhgZPC6AoZ6n2yA5ouk8UcrqT1IxacM0C-pahbLLMD8G0LzM5-IthbT6fgmkC7gJsXYGYrXg1P9Jm1dJI2-SYw93-Q" />
-            </button>
-          </div>
-        </div>
-      </header>
+                <div className="flex-1 min-w-0">
+                  <h1 className="text-h3 font-h3 text-on-surface truncate">Bienvenido, {auth.currentUser?.displayName?.split(' ')[0] || "Donador"}</h1>
+                  <p className="text-body-md text-on-surface-variant truncate">Tu contribución está haciendo la diferencia hoy.</p>
+                </div>
 
-      <main className="max-w-7xl mx-auto px-5 md:px-10 mt-8 space-y-12">
-        {/* ========== INICIO ========== */}
-        {view === "inicio" && (
-          <>
-            {/* Perfil del donador */}
-            <section className="flex flex-col md:flex-row items-center md:items-start gap-8 bg-surface-container-lowest p-8 rounded-3xl shadow-sm border border-indigo-50/50">
-              <div className="relative group">
-                <div className="w-32 h-32 md:w-40 md:h-40 rounded-full p-1 bg-gradient-to-tr from-primary to-secondary">
-                  <img alt="Elena Rodriguez" className="w-full h-full object-cover rounded-full border-4 border-white"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfuOPe0g_EDDBKlNttYUTXp0l7vAw6Bz71AiGuZ1YFyrMNGCuLqYh7CxxsEzdo9mGVJC3jnM-fORAbyn_X39NPiLUqYzIHa0tdbUtO1qM9O4rqxYxCQPq9yq7J3U-1rKZNA-aeAIKuU8CIBaiex4xmHjYJbb7cdxGouH2y0myWcVK-IAPbumrG-SumHQgZv04uOZGQ9mpnnjmNT4y4dxe-TYJQZXy0OyONyGE_GUeApuedtpZqPJv_OvuYDKlfXXaqYX0OC0V3m9qD" />
-                </div>
-                <div className="absolute bottom-2 right-2 bg-primary text-white p-2 rounded-full shadow-lg">
-                  <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
-                </div>
-              </div>
-              <div className="flex-1 text-center md:text-left space-y-4">
-                <div>
-                  <h1 className="text-h1 font-h1 text-on-background">Elena Rodriguez</h1>
-                  <p className="font-label-sm text-label-sm text-secondary uppercase tracking-widest mt-1">Sustaining Partner Since 2022</p>
-                </div>
-                <p className="text-body-md font-body-md text-on-surface-variant max-w-2xl">
-                  Passionate about sustainable food systems and community resilience. Currently focused on reducing surplus waste in the metro area through collaborative distribution networks.
-                </p>
-                <div className="flex flex-wrap justify-center md:justify-start gap-3">
-                  <span className="px-4 py-2 rounded-full bg-surface-container text-primary font-label-sm text-label-sm flex items-center gap-2">
-                    <span className="material-symbols-outlined text-sm">location_on</span> San Francisco, CA
-                  </span>
-                  <span className="px-4 py-2 rounded-full bg-surface-container text-primary font-label-sm text-label-sm flex items-center gap-2">
-                    <span className="material-symbols-outlined text-sm">share</span> Share Profile
-                  </span>
-                </div>
-              </div>
-            </section>
-
-            {/* Impacto */}
-            <section className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h2 className="text-h2 font-h2 text-on-background">Lifetime Impact</h2>
-                <button className="text-primary font-label-sm text-label-sm flex items-center gap-1">
-                  Full Report <span className="material-symbols-outlined text-lg">arrow_forward</span>
+                <button
+                  onClick={() => setView("nueva-donacion")}
+                  className="h-11 px-5 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer shrink-0"
+                >
+                  <PackagePlus size={18} />
+                  <span>Nueva Donación</span>
                 </button>
+              </section>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Columna Izquierda: Mi Perfil */}
+                <div className="lg:col-span-1">
+                  <div className="sticky top-24">
+                    <DonadorProfile />
+                  </div>
+                </div>
+
+                {/* Columna Derecha: Stats y Más */}
+                <div className="lg:col-span-2 space-y-8">
+                  {/* Stats Rápidas */}
+                  <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <div className="bg-white rounded-3xl p-8 border border-outline-variant/30 shadow-sm group hover:border-primary/30 transition-colors">
+                      <div className="w-12 h-12 rounded-xl bg-primary-fixed/30 flex items-center justify-center text-primary mb-4">
+                        <History size={24} />
+                      </div>
+                      <p className="text-4xl font-bold text-on-surface mb-1">{stats.donaciones}</p>
+                      <p className="text-sm font-medium text-on-surface-variant uppercase tracking-wider">Donaciones totales</p>
+                    </div>
+                    <div className="bg-white rounded-3xl p-8 border border-outline-variant/30 shadow-sm group hover:border-primary/30 transition-colors">
+                      <div className="w-12 h-12 rounded-xl bg-secondary-fixed/30 flex items-center justify-center text-secondary mb-4">
+                        <PackagePlus size={24} />
+                      </div>
+                      <p className="text-4xl font-bold text-on-surface mb-1">{stats.productos}</p>
+                      <p className="text-sm font-medium text-on-surface-variant uppercase tracking-wider">Productos entregados</p>
+                    </div>
+                    <div className="bg-white rounded-3xl p-8 border border-outline-variant/30 shadow-sm group hover:border-primary/30 transition-colors md:col-span-2 xl:col-span-1">
+                      <div className="w-12 h-12 rounded-xl bg-tertiary-fixed/30 flex items-center justify-center text-tertiary mb-4">
+                        <span className="material-symbols-outlined text-2xl">weight</span>
+                      </div>
+                      <p className="text-4xl font-bold text-on-surface mb-1">{stats.kg.toFixed(1)} <span className="text-xl font-semibold">kg</span></p>
+                      <p className="text-sm font-medium text-on-surface-variant uppercase tracking-wider">Peso total donado</p>
+                    </div>
+                  </section>
+
+                  {/* Centros de acopio cercanos */}
+                  <section className="space-y-6">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-h3 font-h3 text-on-surface">Puntos de Acopio Cercanos</h3>
+                      <button className="text-primary text-sm font-bold hover:underline">Ver mapa completo</button>
+                    </div>
+                    <NearbyAcopio autoDetectar={true} />
+                  </section>
+
+                  {/* Tutorial Rápido */}
+                  <section className="bg-surface-container-lowest rounded-3xl p-8 border border-outline-variant/40 space-y-8">
+                    <h3 className="text-h3 font-h3 text-on-surface">¿Cómo funciona?</h3>
+                    <div className="space-y-6">
+                      <div className="flex gap-4">
+                        <div className="w-10 h-10 rounded-full bg-primary-container text-primary flex items-center justify-center shrink-0 font-bold">1</div>
+                        <p className="text-on-surface-variant">Registra los productos que quieres donar en la pestaña <b>"Nueva Donación"</b>.</p>
+                      </div>
+                      <div className="flex gap-4">
+                        <div className="w-10 h-10 rounded-full bg-primary-container text-primary flex items-center justify-center shrink-0 font-bold">2</div>
+                        <p className="text-on-surface-variant">Obtén tu <b>código QR único</b> generado automáticamente para tu donación.</p>
+                      </div>
+                      <div className="flex gap-4">
+                        <div className="w-10 h-10 rounded-full bg-primary-container text-primary flex items-center justify-center shrink-0 font-bold">3</div>
+                        <p className="text-on-surface-variant">Lleva tus productos al <b>centro de acopio</b> y muestra tu código al personal.</p>
+                      </div>
+                    </div>
+                  </section>
+                </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div className="md:col-span-2 bg-white p-8 rounded-3xl shadow-sm border border-indigo-50 flex flex-col justify-between group hover:shadow-md transition-shadow relative overflow-hidden">
-                  <div className="absolute -right-12 -top-12 w-48 h-48 bg-indigo-50 rounded-full blur-3xl opacity-50 group-hover:bg-indigo-100 transition-colors"></div>
-                  <div className="relative">
-                    <div className="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center text-primary mb-6">
-                      <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>restaurant</span>
-                    </div>
-                    <h3 className="text-body-lg text-body-lg text-on-surface-variant">Total Meals Saved</h3>
-                    <p className="text-[56px] font-bold text-on-background leading-none mt-2">12,482</p>
-                  </div>
-                  <div className="mt-8 pt-6 border-t border-indigo-50/50 flex items-center gap-2 text-primary">
-                    <span className="material-symbols-outlined">trending_up</span>
-                    <span className="font-label-sm text-label-sm">+12% from last month</span>
-                  </div>
-                </div>
-                <div className="bg-surface-container-lowest p-8 rounded-3xl shadow-sm border border-indigo-50 flex flex-col justify-between hover:shadow-md transition-shadow">
-                  <div>
-                    <div className="w-12 h-12 rounded-2xl bg-secondary-container/10 flex items-center justify-center text-secondary mb-6">
-                      <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
-                    </div>
-                    <h3 className="text-body-md text-body-md text-on-surface-variant">People Helped</h3>
-                    <p className="text-[40px] font-bold text-on-background mt-1">3,204</p>
-                  </div>
-                  <p className="font-label-sm text-label-sm text-outline mt-4">Direct community reach</p>
-                </div>
-                <div className="bg-surface-container-lowest p-8 rounded-3xl shadow-sm border border-indigo-50 flex flex-col justify-between hover:shadow-md transition-shadow">
-                  <div>
-                    <div className="w-12 h-12 rounded-2xl bg-error-container/20 flex items-center justify-center text-error mb-6">
-                      <span className="material-symbols-outlined text-2xl">co2</span>
-                    </div>
-                    <h3 className="text-body-md text-body-md text-on-surface-variant">Carbon Reduced</h3>
-                    <p className="text-[40px] font-bold text-on-background mt-1">4.2<span className="text-2xl font-semibold">t</span></p>
-                  </div>
-                  <p className="font-label-sm text-label-sm text-outline mt-4">Equivalent to 84 trees</p>
-                </div>
+            </div>
+          )}
+
+          {/* NUEVA DONACIÓN */}
+          {view === "nueva-donacion" && (
+            <div className="max-w-4xl mx-auto py-6 animate-fade-in">
+              <AddProductsPanel />
+            </div>
+          )}
+
+          {/* MIS DONACIONES */}
+          {view === "mis-donaciones" && (
+            <div className="max-w-4xl mx-auto py-6 animate-fade-in">
+              <DonationHistory userId={auth.currentUser?.uid} />
+            </div>
+          )}
+
+          {/* PERFIL */}
+          {view === "perfil" && (
+            <div className="max-w-2xl mx-auto py-6 animate-fade-in">
+              <DonadorProfile />
+            </div>
+          )}
+
+          {/* CONFIGURACIÓN */}
+          {view === "configuracion" && (
+            <div className="max-w-2xl mx-auto py-20 text-center animate-fade-in">
+              <div className="w-20 h-20 bg-surface-container-high rounded-full flex items-center justify-center mx-auto mb-6 text-outline">
+                <Settings size={40} />
               </div>
-            </section>
-
-            {/* Centro de acopio */}
-            <section className="max-w-2xl">
-              <NearbyAcopio autoDetectar={true} />
-            </section>
-          </>
-        )}
-
-        {/* PERFIL */}
-        {view === "perfil" && <DonadorProfile />}
-
+              <h2 className="text-h2 font-h2 text-on-surface">Configuración</h2>
+              <p className="text-body-md text-outline mt-2">Opciones de cuenta y preferencias próximamente.</p>
+            </div>
+          )}
         </div>
       </main>
 
-      {/* ===== BOTTOM NAV BAR (Mobile) ===== */}
-      <nav className="fixed bottom-0 left-0 w-full z-50 bg-white/90 backdrop-blur-xl border-t border-indigo-50 shadow-[0_-8px_30px_rgba(79,70,229,0.08)] rounded-t-3xl md:hidden">
-        <div className="flex justify-around items-center px-4 pt-3 pb-6">
+      {/* MOBILE BOTTOM NAV */}
+      <nav className="fixed bottom-0 left-0 w-full z-50 bg-white/90 backdrop-blur-xl border-t border-outline-variant/20 shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:hidden">
+        <div className="flex justify-around items-center px-2 py-3">
           {[
-            { key: "inicio", icon: "explore", label: "Inicio" },
-            { key: "nueva-donacion", icon: "volunteer_activism", label: "Donar" },
-            { key: "donar", icon: "near_me", label: "Acopio" },
-            { key: "perfil", icon: "person", label: "Perfil" },
+            { key: "inicio", icon: <LayoutDashboard size={22} />, label: "Inicio" },
+            { key: "nueva-donacion", icon: <PackagePlus size={22} />, label: "Donar" },
+            { key: "mis-donaciones", icon: <History size={22} />, label: "Historial" },
           ].map((item) => {
             const activo = view === item.key;
             return (
-              <button key={item.key} onClick={() => setView(item.key)}
-                className={`flex flex-col items-center justify-center px-5 py-2 transition-all duration-200 ${
-                  activo ? "bg-indigo-50 text-indigo-700 rounded-2xl" : "text-slate-400 hover:text-indigo-500"
-                }`}>
-                <span className="material-symbols-outlined mb-1" style={activo ? { fontVariationSettings: "'FILL' 1" } : {}}>{item.icon}</span>
-                <span className="text-[11px] font-medium uppercase tracking-wider">{item.label}</span>
+              <button
+                key={item.key}
+                onClick={() => setView(item.key)}
+                className={`flex flex-col items-center justify-center min-w-[70px] py-1 transition-all duration-200 ${activo ? "text-primary" : "text-outline"
+                  }`}
+              >
+                <div className={`p-1 rounded-xl transition-colors ${activo ? "bg-primary/10" : ""}`}>
+                  {item.icon}
+                </div>
+                <span className="text-[10px] font-bold mt-1">{item.label}</span>
               </button>
             );
           })}
