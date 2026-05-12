@@ -81,7 +81,7 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
   };
 
   return (
-    <div className={`${styles.layout} bg-background min-h-screen w-full`}>
+    <div className={`${styles.layout} bg-surface min-h-screen w-full`}>
       <Toaster position="top-right" />
       
       <main className={styles.main}>
@@ -115,14 +115,6 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
             >
               <History size={20} />
               <span>Mis donaciones</span>
-            </button>
-
-            <button 
-              className={`${styles.topMenuItem} ${view === "perfil" ? styles.active : ""}`}
-              onClick={() => setView("perfil")}
-            >
-              <User size={20} />
-              <span>Mi Perfil</span>
             </button>
           </nav>
 
@@ -164,22 +156,22 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
           {view === "inicio" && (
             <div className="max-w-7xl mx-auto px-5 md:px-10 mt-4 space-y-12 animate-fade-in pb-20">
               {/* Header de bienvenida */}
-              <section className="flex items-center justify-between gap-6 bg-white p-6 rounded-3xl border border-outline-variant/40 shadow-sm">
-                <div className="flex items-center gap-6">
-                  <div className="w-16 h-16 rounded-2xl bg-primary-container/10 flex items-center justify-center text-primary shrink-0">
-                    <span className="material-symbols-outlined text-3xl">volunteer_activism</span>
-                  </div>
-                  <div>
-                    <h1 className="text-h2 font-h2 text-on-surface">Bienvenido, {auth.currentUser?.displayName?.split(' ')[0] || "Donador"}</h1>
-                    <p className="text-body-md text-on-surface-variant line-clamp-1">Tu contribución está haciendo la diferencia hoy.</p>
-                  </div>
+              <section className="flex items-center justify-between gap-4 bg-white px-6 py-5 rounded-3xl border border-outline-variant/40 shadow-sm">
+                <div className="w-12 h-12 rounded-xl bg-primary-container/10 flex items-center justify-center text-primary shrink-0">
+                  <span className="material-symbols-outlined text-2xl">volunteer_activism</span>
                 </div>
+                
+                <div className="flex-1 min-w-0">
+                  <h1 className="text-h3 font-h3 text-on-surface truncate">Bienvenido, {auth.currentUser?.displayName?.split(' ')[0] || "Donador"}</h1>
+                  <p className="text-body-md text-on-surface-variant truncate">Tu contribución está haciendo la diferencia hoy.</p>
+                </div>
+
                 <button
                   onClick={() => setView("nueva-donacion")}
-                  className="h-12 px-6 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer shrink-0"
+                  className="h-11 px-5 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer shrink-0"
                 >
                   <PackagePlus size={18} />
-                  Nueva Donación
+                  <span>Nueva Donación</span>
                 </button>
               </section>
 
@@ -291,7 +283,6 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
             { key: "inicio", icon: <LayoutDashboard size={22} />, label: "Inicio" },
             { key: "nueva-donacion", icon: <PackagePlus size={22} />, label: "Donar" },
             { key: "mis-donaciones", icon: <History size={22} />, label: "Historial" },
-            { key: "perfil", icon: <User size={22} />, label: "Perfil" },
           ].map((item) => {
             const activo = view === item.key;
             return (
