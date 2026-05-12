@@ -201,11 +201,15 @@ export function BeneficiarioDashboard({ onLogout }) {
     );
   }
 
-  // ─── VISTA INFORMATIVA: PERFIL PENDIENTE O RECHAZADO ───
-  // Muestra información del usuario en lugar del formulario de registro
-  // Layout: izquierda (avatar + datos), derecha (ubicación), abajo (beneficios), centro (mercado por reclamar)
+  // ─── VISTA DE INICIO UNIFICADA ───
+  // Misma vista para todos los estados del beneficiario (pendiente, rechazado, verificado)
+  // Layout: centro (beneficio por reclamar), 2 columnas (info + ubicación), abajo (beneficios)
 
-  if (needsProfileSetup && beneficiary) {
+  if (view === 'inicio' && beneficiary) {
+    const isVerified = beneficiary.verificationStatus === 'verified';
+    const isRejected = beneficiary.verificationStatus === 'rejected';
+    const isPending = beneficiary.verificationStatus === 'pending';
+
     // Obtener iniciales para el avatar
     const initials = beneficiary.fullName
       ? beneficiary.fullName.split(' ').map(n => n.charAt(0)).join('').slice(0, 2).toUpperCase()
@@ -229,17 +233,65 @@ export function BeneficiarioDashboard({ onLogout }) {
             <span className={styles.roleBadge}>BENEFICIARIO</span>
           </div>
 
+          {/* Navegación para usuarios verificados */}
+          {isVerified && (
+            <div className={styles.topMenu}>
+              <button
+                className={`${styles.topMenuItem} ${styles.active}`}
+                onClick={() => setView('inicio')}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                <span>Inicio</span>
+              </button>
+              <button
+                className={styles.topMenuItem}
+                onClick={() => setView('solicitar')}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                <span>Solicitar</span>
+              </button>
+              <button
+                className={styles.topMenuItem}
+                onClick={() => setView('mis-solicitudes')}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+                <span>Mis solicitudes</span>
+              </button>
+              <button
+                className={styles.topMenuItem}
+                onClick={() => setView('historial')}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Historial</span>
+              </button>
+            </div>
+          )}
+
           <div className={styles.topActions}>
-            {beneficiary.verificationStatus === 'rejected' && (
+            {isRejected && (
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-50 border border-red-200">
                 <span className="w-2 h-2 rounded-full bg-[var(--color-error)]" />
                 <span className="text-xs font-medium text-red-700">Rechazado</span>
               </div>
             )}
-            {beneficiary.verificationStatus === 'pending' && (
+            {isPending && (
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200">
                 <span className="w-2 h-2 rounded-full bg-amber-500" />
                 <span className="text-xs font-medium text-amber-700">Pendiente</span>
+              </div>
+            )}
+            {isVerified && (
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200">
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                <span className="text-xs font-medium text-emerald-700">Verificado</span>
               </div>
             )}
             <button className={styles.logoutIconBtn} onClick={onLogout} title="Cerrar sesión">
@@ -283,7 +335,6 @@ export function BeneficiarioDashboard({ onLogout }) {
                     Ver detalle
                   </button>
                 </div>
-                {/* Lista de mercados pendientes */}
                 {pendingClaims.length > 1 && (
                   <div className="mt-4 pt-4 border-t border-emerald-200">
                     <p className="text-xs font-medium text-emerald-600 mb-2">MERCADOS PENDIENTES:</p>
@@ -316,7 +367,6 @@ export function BeneficiarioDashboard({ onLogout }) {
             {/* COLUMNA IZQUIERDA: Avatar + Información personal */}
             <div className="p-6 rounded-2xl" style={{ backgroundColor: 'var(--color-surface-container-lowest)', border: '1px solid var(--color-outline-variant)' }}>
               <div className="flex items-start gap-5">
-                {/* Avatar con iniciales */}
                 <div
                   className="w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-bold flex-shrink-0 shadow-md"
                   style={{
@@ -326,8 +376,6 @@ export function BeneficiarioDashboard({ onLogout }) {
                 >
                   {initials}
                 </div>
-
-                {/* Información */}
                 <div className="flex-1 min-w-0">
                   <h3 className="text-xl font-bold truncate" style={{ color: 'var(--color-on-surface)' }}>
                     {beneficiary.fullName}
@@ -359,20 +407,26 @@ export function BeneficiarioDashboard({ onLogout }) {
               <div className="mt-5 pt-4" style={{ borderTop: '1px solid var(--color-outline-variant)' }}>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium" style={{ color: 'var(--color-on-surface-variant)' }}>Estado de verificación</span>
-                  {beneficiary.verificationStatus === 'pending' && (
+                  {isPending && (
                     <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
                       <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
                       Pendiente
                     </span>
                   )}
-                  {beneficiary.verificationStatus === 'rejected' && (
+                  {isRejected && (
                     <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
                       <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
                       Rechazado
                     </span>
                   )}
+                  {isVerified && (
+                    <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      Verificado
+                    </span>
+                  )}
                 </div>
-                {beneficiary.verificationStatus === 'rejected' && beneficiary.verificationNotes && (
+                {isRejected && beneficiary.verificationNotes && (
                   <p className="mt-2 text-xs text-red-600 bg-red-50 p-2 rounded-lg">
                     Motivo: {beneficiary.verificationNotes}
                   </p>
@@ -389,7 +443,6 @@ export function BeneficiarioDashboard({ onLogout }) {
                 </svg>
                 Ubicación de residencia
               </h4>
-
               <div className="space-y-3">
                 <div>
                   <p className="text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-outline)' }}>Dirección</p>
@@ -405,7 +458,6 @@ export function BeneficiarioDashboard({ onLogout }) {
                     <p className="text-sm font-medium mt-0.5 font-mono" style={{ color: 'var(--color-on-surface)' }}>
                       {beneficiary.latitude.toFixed(4)}, {beneficiary.longitude.toFixed(4)}
                     </p>
-                    {/* Mini mapa estático placeholder */}
                     <div
                       className="mt-3 h-28 rounded-xl flex items-center justify-center overflow-hidden"
                       style={{ backgroundColor: 'var(--color-surface-container-high)' }}
@@ -484,8 +536,8 @@ export function BeneficiarioDashboard({ onLogout }) {
               </div>
             )}
 
-            {/* Banner informativo según estado */}
-            {beneficiary.verificationStatus === 'pending' && (
+            {/* Banner informativo según estado (solo si no está verificado) */}
+            {isPending && (
               <div className="mt-5 p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-800 flex items-start gap-3">
                 <span className="text-lg flex-shrink-0">⏳</span>
                 <div>
@@ -496,7 +548,7 @@ export function BeneficiarioDashboard({ onLogout }) {
                 </div>
               </div>
             )}
-            {beneficiary.verificationStatus === 'rejected' && (
+            {isRejected && (
               <div className="mt-5 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-800 flex items-start gap-3">
                 <span className="text-lg flex-shrink-0">❌</span>
                 <div>
@@ -516,47 +568,66 @@ export function BeneficiarioDashboard({ onLogout }) {
             )}
           </div>
 
-          {/* Botón flotante para editar perfil (visible siempre) */}
-          <div className="mt-6 text-center">
-            <button
-              onClick={() => setView('registro')}
-              className="px-8 py-3 rounded-xl text-sm font-semibold transition-all active:scale-95 cursor-pointer"
-              style={{
-                backgroundColor: 'var(--color-primary)',
-                color: 'var(--color-on-primary)',
-              }}
-            >
-              <span className="flex items-center gap-2 justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-                {isProfileComplete ? 'Editar mi perfil' : 'Completar mi perfil'}
-              </span>
-            </button>
+          {/* Acciones según estado */}
+          <div className="mt-6">
+            {!isVerified && (
+              <div className="text-center">
+                <button
+                  onClick={() => setView('registro')}
+                  className="px-8 py-3 rounded-xl text-sm font-semibold transition-all active:scale-95 cursor-pointer"
+                  style={{
+                    backgroundColor: 'var(--color-primary)',
+                    color: 'var(--color-on-primary)',
+                  }}
+                >
+                  <span className="flex items-center gap-2 justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    {isProfileComplete ? 'Editar mi perfil' : 'Completar mi perfil'}
+                  </span>
+                </button>
+              </div>
+            )}
+            {isVerified && canCreateThisWeek && (
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                <button
+                  onClick={() => setView('solicitar')}
+                  className="px-8 py-3 rounded-xl text-sm font-semibold transition-all active:scale-95 cursor-pointer flex items-center gap-2"
+                  style={{
+                    backgroundColor: 'var(--color-primary)',
+                    color: 'var(--color-on-primary)',
+                  }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  Solicitar ayuda
+                </button>
+                <button
+                  onClick={() => setView('mis-solicitudes')}
+                  className="px-8 py-3 rounded-xl text-sm font-semibold transition-all active:scale-95 cursor-pointer flex items-center gap-2"
+                  style={{
+                    backgroundColor: 'transparent',
+                    color: 'var(--color-primary)',
+                    border: '2px solid var(--color-primary)',
+                  }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                  </svg>
+                  Ver mis solicitudes
+                </button>
+              </div>
+            )}
           </div>
         </main>
       </div>
     );
   }
 
-  // ─── VISTA: DASHBOARD VERIFICADO (BeneficiaryHome) ───
-  // Cuando el usuario está verificado, mostramos el nuevo layout de 3 columnas
-  // SIN la barra de navegación anterior (Explore/Donate/Impact ni Inicio/Solicitar/Historial)
-
-  if (view === 'inicio' && beneficiary && canRequestHelp) {
-    return (
-      <BeneficiaryHome
-        beneficiary={beneficiary}
-        activeRequests={activeRequests}
-        totalKgReceived={totalKgReceived}
-        onNavigate={(v) => setView(v)}
-        onLogout={onLogout}
-      />
-    );
-  }
-
-  // ─── VISTAS SECUNDARIAS (verificado, sin topbar de navegación) ───
-  // Muestran solo el contenido, con un botón de volver al inicio
+  // ─── VISTAS SECUNDARIAS (registro, perfil, solicitar, etc.) ───
+  // Muestran solo el contenido con topbar y botón de volver al inicio
 
   return (
     <div className={styles.layout} role="application" aria-label="Panel de beneficiario">
@@ -566,7 +637,6 @@ export function BeneficiarioDashboard({ onLogout }) {
           <span className={styles.roleBadge}>BENEFICIARIO</span>
         </div>
 
-        {/* Solo botón de volver al inicio y cerrar sesión */}
         <div className={styles.topActions}>
           <button
             onClick={() => setView('inicio')}
