@@ -1,0 +1,39 @@
+.card {
+  background: linear-gradient(135deg, #4f46e5, #712ae2);
+  padding: 32px;
+  border-radius: var(--radius-2xl);
+  color: white;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.balanceLabel {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.balance {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.progressContainer {
+  margin-top: 16px;
+}
+
+.progressBar {
+  width: 100%;
+  height: 14px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  width: 78%;
+  background: white;
+  border-radius: 999px;
+  box-shadow: 0 0 15px rgba(255,255,255,0.5);
+}

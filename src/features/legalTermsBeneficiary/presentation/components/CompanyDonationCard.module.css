@@ -1,0 +1,75 @@
+.card {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  padding: 2rem;
+  border: 1px solid #e2e7ff;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.iconWrapper {
+  height: 3rem;
+  width: 3rem;
+  border-radius: 0.75rem;
+  background-color: rgba(53, 37, 205, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3525cd;
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  color: #131b2e;
+}
+
+.rulesGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .rulesGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.ruleItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ruleIconWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #712ae2;
+}
+
+.ruleTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #712ae2;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+.ruleDesc {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #464555;
+  margin: 0;
+}

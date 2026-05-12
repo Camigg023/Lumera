@@ -1,4 +1,3 @@
-
 import { CollectionPointFilter } from '../../../domain/entities/colecctionPoints';
 import styles from './FilterChips.module.css';
 
@@ -29,7 +28,9 @@ export function FilterChips({ active, onChange }: FilterChipsProps) {
           onClick={() => onChange(value)}
           aria-pressed={value === active}
         >
-          <span className={`material-symbols-outlined ${styles.icon}`}>{icon}</span>
+         <span className="material-symbols-outlined">
+          {icon}
+         </span>
           {label}
         </button>
       ))}

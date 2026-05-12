@@ -19,7 +19,6 @@ export {
   CollectionPointCard,
   MapView,
   StatsPanel,
-  BottomNav,
 } from './presentation/components';
 
 // ── Presentation: Page ───────────────────────────────────────────────────────

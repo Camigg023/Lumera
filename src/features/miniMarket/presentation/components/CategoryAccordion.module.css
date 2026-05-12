@@ -1,0 +1,140 @@
+.details {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  border: 1px solid #eef2ff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.2s;
+}
+
+.details:hover {
+  border-color: rgba(79, 70, 229, 0.3);
+}
+
+/* Hide native marker */
+.details summary::-webkit-details-marker {
+  display: none;
+}
+
+.summary {
+  list-style: none;
+  outline: none;
+  cursor: pointer;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.iconWrap {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.iconSymbol {
+  font-size: 1.5rem;
+}
+
+.summaryBody {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.titleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.categoryTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: #131b2e;
+}
+
+.categoryDesc {
+  font-size: 0.875rem;
+  color: #464555;
+  line-height: 1.3;
+}
+
+.quantityRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.quantity {
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: #131b2e;
+}
+
+.expandIcon {
+  transition: transform 0.3s ease;
+  color: #464555;
+}
+
+/* Rotate when open */
+.details[open] .expandIcon {
+  transform: rotate(180deg);
+}
+
+.detailsContent {
+  padding: 0.5rem 1.25rem 1.25rem;
+  border-top: 1px solid rgba(238, 242, 255, 0.5);
+  margin-left: 4rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+@media (min-width: 768px) {
+  .detailsContent {
+    margin-left: 4.75rem;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.itemsGrid {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.foodItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  background-color: #f2f3ff;
+  border: 1px solid rgba(199, 196, 216, 0.2);
+}
+
+.foodItemName {
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: #131b2e;
+}
+
+.foodItemQty {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #464555;
+}

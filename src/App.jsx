@@ -1,13 +1,33 @@
 import { useState } from "react";
 import { HomePage } from "./features/home";
 import { LoginPage } from "./features/login";
-import { DashboardPage } from "./features/dashboard";
 import { RegisterPage } from "./features/register";
 import { PasswordRecoveryPage } from "./features/password-recovery";
-import { CollectionPointsPage } from './features/collectionPoints';
+import { CollectionPointsPage } from "./features/collectionPoints";
+import { RewardsPage } from "./features/rewards";
+import { MiniMarketPage } from "./features/miniMarket";
+import { TermsPage } from "./features/legalTermsBeneficiary";
+import { NewDeliveryTimePage } from "./features/NewDeliveryTime";
+import { LegalTermsCompanyPage } from "./features/legalTermsCompany";
+import {DeliveryPointsPage} from "./features/deliveryPoints";
+
 
 function App() {
- const [screen, setScreen] = useState("collection-points");
+  // 💅 cambia esto según lo que quieras ver primero
+  const [screen, setScreen] = useState("delivery-points");
+
+  if (screen === "legalTermsBeneficiary") {
+    return <TermsPage />;
+  }
+
+  if (screen === "legalTermsCompany") {
+    return <LegalTermsCompanyPage />;
+  }
+
+  if (screen === "delivery-time") {
+    return <NewDeliveryTimePage />;
+  }
+
   if (screen === "login") {
     return (
       <LoginPage
@@ -15,6 +35,9 @@ function App() {
         onLoginSuccess={() => setScreen("collection-points")}
         onNavigateToRegister={() => setScreen("register")}
         onNavigateToPasswordRecovery={() => setScreen("password-recovery")}
+        onNavigateToMiniMarket={() => setScreen("mini-market")}
+        onNavigateToDeliveryPoints={() => setScreen("delivery-points")}
+
       />
     );
   }
@@ -24,7 +47,7 @@ function App() {
       <RegisterPage
         onBackToHome={() => setScreen("home")}
         onNavigateToLogin={() => setScreen("login")}
-        onRegisterSuccess={() => setScreen("dashboard")}
+        onNavigateToMiniMarket={() => setScreen("mini-market")}
       />
     );
   }
@@ -39,17 +62,27 @@ function App() {
     );
   }
 
-  if (screen === "dashboard") {
-    return (
-      <DashboardPage onLogout={() => setScreen("home")} />
-    );
-  }
 
   if (screen === "collection-points") {
     return <CollectionPointsPage />;
   }
 
-  return <HomePage onNavigateToLogin={() => setScreen("login")} />;
+  if (screen === "delivery-points") {
+    return <DeliveryPointsPage />;
+  } 
+
+  if (screen === "rewards") {
+    return <RewardsPage />;
+  }
+
+  if (screen === "mini-market") {
+    return <MiniMarketPage />;
+  }
+
+  return (
+    <HomePage onNavigateToLogin={() => setScreen("login")} />
+  );
 }
+
 
 export default App;

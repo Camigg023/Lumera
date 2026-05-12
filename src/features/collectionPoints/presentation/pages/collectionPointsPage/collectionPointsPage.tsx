@@ -6,7 +6,6 @@ import { SearchInput } from '../../components/SearchInput';
 import { CollectionPointCard } from '../../components/CollectionPointCard';
 import { MapView } from '../../components/MapView';
 import { StatsPanel } from '../../components/StatsPanel';
-import { BottomNav } from '../../components/BottomNav';
 import styles from './collectionPointsPage.module.css';
 import { CollectionPoint } from '../../../domain/entities/colecctionPoints';
 
@@ -74,7 +73,7 @@ export function CollectionPointsPage() {
         {stats && <StatsPanel stats={stats} />}
       </main>
 
-      <BottomNav />
+     
 
       {/* FAB */}
       <button className={styles.fab} aria-label="Add collection point">

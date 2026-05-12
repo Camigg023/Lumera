@@ -1,0 +1,32 @@
+.box {
+  background-color: #f2f3ff;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.label {
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  color: #3525cd;
+  margin-bottom: 0.25rem;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.icon {
+  color: #3525cd;
+}
+
+.time {
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 600;
+  color: #131b2e;
+}

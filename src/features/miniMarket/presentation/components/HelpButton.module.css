@@ -1,0 +1,46 @@
+.btn {
+  display: none;
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background-color: #8a4cfc;
+  color: #ffffff;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 20px 40px rgba(138, 76, 252, 0.4);
+  border: none;
+  cursor: pointer;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 40;
+  transition: transform 0.2s;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .btn {
+    display: flex;
+  }
+}
+
+.btn:hover {
+  transform: scale(1.1);
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+.expandText {
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  transition: max-width 0.5s ease;
+}
+
+.btn:hover .expandText {
+  max-width: 16rem;
+}

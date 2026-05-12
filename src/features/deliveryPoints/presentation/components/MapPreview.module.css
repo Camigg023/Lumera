@@ -1,0 +1,92 @@
+.mapContainer {
+  position: relative;
+  height: 400px;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eef2ff;
+}
+
+.mapImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1);
+  opacity: 0.8;
+}
+
+/* Active pin overlay */
+.pinOverlay {
+  position: absolute;
+  top: 33%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pin {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: #4f46e5;
+  color: #ffffff;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.pinLabel {
+  margin-top: 0.5rem;
+  background: #ffffff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid #eef2ff;
+}
+
+.pinLabelText {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: #3525cd;
+}
+
+/* Map controls */
+.controls {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.controlBtn {
+  width: 3rem;
+  height: 3rem;
+  background: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #464555;
+  border: none;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.controlBtn:hover {
+  color: #3525cd;
+}

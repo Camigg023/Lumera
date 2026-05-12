@@ -1,0 +1,21 @@
+.grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: 3fr 2fr;
+  }
+}
+
+.colLarge {
+  display: flex;
+  flex-direction: column;
+}
+
+.colSmall {
+  display: flex;
+  flex-direction: column;
+}

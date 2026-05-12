@@ -1,0 +1,15 @@
+.block {
+  padding: 1.5rem;
+  background: #f2f3ff;
+  border-radius: 0.75rem;
+  border-left: 4px solid #cd6325;
+}
+
+.quote {
+  font-style: italic;
+  color: #131b2e;
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+  font-family: Inter, sans-serif;
+}
