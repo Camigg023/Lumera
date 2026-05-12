@@ -148,11 +148,13 @@ export class HelpRequestDataSource {
   }
 
   /**
-   * Lista todas las solicitudes de un beneficiario, ordenadas por fecha descendente.
+   * Lista todas las solicitudes de un beneficiario.
+   * El ordenamiento por fecha descendente se realiza en el caso de uso para evitar
+   * la necesidad de un índice compuesto en Firestore.
    */
   async listRequestsByBeneficiary(beneficiaryId: string): Promise<HelpRequest[]> {
     const colRef = this.getCollection();
-    const q = query(colRef, where('beneficiaryId', '==', beneficiaryId), orderBy('createdAt', 'desc'));
+    const q = query(colRef, where('beneficiaryId', '==', beneficiaryId));
     const snapshot = await getDocs(q);
     return snapshot.docs.map(mapDocToRequest);
   }
