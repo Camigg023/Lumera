@@ -2,8 +2,11 @@ import { useState, useEffect } from "react";
 import { auth, db } from "../../../config/firebase";
 import { onSnapshot, collection, query, where } from "firebase/firestore";
 import { DonadorProfile } from "../pages/DonadorProfile";
+// @ts-ignore
 import AddProductsPanel from "../../addProducts/AddProductsPanel";
+// @ts-ignore
 import DonationHistory from "../../codeValidation/DonationHistory";
+// @ts-ignore
 import NearbyAcopio from "../../collectionPoints/presentation/components/NearbyAcopio/NearbyAcopio";
 import { 
   Bell, 
@@ -54,7 +57,7 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
       snapshot.forEach((doc) => {
         const data = doc.data();
         totalProductos += data.totalProductos || 0;
-        const kgDoc = data.productos?.reduce((acc, p: any) => acc + (p.pesoUnidad * p.cantidad), 0) || 0;
+        const kgDoc = data.productos?.reduce((acc: number, p: any) => acc + (p.pesoUnidad * p.cantidad), 0) || 0;
         totalKg += kgDoc;
       });
 
@@ -70,7 +73,7 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
     }
 
     return () => unsubscribe();
-  }, []);
+  }, [auth.currentUser]);
 
   const handleLogout = () => {
     auth.signOut();
