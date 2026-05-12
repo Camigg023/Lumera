@@ -1,5 +1,11 @@
 import { useState } from "react";
-import styles from "./DonadorProfile.module.css";
+
+const styles = {
+  card: "",
+  cardTitle: "",
+  input: "",
+  saveButton: "",
+};
 
 export function DonadorProfile() {
   const [name, setName] = useState("");
