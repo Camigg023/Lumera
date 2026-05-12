@@ -171,7 +171,7 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
                   </div>
                   <div>
                     <h1 className="text-h2 font-h2 text-on-surface">Bienvenido de nuevo, {auth.currentUser?.displayName?.split(' ')[0] || "Donador"}</h1>
-                    <p className="text-body-md text-outline">Tu contribución está haciendo la diferencia hoy.</p>
+                    <p className="text-body-md text-on-surface-variant">Tu contribución está haciendo la diferencia hoy.</p>
                   </div>
                 </div>
                 <button
@@ -186,25 +186,25 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
               {/* Stats Rápidas */}
               <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-white rounded-3xl p-8 border border-outline-variant/30 shadow-sm group hover:border-primary/30 transition-colors">
-                  <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-primary mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-primary-fixed/30 flex items-center justify-center text-primary mb-4">
                     <History size={24} />
                   </div>
                   <p className="text-4xl font-bold text-on-surface mb-1">{stats.donaciones}</p>
-                  <p className="text-sm font-medium text-outline uppercase tracking-wider">Donaciones totales</p>
+                  <p className="text-sm font-medium text-on-surface-variant uppercase tracking-wider">Donaciones totales</p>
                 </div>
                 <div className="bg-white rounded-3xl p-8 border border-outline-variant/30 shadow-sm group hover:border-primary/30 transition-colors">
-                  <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center text-green-600 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-secondary-fixed/30 flex items-center justify-center text-secondary mb-4">
                     <PackagePlus size={24} />
                   </div>
                   <p className="text-4xl font-bold text-on-surface mb-1">{stats.productos}</p>
-                  <p className="text-sm font-medium text-outline uppercase tracking-wider">Productos entregados</p>
+                  <p className="text-sm font-medium text-on-surface-variant uppercase tracking-wider">Productos entregados</p>
                 </div>
                 <div className="bg-white rounded-3xl p-8 border border-outline-variant/30 shadow-sm group hover:border-primary/30 transition-colors">
-                  <div className="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-tertiary-fixed/30 flex items-center justify-center text-tertiary mb-4">
                     <span className="material-symbols-outlined text-2xl">weight</span>
                   </div>
                   <p className="text-4xl font-bold text-on-surface mb-1">{stats.kg.toFixed(1)} <span className="text-xl font-semibold">kg</span></p>
-                  <p className="text-sm font-medium text-outline uppercase tracking-wider">Peso total donado</p>
+                  <p className="text-sm font-medium text-on-surface-variant uppercase tracking-wider">Peso total donado</p>
                 </div>
               </section>
 
