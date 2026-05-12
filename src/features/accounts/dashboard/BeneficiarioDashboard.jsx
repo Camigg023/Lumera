@@ -369,7 +369,7 @@ export function BeneficiarioDashboard({ onLogout }) {
             <div className="p-6 rounded-2xl" style={{ backgroundColor: 'var(--color-surface-container-lowest)', border: '1px solid var(--color-outline-variant)' }}>
               <div className="flex items-start gap-5">
                 <div
-                  className="w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-bold flex-shrink-0 shadow-md"
+                  className="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold flex-shrink-0 shadow-md"
                   style={{
                     background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-container))',
                     color: 'var(--color-on-primary)',
