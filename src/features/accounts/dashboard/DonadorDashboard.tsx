@@ -8,10 +8,10 @@ import AddProductsPanel from "../../addProducts/AddProductsPanel";
 import DonationHistory from "../../codeValidation/DonationHistory";
 // @ts-ignore
 import NearbyAcopio from "../../collectionPoints/presentation/components/NearbyAcopio/NearbyAcopio";
-import { 
-  Bell, 
-  Search, 
-  User, 
+import {
+  Bell,
+  Search,
+  User,
   LogOut,
   LayoutDashboard,
   PackagePlus,
@@ -81,9 +81,9 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
   };
 
   return (
-    <div className={`${styles.layout} bg-surface min-h-screen w-full`}>
+    <div className={`${styles.layout} bg-surface `}>
       <Toaster position="top-right" />
-      
+
       <main className={styles.main}>
         {/* TOP NAVBAR */}
         <header className={styles.topbar}>
@@ -93,15 +93,15 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
           </div>
 
           <nav className={styles.topMenu}>
-            <button 
+            <button
               className={`${styles.topMenuItem} ${view === "inicio" ? styles.active : ""}`}
               onClick={() => setView("inicio")}
             >
               <LayoutDashboard size={20} />
               <span>Inicio</span>
             </button>
-            
-            <button 
+
+            <button
               className={`${styles.topMenuItem} ${view === "nueva-donacion" ? styles.active : ""}`}
               onClick={() => setView("nueva-donacion")}
             >
@@ -109,7 +109,7 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
               <span>Nueva donación</span>
             </button>
 
-            <button 
+            <button
               className={`${styles.topMenuItem} ${view === "mis-donaciones" ? styles.active : ""}`}
               onClick={() => setView("mis-donaciones")}
             >
@@ -128,16 +128,16 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
               <Bell size={20} />
               <span className={styles.notifBadge}></span>
             </button>
-            
+
             <div className={styles.userProfile}>
               <div className={styles.userInfo}>
                 <span className={styles.userName}>{auth.currentUser?.displayName || "Usuario"}</span>
               </div>
               {auth.currentUser?.photoURL ? (
-                <img 
-                  src={auth.currentUser.photoURL} 
-                  alt="Profile" 
-                  className={styles.avatar} 
+                <img
+                  src={auth.currentUser.photoURL}
+                  alt="Profile"
+                  className={styles.avatar}
                 />
               ) : (
                 <div className={`${styles.avatar} flex items-center justify-center bg-indigo-100 text-primary font-bold`}>
@@ -160,7 +160,7 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
                 <div className="w-12 h-12 rounded-xl bg-primary-container/10 flex items-center justify-center text-primary shrink-0">
                   <span className="material-symbols-outlined text-2xl">volunteer_activism</span>
                 </div>
-                
+
                 <div className="flex-1 min-w-0">
                   <h1 className="text-h3 font-h3 text-on-surface truncate">Bienvenido, {auth.currentUser?.displayName?.split(' ')[0] || "Donador"}</h1>
                   <p className="text-body-md text-on-surface-variant truncate">Tu contribución está haciendo la diferencia hoy.</p>
@@ -245,7 +245,7 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
           {/* NUEVA DONACIÓN */}
           {view === "nueva-donacion" && (
             <div className="max-w-4xl mx-auto py-6 animate-fade-in">
-               <AddProductsPanel />
+              <AddProductsPanel />
             </div>
           )}
 
@@ -286,12 +286,11 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
           ].map((item) => {
             const activo = view === item.key;
             return (
-              <button 
-                key={item.key} 
+              <button
+                key={item.key}
                 onClick={() => setView(item.key)}
-                className={`flex flex-col items-center justify-center min-w-[70px] py-1 transition-all duration-200 ${
-                  activo ? "text-primary" : "text-outline"
-                }`}
+                className={`flex flex-col items-center justify-center min-w-[70px] py-1 transition-all duration-200 ${activo ? "text-primary" : "text-outline"
+                  }`}
               >
                 <div className={`p-1 rounded-xl transition-colors ${activo ? "bg-primary/10" : ""}`}>
                   {item.icon}
