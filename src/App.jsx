@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "./config/firebase";
 
@@ -99,9 +99,14 @@ function App() {
     }
   };
 
-  const onLogout = () => {
-    setRole(null);
-    setAppState("home");
+  const onLogout = async () => {
+    try {
+      await signOut(auth);
+      setRole(null);
+      setAppState("home");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
   };
 
   // ─── RENDER POR ESTADO ───
@@ -178,7 +183,7 @@ function App() {
   if (appState === "dashboard") {
     if (role && isValidRole(role)) {
       const DashboardComponent = DASHBOARD_COMPONENTS[role];
-      return <DashboardComponent />;
+      return <DashboardComponent onLogout={onLogout} />;
     }
 
     console.warn(`[App] Rol inválido en dashboard: "${role}".`);

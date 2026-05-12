@@ -4,10 +4,21 @@ import { onSnapshot, collection, query, where } from "firebase/firestore";
 import { DonadorProfile } from "../pages/DonadorProfile";
 import AddProductsPanel from "../../addProducts/AddProductsPanel";
 import DonationHistory from "../../codeValidation/DonationHistory";
+import NearbyAcopio from "../../collectionPoints/presentation/components/NearbyAcopio/NearbyAcopio";
+import { 
+  Bell, 
+  Search, 
+  User, 
+  LogOut,
+  LayoutDashboard,
+  PackagePlus,
+  Settings,
+  History
+} from "lucide-react";
 import styles from "./DonadorDashboard.module.css";
 import toast, { Toaster } from 'react-hot-toast';
 
-export function DonadorDashboard() {
+export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
   const [view, setView] = useState("inicio");
   const [stats, setStats] = useState({ donaciones: 0, productos: 0, kg: 0 });
 
@@ -26,12 +37,10 @@ export function DonadorDashboard() {
         if (change.type === "modified") {
           const docData = change.doc.data();
           if (docData.estado === "entregado" || docData.estado === "validado") {
-            // Mostrar notificación de éxito!
             toast.success(`¡Tu donación ${docData.codigoUnico} ha sido entregada exitosamente!`, {
               duration: 6000,
               icon: '🎉'
             });
-            // Opcional: API de notificaciones del navegador
             if ("Notification" in window && Notification.permission === "granted") {
               new Notification("¡Donación entregada!", {
                 body: `Tu donación ${docData.codigoUnico} ha sido recibida en el centro de acopio.`,
@@ -45,7 +54,7 @@ export function DonadorDashboard() {
       snapshot.forEach((doc) => {
         const data = doc.data();
         totalProductos += data.totalProductos || 0;
-        const kgDoc = data.productos?.reduce((acc, p) => acc + (p.pesoUnidad * p.cantidad), 0) || 0;
+        const kgDoc = data.productos?.reduce((acc, p: any) => acc + (p.pesoUnidad * p.cantidad), 0) || 0;
         totalKg += kgDoc;
       });
 
@@ -56,7 +65,6 @@ export function DonadorDashboard() {
       });
     });
 
-    // Pedir permiso para notificaciones nativas si es necesario
     if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
       Notification.requestPermission();
     }
@@ -66,123 +74,230 @@ export function DonadorDashboard() {
 
   const handleLogout = () => {
     auth.signOut();
+    if (onLogout) onLogout();
   };
 
   return (
     <div className={styles.layout}>
       <Toaster position="top-right" />
       
-      {/* SIDEBAR */}
-      <aside className={styles.sidebar}>
-        <div className="flex-1">
-          <h2 className={styles.logo}>LUMERA</h2>
-
-          <nav className={styles.menu}>
-            <p onClick={() => setView("inicio")} className={view === "inicio" ? "font-bold text-primary" : ""}>🏠 Inicio</p>
-            <p onClick={() => setView("nueva-donacion")} className={view === "nueva-donacion" ? "font-bold text-primary" : ""}>📦 Nueva donación</p>
-            <p onClick={() => setView("mis-donaciones")} className={view === "mis-donaciones" ? "font-bold text-primary" : ""}>📋 Mis donaciones</p>
-            <p onClick={() => setView("perfil")} className={view === "perfil" ? "font-bold text-primary" : ""}>👤 Perfil</p>
-          </nav>
-        </div>
-
-        <button 
-          onClick={handleLogout}
-          className="mt-auto mb-6 flex items-center justify-center gap-2 text-error hover:bg-error-container/50 px-4 py-3 rounded-xl transition cursor-pointer font-medium"
-        >
-          <span className="material-symbols-outlined">logout</span>
-          Cerrar sesión
-        </button>
-      </aside>
-
-      {/* MAIN */}
       <main className={styles.main}>
+        {/* TOP NAVBAR */}
+        <header className={styles.topbar}>
+          <div className={styles.logoSection}>
+            <h2 className={styles.logo}>LUMERA</h2>
+            <span className={styles.roleBadge}>DONADOR</span>
+          </div>
 
-        {/* INICIO */}
-        {view === "inicio" && (
-          <div className="max-w-4xl mx-auto py-12 animate-fade-in">
-            <div className="text-center mb-10">
-              <div className="w-24 h-24 mx-auto rounded-3xl bg-surface-container-low flex items-center justify-center mb-6">
-                <span className="material-symbols-outlined text-5xl text-primary">volunteer_activism</span>
+          <nav className={styles.topMenu}>
+            <button 
+              className={`${styles.topMenuItem} ${view === "inicio" ? styles.active : ""}`}
+              onClick={() => setView("inicio")}
+            >
+              <LayoutDashboard size={20} />
+              <span>Inicio</span>
+            </button>
+            
+            <button 
+              className={`${styles.topMenuItem} ${view === "nueva-donacion" ? styles.active : ""}`}
+              onClick={() => setView("nueva-donacion")}
+            >
+              <PackagePlus size={20} />
+              <span>Nueva donación</span>
+            </button>
+
+            <button 
+              className={`${styles.topMenuItem} ${view === "mis-donaciones" ? styles.active : ""}`}
+              onClick={() => setView("mis-donaciones")}
+            >
+              <History size={20} />
+              <span>Mis donaciones</span>
+            </button>
+
+            <button 
+              className={`${styles.topMenuItem} ${view === "perfil" ? styles.active : ""}`}
+              onClick={() => setView("perfil")}
+            >
+              <User size={20} />
+              <span>Mi Perfil</span>
+            </button>
+          </nav>
+
+          <div className={styles.topActions}>
+            <div className={styles.searchBox}>
+              <Search size={18} className={styles.searchIcon} />
+              <input type="text" placeholder="Buscar..." />
+            </div>
+
+            <button className={styles.iconBtn} aria-label="Notificaciones">
+              <Bell size={20} />
+              <span className={styles.notifBadge}></span>
+            </button>
+            
+            <div className={styles.userProfile}>
+              <div className={styles.userInfo}>
+                <span className={styles.userName}>{auth.currentUser?.displayName || "Usuario"}</span>
               </div>
-              <h1 className="text-h2 font-h2 text-on-surface mb-3">
-                Bienvenido, Donador
-              </h1>
-              <p className="text-body-md text-outline mb-8 max-w-md mx-auto">
-                Cada donación cuenta. Agrega los productos que deseas donar y ayúdanos a llevarlos a quienes más lo necesitan.
-              </p>
-              <button
-                onClick={() => setView("nueva-donacion")}
-                className="h-14 px-10 bg-gradient-to-r from-primary to-primary-container text-white font-bold text-body-md rounded-2xl shadow-lg shadow-indigo-200 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 mx-auto cursor-pointer"
-              >
-                <span className="material-symbols-outlined">add_circle</span>
-                Nueva donación
+              {auth.currentUser?.photoURL ? (
+                <img 
+                  src={auth.currentUser.photoURL} 
+                  alt="Profile" 
+                  className={styles.avatar} 
+                />
+              ) : (
+                <div className={`${styles.avatar} flex items-center justify-center bg-indigo-100 text-primary font-bold`}>
+                  {auth.currentUser?.displayName?.charAt(0) || "U"}
+                </div>
+              )}
+              <button className={styles.logoutIconBtn} onClick={handleLogout} title="Cerrar sesión">
+                <LogOut size={18} />
               </button>
             </div>
+          </div>
+        </header>
 
-            {/* Stats rápidas (Conectadas a Firebase) */}
-            <div className="grid grid-cols-3 gap-6 mt-12 max-w-2xl mx-auto">
-              <div className="bg-white rounded-3xl p-6 border border-outline-variant/40 shadow-sm text-center">
-                <p className="text-4xl font-bold text-primary mb-2">{stats.donaciones}</p>
-                <p className="text-sm font-medium text-outline uppercase tracking-wider">Donaciones</p>
-              </div>
-              <div className="bg-white rounded-3xl p-6 border border-outline-variant/40 shadow-sm text-center">
-                <p className="text-4xl font-bold text-primary mb-2">{stats.productos}</p>
-                <p className="text-sm font-medium text-outline uppercase tracking-wider">Productos</p>
-              </div>
-              <div className="bg-white rounded-3xl p-6 border border-outline-variant/40 shadow-sm text-center">
-                <p className="text-4xl font-bold text-primary mb-2">{stats.kg.toFixed(1)} <span className="text-lg">kg</span></p>
-                <p className="text-sm font-medium text-outline uppercase tracking-wider">Donados</p>
+        <div className={styles.contentWrapper}>
+          {/* INICIO */}
+          {view === "inicio" && (
+            <div className="max-w-7xl mx-auto px-5 md:px-10 mt-4 space-y-12 animate-fade-in pb-20">
+              {/* Header de bienvenida */}
+              <section className="flex flex-col md:flex-row items-center justify-between gap-6 bg-white p-8 rounded-3xl border border-outline-variant/40 shadow-sm">
+                <div className="flex items-center gap-6">
+                  <div className="w-20 h-20 rounded-2xl bg-primary-container/10 flex items-center justify-center text-primary">
+                    <span className="material-symbols-outlined text-4xl">volunteer_activism</span>
+                  </div>
+                  <div>
+                    <h1 className="text-h2 font-h2 text-on-surface">Bienvenido de nuevo, {auth.currentUser?.displayName?.split(' ')[0] || "Donador"}</h1>
+                    <p className="text-body-md text-outline">Tu contribución está haciendo la diferencia hoy.</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setView("nueva-donacion")}
+                  className="h-14 px-8 bg-primary text-white font-bold rounded-2xl shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
+                >
+                  <PackagePlus size={20} />
+                  Nueva Donación
+                </button>
+              </section>
+
+              {/* Stats Rápidas */}
+              <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white rounded-3xl p-8 border border-outline-variant/30 shadow-sm group hover:border-primary/30 transition-colors">
+                  <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-primary mb-4">
+                    <History size={24} />
+                  </div>
+                  <p className="text-4xl font-bold text-on-surface mb-1">{stats.donaciones}</p>
+                  <p className="text-sm font-medium text-outline uppercase tracking-wider">Donaciones totales</p>
+                </div>
+                <div className="bg-white rounded-3xl p-8 border border-outline-variant/30 shadow-sm group hover:border-primary/30 transition-colors">
+                  <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center text-green-600 mb-4">
+                    <PackagePlus size={24} />
+                  </div>
+                  <p className="text-4xl font-bold text-on-surface mb-1">{stats.productos}</p>
+                  <p className="text-sm font-medium text-outline uppercase tracking-wider">Productos entregados</p>
+                </div>
+                <div className="bg-white rounded-3xl p-8 border border-outline-variant/30 shadow-sm group hover:border-primary/30 transition-colors">
+                  <div className="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 mb-4">
+                    <span className="material-symbols-outlined text-2xl">weight</span>
+                  </div>
+                  <p className="text-4xl font-bold text-on-surface mb-1">{stats.kg.toFixed(1)} <span className="text-xl font-semibold">kg</span></p>
+                  <p className="text-sm font-medium text-outline uppercase tracking-wider">Peso total donado</p>
+                </div>
+              </section>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Centros de acopio cercanos */}
+                <section className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-h3 font-h3 text-on-surface">Puntos de Acopio Cercanos</h3>
+                    <button className="text-primary text-sm font-bold hover:underline">Ver mapa completo</button>
+                  </div>
+                  <NearbyAcopio autoDetectar={true} />
+                </section>
+
+                {/* Tutorial Rápido */}
+                <section className="bg-surface-container-lowest rounded-3xl p-8 border border-outline-variant/40 space-y-8">
+                  <h3 className="text-h3 font-h3 text-on-surface">¿Cómo funciona?</h3>
+                  <div className="space-y-6">
+                    <div className="flex gap-4">
+                      <div className="w-10 h-10 rounded-full bg-primary-container text-primary flex items-center justify-center shrink-0 font-bold">1</div>
+                      <p className="text-on-surface-variant">Registra los productos que quieres donar en la pestaña <b>"Nueva Donación"</b>.</p>
+                    </div>
+                    <div className="flex gap-4">
+                      <div className="w-10 h-10 rounded-full bg-primary-container text-primary flex items-center justify-center shrink-0 font-bold">2</div>
+                      <p className="text-on-surface-variant">Obtén tu <b>código QR único</b> generado automáticamente para tu donación.</p>
+                    </div>
+                    <div className="flex gap-4">
+                      <div className="w-10 h-10 rounded-full bg-primary-container text-primary flex items-center justify-center shrink-0 font-bold">3</div>
+                      <p className="text-on-surface-variant">Lleva tus productos al <b>centro de acopio</b> y muestra tu código al personal.</p>
+                    </div>
+                  </div>
+                </section>
               </div>
             </div>
+          )}
 
-            {/* Onboarding / Tutorial Rápido */}
-            <div className="mt-16 bg-surface-container-lowest border border-outline-variant/40 rounded-3xl p-8 max-w-3xl mx-auto">
-              <h3 className="font-h3 text-h3 text-on-surface mb-6 text-center">¿Cómo funciona?</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="text-center">
-                  <div className="w-12 h-12 rounded-full bg-primary-container text-primary flex items-center justify-center mx-auto mb-4 font-bold text-xl">1</div>
-                  <h4 className="font-semibold text-on-surface mb-2">Registra</h4>
-                  <p className="text-sm text-outline">Agrega los productos que quieres donar con sus detalles.</p>
-                </div>
-                <div className="text-center relative">
-                  <div className="hidden md:block absolute top-6 left-[-20%] w-[40%] h-0.5 bg-outline-variant/40"></div>
-                  <div className="w-12 h-12 rounded-full bg-primary-container text-primary flex items-center justify-center mx-auto mb-4 font-bold text-xl relative z-10">2</div>
-                  <h4 className="font-semibold text-on-surface mb-2">Obtén tu código</h4>
-                  <p className="text-sm text-outline">El sistema generará un QR único para tu donación.</p>
-                </div>
-                <div className="text-center relative">
-                  <div className="hidden md:block absolute top-6 left-[-20%] w-[40%] h-0.5 bg-outline-variant/40"></div>
-                  <div className="w-12 h-12 rounded-full bg-primary-container text-primary flex items-center justify-center mx-auto mb-4 font-bold text-xl relative z-10">3</div>
-                  <h4 className="font-semibold text-on-surface mb-2">Entrega</h4>
-                  <p className="text-sm text-outline">Lleva tus productos al centro de acopio más cercano.</p>
-                </div>
-              </div>
+          {/* NUEVA DONACIÓN */}
+          {view === "nueva-donacion" && (
+            <div className="max-w-4xl mx-auto py-6 animate-fade-in">
+               <AddProductsPanel />
             </div>
-          </div>
-        )}
+          )}
 
-        {/* NUEVA DONACIÓN - AddProductsPanel */}
-        {view === "nueva-donacion" && (
-          <div className="max-w-3xl mx-auto pt-6">
-             <AddProductsPanel />
-          </div>
-        )}
+          {/* MIS DONACIONES */}
+          {view === "mis-donaciones" && (
+            <div className="max-w-4xl mx-auto py-6 animate-fade-in">
+              <DonationHistory userId={auth.currentUser?.uid} />
+            </div>
+          )}
 
-        {/* MIS DONACIONES */}
-        {view === "mis-donaciones" && (
-          <div className="max-w-3xl mx-auto pt-6">
-            <DonationHistory userId={auth.currentUser?.uid} />
-          </div>
-        )}
+          {/* PERFIL */}
+          {view === "perfil" && (
+            <div className="max-w-2xl mx-auto py-6 animate-fade-in">
+              <DonadorProfile />
+            </div>
+          )}
 
-        {/* PERFIL */}
-        {view === "perfil" && (
-          <div className="max-w-2xl mx-auto pt-6">
-            <DonadorProfile />
-          </div>
-        )}
-
+          {/* CONFIGURACIÓN */}
+          {view === "configuracion" && (
+            <div className="max-w-2xl mx-auto py-20 text-center animate-fade-in">
+              <div className="w-20 h-20 bg-surface-container-high rounded-full flex items-center justify-center mx-auto mb-6 text-outline">
+                <Settings size={40} />
+              </div>
+              <h2 className="text-h2 font-h2 text-on-surface">Configuración</h2>
+              <p className="text-body-md text-outline mt-2">Opciones de cuenta y preferencias próximamente.</p>
+            </div>
+          )}
+        </div>
       </main>
+
+      {/* MOBILE BOTTOM NAV */}
+      <nav className="fixed bottom-0 left-0 w-full z-50 bg-white/90 backdrop-blur-xl border-t border-outline-variant/20 shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:hidden">
+        <div className="flex justify-around items-center px-2 py-3">
+          {[
+            { key: "inicio", icon: <LayoutDashboard size={22} />, label: "Inicio" },
+            { key: "nueva-donacion", icon: <PackagePlus size={22} />, label: "Donar" },
+            { key: "mis-donaciones", icon: <History size={22} />, label: "Historial" },
+            { key: "perfil", icon: <User size={22} />, label: "Perfil" },
+          ].map((item) => {
+            const activo = view === item.key;
+            return (
+              <button 
+                key={item.key} 
+                onClick={() => setView(item.key)}
+                className={`flex flex-col items-center justify-center min-w-[70px] py-1 transition-all duration-200 ${
+                  activo ? "text-primary" : "text-outline"
+                }`}
+              >
+                <div className={`p-1 rounded-xl transition-colors ${activo ? "bg-primary/10" : ""}`}>
+                  {item.icon}
+                </div>
+                <span className="text-[10px] font-bold mt-1">{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </nav>
     </div>
   );
 }
