@@ -367,7 +367,7 @@ export function BeneficiarioDashboard({ onLogout }) {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             {/* COLUMNA IZQUIERDA: Avatar + Información personal */}
             <div className="p-6 rounded-2xl" style={{ backgroundColor: 'var(--color-surface-container-lowest)', border: '1px solid var(--color-outline-variant)' }}>
-              <div className="flex items-start gap-5">
+              <div className="flex flex-col items-center">
                 <div
                   className="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold flex-shrink-0 shadow-md"
                   style={{
@@ -377,28 +377,28 @@ export function BeneficiarioDashboard({ onLogout }) {
                 >
                   {initials}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-xl font-bold truncate" style={{ color: 'var(--color-on-surface)' }}>
+                <div className="w-full mt-4">
+                  <h3 className="text-xl font-bold text-center" style={{ color: 'var(--color-on-surface)' }}>
                     {beneficiary.fullName}
                   </h3>
-                  <div className="mt-3 space-y-2">
-                    <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-on-surface-variant)' }}>
+                  <div className="mt-4 space-y-3">
+                    <div className="flex items-center gap-3 text-sm px-3 py-2 rounded-lg" style={{ backgroundColor: 'var(--color-surface-container-high)' }}>
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.468.767 2.943 1.868m-2.943-1.868A2.5 2.5 0 0010 16.5V17" />
                       </svg>
-                      <span className="truncate">{beneficiary.documentId}</span>
+                      <span className="font-medium">{beneficiary.documentId}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-on-surface-variant)' }}>
+                    <div className="flex items-center gap-3 text-sm px-3 py-2 rounded-lg" style={{ backgroundColor: 'var(--color-surface-container-high)' }}>
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                       </svg>
-                      <span>{beneficiary.phone}</span>
+                      <span className="font-medium">{beneficiary.phone}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-on-surface-variant)' }}>
+                    <div className="flex items-center gap-3 text-sm px-3 py-2 rounded-lg" style={{ backgroundColor: 'var(--color-surface-container-high)' }}>
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                       </svg>
-                      <span>{typeLabel}</span>
+                      <span className="font-medium">{typeLabel}</span>
                     </div>
                   </div>
                 </div>
