@@ -1,94 +1,79 @@
-import { useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-
-// ─── Fix para iconos de Leaflet en Webpack/Vite ───
-// Los iconos por defecto de Leaflet no se cargan correctamente con bundlers modernos.
-// Esta solución parchea los iconos usando rutas directamente de node_modules.
-// Referencia: https://github.com/PaulLeCam/react-leaflet/issues/453
-
-const DefaultIcon = L.icon({
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
-
-L.Marker.prototype.options.icon = DefaultIcon;
-
 /**
- * Componente interno que ajusta el viewport del mapa cuando cambian las coordenadas.
+ * Componente LocationMap - Muestra un mapa embebido de OpenStreetMap.
+ *
+ * En lugar de usar react-leaflet (que requiere CSS adicional y puede causar
+ * conflictos de layout), usamos un iframe de OpenStreetMap que es liviano,
+ * gratuito, sin API key y no requiere CSS externo.
+ *
+ * @example
+ * ```tsx
+ * <LocationMap latitude={4.7110} longitude={-74.0721} address="Bogotá" />
+ * ```
  */
-function MapBoundsUpdater({ latitude, longitude }: { latitude: number; longitude: number }) {
-  const map = useMap();
-  useEffect(() => {
-    map.setView([latitude, longitude], 15, { animate: true });
-  }, [map, latitude, longitude]);
-  return null;
-}
 
-/**
- * Props para el componente LocationMap.
- */
 interface LocationMapProps {
   /** Latitud de la ubicación */
   latitude: number;
   /** Longitud de la ubicación */
   longitude: number;
-  /** Altura del mapa en píxeles (por defecto: 200) */
+  /** Altura del mapa en píxeles (por defecto: 180) */
   height?: number;
-  /** Etiqueta opcional para el marcador */
+  /** Etiqueta opcional para mostrar como popup */
   label?: string;
-  /** Si es true, el mapa ocupa todo el ancho disponible (por defecto: true) */
-  fullWidth?: boolean;
 }
 
-/**
- * Componente de mapa interactivo para mostrar la ubicación del beneficiario.
- * Usa Leaflet con OpenStreetMap (gratuito, sin API key).
- *
- * @example
- * ```tsx
- * <LocationMap latitude={4.7110} longitude={-74.0721} label="Bogotá, Colombia" />
- * ```
- */
 export function LocationMap({
   latitude,
   longitude,
-  height = 200,
+  height = 180,
   label,
-  fullWidth = true,
 }: LocationMapProps) {
+  // Calcular el bounding box para el embed (viewport de ~0.02 grados alrededor del punto)
+  const padding = 0.02;
+  const minLng = longitude - padding;
+  const minLat = latitude - padding;
+  const maxLng = longitude + padding;
+  const maxLat = latitude + padding;
+
+  // URL del embed de OpenStreetMap con marcador
+  const embedUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${minLng}%2C${minLat}%2C${maxLng}%2C${maxLat}&layer=mapnik&marker=${latitude}%2C${longitude}`;
+
+  // URL para abrir en una ventana externa
+  const externalUrl = `https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}#map=15/${latitude}/${longitude}`;
+
   return (
     <div
-      className={`rounded-xl overflow-hidden ${fullWidth ? 'w-full' : ''}`}
-      style={{ height }}
+      className="mt-3 rounded-xl overflow-hidden border"
+      style={{
+        height,
+        borderColor: 'var(--color-outline-variant)',
+      }}
     >
-      <MapContainer
-        center={[latitude, longitude]}
-        zoom={15}
-        scrollWheelZoom={false}
-        dragging={true}
-        zoomControl={true}
-        style={{ width: '100%', height: '100%' }}
+      <iframe
+        title={`Mapa de ${label || 'ubicación del beneficiario'}`}
+        src={embedUrl}
+        width="100%"
+        height="100%"
+        loading="lazy"
+        style={{ border: 'none', display: 'block' }}
+        allowFullScreen
+      />
+      {/* Botón para abrir en OpenStreetMap */}
+      <a
+        href={externalUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium transition-colors"
+        style={{
+          backgroundColor: 'var(--color-surface-container-high)',
+          color: 'var(--color-primary)',
+        }}
       >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <Marker position={[latitude, longitude]}>
-          {label && (
-            <Popup>
-              <span className="text-sm font-medium">{label}</span>
-            </Popup>
-          )}
-        </Marker>
-        <MapBoundsUpdater latitude={latitude} longitude={longitude} />
-      </MapContainer>
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+        </svg>
+        Abrir en OpenStreetMap
+      </a>
     </div>
   );
 }
