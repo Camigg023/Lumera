@@ -1,24 +1,80 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { auth, db } from "../../../config/firebase";
+import { onSnapshot, collection, query, where } from "firebase/firestore";
 import { DonadorProfile } from "../pages/DonadorProfile";
 import NearbyAcopio from "../../collectionPoints/presentation/components/NearbyAcopio/NearbyAcopio";
+import AddProductsPanel from "../../addProducts/AddProductsPanel";
+import DonationHistory from "../../codeValidation/DonationHistory";
 import {
   Bell,
   Search,
-  HelpCircle,
   User,
   LogOut,
   LayoutDashboard,
   PackagePlus,
-  Settings,
-  Heart
+  Settings
 } from "lucide-react";
 import styles from "./DonadorDashboard.module.css";
+import toast, { Toaster } from 'react-hot-toast';
 
 export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
   const [view, setView] = useState("inicio");
+  const [stats, setStats] = useState({ donaciones: 0, productos: 0, kg: 0 });
+
+  useEffect(() => {
+    const userId = auth.currentUser?.uid;
+    if (!userId) return;
+
+    // Escuchar en tiempo real las donaciones del usuario
+    const q = query(collection(db, "donations"), where("userId", "==", userId));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      let totalDonaciones = snapshot.size;
+      let totalProductos = 0;
+      let totalKg = 0;
+
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "modified") {
+          const docData = change.doc.data();
+          if (docData.estado === "entregado" || docData.estado === "validado") {
+            toast.success(`¡Tu donación ${docData.codigoUnico} ha sido entregada exitosamente!`, {
+              duration: 6000,
+              icon: '🎉'
+            });
+            if ("Notification" in window && Notification.permission === "granted") {
+              new Notification("¡Donación entregada!", {
+                body: `Tu donación ${docData.codigoUnico} ha sido recibida en el centro de acopio.`,
+                icon: "/favicon.ico"
+              });
+            }
+          }
+        }
+      });
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        totalProductos += data.totalProductos || 0;
+        const kgDoc = data.productos?.reduce((acc, p) => acc + (p.pesoUnidad * p.cantidad), 0) || 0;
+        totalKg += kgDoc;
+      });
+
+      setStats({
+        donaciones: totalDonaciones,
+        productos: totalProductos,
+        kg: totalKg
+      });
+    });
+
+    if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
+      Notification.requestPermission();
+    }
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div className={styles.layout}>
+      <Toaster position="top-right" />
+
       {/* MAIN */}
       <main className={styles.main}>
         {/* TOP NAVBAR */}
@@ -43,6 +99,14 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
             >
               <PackagePlus size={20} />
               <span>Nueva donación</span>
+            </button>
+
+            <button 
+              className={`${styles.topMenuItem} ${view === "mis-donaciones" ? styles.active : ""}`}
+              onClick={() => setView("mis-donaciones")}
+            >
+              <LayoutDashboard size={20} />
+              <span>Mis donaciones</span>
             </button>
 
             <button 
@@ -74,14 +138,6 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
             </button>
             
             <div className={styles.userProfile}>
-              <div className={styles.userInfo}>
-                <span className={styles.userName}>Oscar Correa</span>
-              </div>
-              <img 
-                src="https://i.pravatar.cc/150?u=oscar" 
-                alt="Profile" 
-                className={styles.avatar} 
-              />
               <button className={styles.logoutIconBtn} onClick={onLogout} title="Cerrar sesión">
                 <LogOut size={18} />
               </button>
@@ -90,120 +146,76 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
         </header>
 
         <div className={styles.contentWrapper}>
-        {/* ========== INICIO ========== */}
-        {view === "inicio" && (
-          <>
-            {/* Perfil del donador */}
-            <section className="flex flex-col md:flex-row items-center md:items-start gap-8 bg-surface-container-lowest p-8 rounded-3xl shadow-sm border border-indigo-50/50">
-              <div className="relative group">
-                <div className="w-32 h-32 md:w-40 md:h-40 rounded-full p-1 bg-gradient-to-tr from-primary to-secondary">
-                  <img alt="Elena Rodriguez" className="w-full h-full object-cover rounded-full border-4 border-white"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfuOPe0g_EDDBKlNttYUTXp0l7vAw6Bz71AiGuZ1YFyrMNGCuLqYh7CxxsEzdo9mGVJC3jnM-fORAbyn_X39NPiLUqYzIHa0tdbUtO1qM9O4rqxYxCQPq9yq7J3U-1rKZNA-aeAIKuU8CIBaiex4xmHjYJbb7cdxGouH2y0myWcVK-IAPbumrG-SumHQgZv04uOZGQ9mpnnjmNT4y4dxe-TYJQZXy0OyONyGE_GUeApuedtpZqPJv_OvuYDKlfXXaqYX0OC0V3m9qD" />
-                </div>
-                <div className="absolute bottom-2 right-2 bg-primary text-white p-2 rounded-full shadow-lg">
-                  <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
-                </div>
-              </div>
-              <div className="flex-1 text-center md:text-left space-y-4">
-                <div>
-                  <h1 className="text-h1 font-h1 text-on-background">Elena Rodriguez</h1>
-                  <p className="font-label-sm text-label-sm text-secondary uppercase tracking-widest mt-1">Sustaining Partner Since 2022</p>
-                </div>
-                <p className="text-body-md font-body-md text-on-surface-variant max-w-2xl">
-                  Passionate about sustainable food systems and community resilience. Currently focused on reducing surplus waste in the metro area through collaborative distribution networks.
-                </p>
-                <div className="flex flex-wrap justify-center md:justify-start gap-3">
-                  <span className="px-4 py-2 rounded-full bg-surface-container text-primary font-label-sm text-label-sm flex items-center gap-2">
-                    <span className="material-symbols-outlined text-sm">location_on</span> San Francisco, CA
-                  </span>
-                  <span className="px-4 py-2 rounded-full bg-surface-container text-primary font-label-sm text-label-sm flex items-center gap-2">
-                    <span className="material-symbols-outlined text-sm">share</span> Share Profile
-                  </span>
-                </div>
-              </div>
-            </section>
-
-            {/* Impacto */}
-            <section className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h2 className="text-h2 font-h2 text-on-background">Lifetime Impact</h2>
-                <button className="text-primary font-label-sm text-label-sm flex items-center gap-1">
-                  Full Report <span className="material-symbols-outlined text-lg">arrow_forward</span>
-                </button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div className="md:col-span-2 bg-white p-8 rounded-3xl shadow-sm border border-indigo-50 flex flex-col justify-between group hover:shadow-md transition-shadow relative overflow-hidden">
-                  <div className="absolute -right-12 -top-12 w-48 h-48 bg-indigo-50 rounded-full blur-3xl opacity-50 group-hover:bg-indigo-100 transition-colors"></div>
-                  <div className="relative">
-                    <div className="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center text-primary mb-6">
-                      <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>restaurant</span>
-                    </div>
-                    <h3 className="text-body-lg text-body-lg text-on-surface-variant">Total Meals Saved</h3>
-                    <p className="text-[56px] font-bold text-on-background leading-none mt-2">12,482</p>
+          {/* ========== INICIO ========== */}
+          {view === "inicio" && (
+            <>
+              {/* Stats desde Firebase */}
+              <div className="max-w-4xl mx-auto pt-6 animate-fade-in">
+                <div className="text-center mb-10">
+                  <div className="w-24 h-24 mx-auto rounded-3xl bg-surface-container-low flex items-center justify-center mb-6">
+                    <span className="material-symbols-outlined text-5xl text-primary">volunteer_activism</span>
                   </div>
-                  <div className="mt-8 pt-6 border-t border-indigo-50/50 flex items-center gap-2 text-primary">
-                    <span className="material-symbols-outlined">trending_up</span>
-                    <span className="font-label-sm text-label-sm">+12% from last month</span>
+                  <h1 className="text-h2 font-h2 text-on-surface mb-3">
+                    Bienvenido, Donador
+                  </h1>
+                  <p className="text-body-md text-outline mb-8 max-w-md mx-auto">
+                    Cada donación cuenta. Agrega los productos que deseas donar y ayúdanos a llevarlos a quienes más lo necesitan.
+                  </p>
+                  <button
+                    onClick={() => setView("nueva-donacion")}
+                    className="h-14 px-10 bg-gradient-to-r from-primary to-primary-container text-white font-bold text-body-md rounded-2xl shadow-lg shadow-indigo-200 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 mx-auto cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined">add_circle</span>
+                    Nueva donación
+                  </button>
+                </div>
+
+                {/* Stats rápidas (Conectadas a Firebase) */}
+                <div className="grid grid-cols-3 gap-6 mt-12 max-w-2xl mx-auto">
+                  <div className="bg-white rounded-3xl p-6 border border-outline-variant/40 shadow-sm text-center">
+                    <p className="text-4xl font-bold text-primary mb-2">{stats.donaciones}</p>
+                    <p className="text-sm font-medium text-outline uppercase tracking-wider">Donaciones</p>
+                  </div>
+                  <div className="bg-white rounded-3xl p-6 border border-outline-variant/40 shadow-sm text-center">
+                    <p className="text-4xl font-bold text-primary mb-2">{stats.productos}</p>
+                    <p className="text-sm font-medium text-outline uppercase tracking-wider">Productos</p>
+                  </div>
+                  <div className="bg-white rounded-3xl p-6 border border-outline-variant/40 shadow-sm text-center">
+                    <p className="text-4xl font-bold text-primary mb-2">{stats.kg.toFixed(1)} <span className="text-lg">kg</span></p>
+                    <p className="text-sm font-medium text-outline uppercase tracking-wider">Donados</p>
                   </div>
                 </div>
-                <div className="bg-surface-container-lowest p-8 rounded-3xl shadow-sm border border-indigo-50 flex flex-col justify-between hover:shadow-md transition-shadow">
-                  <div>
-                    <div className="w-12 h-12 rounded-2xl bg-secondary-container/10 flex items-center justify-center text-secondary mb-6">
-                      <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
-                    </div>
-                    <h3 className="text-body-md text-body-md text-on-surface-variant">People Helped</h3>
-                    <p className="text-[40px] font-bold text-on-background mt-1">3,204</p>
-                  </div>
-                  <p className="font-label-sm text-label-sm text-outline mt-4">Direct community reach</p>
-                </div>
-                <div className="bg-surface-container-lowest p-8 rounded-3xl shadow-sm border border-indigo-50 flex flex-col justify-between hover:shadow-md transition-shadow">
-                  <div>
-                    <div className="w-12 h-12 rounded-2xl bg-error-container/20 flex items-center justify-center text-error mb-6">
-                      <span className="material-symbols-outlined text-2xl">co2</span>
-                    </div>
-                    <h3 className="text-body-md text-body-md text-on-surface-variant">Carbon Reduced</h3>
-                    <p className="text-[40px] font-bold text-on-background mt-1">4.2<span className="text-2xl font-semibold">t</span></p>
-                  </div>
-                  <p className="font-label-sm text-label-sm text-outline mt-4">Equivalent to 84 trees</p>
-                </div>
               </div>
-            </section>
 
-            {/* Centro de acopio */}
-            <section className="max-w-2xl">
-              <NearbyAcopio autoDetectar={true} />
-            </section>
-          </>
-        )}
+              {/* Centro de acopio */}
+              <div className="max-w-2xl mx-auto mt-10">
+                <NearbyAcopio autoDetectar={true} />
+              </div>
+            </>
+          )}
 
-        {/* PERFIL */}
-        {view === "perfil" && <DonadorProfile />}
+          {/* NUEVA DONACIÓN */}
+          {view === "nueva-donacion" && (
+            <div className="max-w-3xl mx-auto pt-6">
+              <AddProductsPanel />
+            </div>
+          )}
 
+          {/* MIS DONACIONES */}
+          {view === "mis-donaciones" && (
+            <div className="max-w-3xl mx-auto pt-6">
+              <DonationHistory userId={auth.currentUser?.uid} />
+            </div>
+          )}
+
+          {/* PERFIL */}
+          {view === "perfil" && (
+            <div className="max-w-2xl mx-auto pt-6">
+              <DonadorProfile />
+            </div>
+          )}
         </div>
       </main>
-
-      {/* ===== BOTTOM NAV BAR (Mobile) ===== */}
-      <nav className="fixed bottom-0 left-0 w-full z-50 bg-white/90 backdrop-blur-xl border-t border-indigo-50 shadow-[0_-8px_30px_rgba(79,70,229,0.08)] rounded-t-3xl md:hidden">
-        <div className="flex justify-around items-center px-4 pt-3 pb-6">
-          {[
-            { key: "inicio", icon: "explore", label: "Inicio" },
-            { key: "nueva-donacion", icon: "volunteer_activism", label: "Donar" },
-            { key: "donar", icon: "near_me", label: "Acopio" },
-            { key: "perfil", icon: "person", label: "Perfil" },
-          ].map((item) => {
-            const activo = view === item.key;
-            return (
-              <button key={item.key} onClick={() => setView(item.key)}
-                className={`flex flex-col items-center justify-center px-5 py-2 transition-all duration-200 ${
-                  activo ? "bg-indigo-50 text-indigo-700 rounded-2xl" : "text-slate-400 hover:text-indigo-500"
-                }`}>
-                <span className="material-symbols-outlined mb-1" style={activo ? { fontVariationSettings: "'FILL' 1" } : {}}>{item.icon}</span>
-                <span className="text-[11px] font-medium uppercase tracking-wider">{item.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </nav>
     </div>
   );
 }
