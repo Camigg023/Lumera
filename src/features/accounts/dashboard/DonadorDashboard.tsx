@@ -1,38 +1,100 @@
 import { useState } from "react";
 import { DonadorProfile } from "../pages/DonadorProfile";
-import AddProductsPanel from "../../addProducts/AddProductsPanel";
-import NearbyAcopio from "../../collectionPoints/presentation/components/NearbyAcopio/NearbyAcopio";
+import { 
+  Bell, 
+  Search, 
+  HelpCircle, 
+  User, 
+  LogOut,
+  LayoutDashboard,
+  PackagePlus,
+  Settings,
+  Heart
+} from "lucide-react";
+import styles from "./DonadorDashboard.module.css";
 
-export function DonadorDashboard() {
+export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
   const [view, setView] = useState("inicio");
 
   return (
-    <div className="min-h-screen bg-background text-on-background font-sans antialiased pb-32">
-      {/* ===== TOP APP BAR ===== */}
-      <header className="sticky top-0 w-full z-40 bg-white/80 backdrop-blur-lg border-b border-indigo-50 shadow-sm">
-        <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-indigo-600">eco</span>
-            <span className="text-2xl font-bold text-indigo-600 tracking-tight">Lumera</span>
+    <div className={styles.layout}>
+      {/* MAIN */}
+      <main className={styles.main}>
+        {/* TOP NAVBAR */}
+        <header className={styles.topbar}>
+          <div className={styles.logoSection}>
+            <h2 className={styles.logo}>LUMERA</h2>
+            <span className={styles.roleBadge}>DONADOR</span>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="hidden md:flex gap-6 mr-6">
-              <button onClick={() => setView("inicio")}
-                className={`font-medium transition-colors ${view === "inicio" ? "text-indigo-600" : "text-slate-500 hover:text-indigo-600"}`}>
-                Inicio
+
+          <nav className={styles.topMenu}>
+            <button 
+              className={`${styles.topMenuItem} ${view === "inicio" ? styles.active : ""}`}
+              onClick={() => setView("inicio")}
+            >
+              <LayoutDashboard size={20} />
+              <span>Inicio</span>
+            </button>
+            
+            <button 
+              className={`${styles.topMenuItem} ${view === "nueva-donacion" ? styles.active : ""}`}
+              onClick={() => setView("nueva-donacion")}
+            >
+              <PackagePlus size={20} />
+              <span>Nueva donación</span>
+            </button>
+
+            <button 
+              className={`${styles.topMenuItem} ${view === "perfil" ? styles.active : ""}`}
+              onClick={() => setView("perfil")}
+            >
+              <User size={20} />
+              <span>Mi Perfil</span>
+            </button>
+
+            <button 
+              className={`${styles.topMenuItem} ${view === "configuracion" ? styles.active : ""}`}
+              onClick={() => setView("configuracion")}
+            >
+              <Settings size={20} />
+              <span>Configuración</span>
+            </button>
+          </nav>
+
+          <div className={styles.topActions}>
+            <div className={styles.searchBox}>
+              <Search size={18} className={styles.searchIcon} />
+              <input type="text" placeholder="Buscar..." />
+            </div>
+
+            <button className={styles.iconBtn} aria-label="Notificaciones">
+              <Bell size={20} />
+              <span className={styles.notifBadge}></span>
+            </button>
+            
+            <div className={styles.userProfile}>
+              <div className={styles.userInfo}>
+                <span className={styles.userName}>Oscar Correa</span>
+              </div>
+              <img 
+                src="https://i.pravatar.cc/150?u=oscar" 
+                alt="Profile" 
+                className={styles.avatar} 
+              />
+              <button className={styles.logoutIconBtn} onClick={onLogout} title="Cerrar sesión">
+                <LogOut size={18} />
               </button>
-              <button onClick={() => setView("donar")}
-                className={`font-medium transition-colors ${view === "donar" ? "text-indigo-600" : "text-slate-500 hover:text-indigo-600"}`}>
-                Donar
-              </button>
-              <button onClick={() => setView("nueva-donacion")}
-                className={`font-medium transition-colors ${view === "nueva-donacion" ? "text-indigo-600" : "text-slate-500 hover:text-indigo-600"}`}>
-                Registrar
-              </button>
-              <button onClick={() => setView("perfil")}
-                className={`font-medium transition-colors ${view === "perfil" ? "text-indigo-600" : "text-slate-500 hover:text-indigo-600"}`}>
-                Perfil
-              </button>
+            </div>
+          </div>
+        </header>
+
+        <div className={styles.contentWrapper}>
+
+        {/* INICIO */}
+        {view === "inicio" && (
+          <div className="max-w-2xl mx-auto text-center py-12 animate-fade-in">
+            <div className="w-24 h-24 mx-auto rounded-3xl bg-surface-container-low flex items-center justify-center mb-6">
+              <span className="material-symbols-outlined text-5xl text-primary">volunteer_activism</span>
             </div>
             <button className="w-10 h-10 rounded-full overflow-hidden border-2 border-indigo-100 transition-transform active:scale-95">
               <img alt="Perfil" className="w-full h-full object-cover"
@@ -129,22 +191,10 @@ export function DonadorDashboard() {
           </>
         )}
 
-        {/* ========== NUEVA DONACIÓN ========== */}
-        {view === "nueva-donacion" && <AddProductsPanel />}
-
-        {/* ========== DONAR / ACOPIO ========== */}
-        {view === "donar" && (
-          <section className="max-w-2xl mx-auto space-y-6">
-            <div>
-              <h1 className="text-h2 font-h2 text-on-background">Centro de acopio</h1>
-              <p className="text-body-md text-on-surface-variant mt-1">Find the nearest collection point to drop off your donation</p>
-            </div>
-            <NearbyAcopio autoDetectar={true} />
-          </section>
-        )}
-
-        {/* ========== PERFIL ========== */}
+        {/* PERFIL */}
         {view === "perfil" && <DonadorProfile />}
+
+        </div>
       </main>
 
       {/* ===== BOTTOM NAV BAR (Mobile) ===== */}
