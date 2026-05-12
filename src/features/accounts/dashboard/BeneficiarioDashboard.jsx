@@ -12,6 +12,7 @@ import { TrackingView } from '../../beneficiary/presentation/components/Tracking
 import { useDeliveryHistory } from '../../beneficiary/presentation/hooks/useDeliveryHistory';
 import { DeliveryHistoryList } from '../../beneficiary/presentation/components/DeliveryHistoryList';
 import { DeliveryDetailView } from '../../beneficiary/presentation/components/DeliveryDetailView';
+import { LocationMap } from '../../beneficiary/presentation/components/LocationMap';
 import { LogOut } from "lucide-react";
 import styles from "./BeneficiarioDashboard.module.css";
 
@@ -458,17 +459,12 @@ export function BeneficiarioDashboard({ onLogout }) {
                     <p className="text-sm font-medium mt-0.5 font-mono" style={{ color: 'var(--color-on-surface)' }}>
                       {beneficiary.latitude.toFixed(4)}, {beneficiary.longitude.toFixed(4)}
                     </p>
-                    <div
-                      className="mt-3 h-28 rounded-xl flex items-center justify-center overflow-hidden"
-                      style={{ backgroundColor: 'var(--color-surface-container-high)' }}
-                    >
-                      <div className="text-center">
-                        <span className="text-2xl">📍</span>
-                        <p className="text-xs mt-1" style={{ color: 'var(--color-outline)' }}>
-                          {beneficiary.latitude.toFixed(4)}, {beneficiary.longitude.toFixed(4)}
-                        </p>
-                      </div>
-                    </div>
+                    <LocationMap
+                      latitude={beneficiary.latitude}
+                      longitude={beneficiary.longitude}
+                      height={180}
+                      label={`${beneficiary.address}, ${beneficiary.city}`}
+                    />
                   </div>
                 )}
               </div>
