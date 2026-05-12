@@ -72,7 +72,7 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
   }, []);
 
   return (
-    <div className={styles.layout}>
+    <div className={`${styles.layout} bg-background`}>
       <Toaster position="top-right" />
 
       {/* MAIN */}
