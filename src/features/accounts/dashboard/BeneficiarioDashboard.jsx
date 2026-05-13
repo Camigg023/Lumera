@@ -202,9 +202,10 @@ export function BeneficiarioDashboard({ onLogout }) {
     );
   }
 
-  // ─── VISTA DE INICIO UNIFICADA ───
-  // Misma vista para todos los estados del beneficiario (pendiente, rechazado, verificado)
-  // Layout: centro (beneficio por reclamar), 2 columnas (info + ubicación), abajo (beneficios)
+    // ─── VISTA DE INICIO: Layout 3 Columnas (diseño referencia) ───
+  // Izquierda: Perfil (avatar, datos, stats, menú)
+  // Centro: Contenido principal (solicitud activa / beneficios)
+  // Derecha: Logística (ubicación, mapa, QR)
 
   if (view === 'inicio' && beneficiary) {
     const isVerified = beneficiary.verificationStatus === 'verified';
@@ -225,402 +226,307 @@ export function BeneficiarioDashboard({ onLogout }) {
     // Buscar solicitudes entregadas pendientes de reclamar
     const pendingClaims = helpRequests.filter(r => r.status === 'entregada');
     const hasPendingClaim = pendingClaims.length > 0;
+    const activeRequest = activeRequests.length > 0 ? activeRequests[0] : null;
 
     return (
       <div className={styles.layout} role="application" aria-label="Panel de beneficiario">
+        {/* ═══ TOPBAR ═══ */}
         <header className={styles.topbar}>
-          <div className={styles.logoSection}>
+          <div className="flex items-center gap-3">
             <h2 className={styles.logo}>LUMERA</h2>
             <span className={styles.roleBadge}>BENEFICIARIO</span>
           </div>
 
-          {/* Navegación para usuarios verificados */}
           {isVerified && (
-            <div className={styles.topMenu}>
-              <button
-                className={`${styles.topMenuItem} ${styles.active}`}
-                onClick={() => setView('inicio')}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
-                <span>Inicio</span>
-              </button>
-              <button
-                className={styles.topMenuItem}
-                onClick={() => setView('solicitar')}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                </svg>
-                <span>Solicitar</span>
-              </button>
-              <button
-                className={styles.topMenuItem}
-                onClick={() => setView('mis-solicitudes')}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                </svg>
-                <span>Mis solicitudes</span>
-              </button>
-              <button
-                className={styles.topMenuItem}
-                onClick={() => setView('historial')}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>Historial</span>
-              </button>
-            </div>
+            <nav className="hidden md:flex items-center gap-6">
+              <button className="text-sm font-semibold" style={{color: 'var(--color-primary)'}} onClick={() => setView('inicio')}>Inicio</button>
+              <button className="text-sm font-medium" style={{color: 'var(--color-on-surface-variant)'}} onClick={() => setView('solicitar')}>Solicitar</button>
+              <button className="text-sm font-medium" style={{color: 'var(--color-on-surface-variant)'}} onClick={() => setView('mis-solicitudes')}>Mis Solicitudes</button>
+              <button className="text-sm font-medium" style={{color: 'var(--color-on-surface-variant)'}} onClick={() => setView('historial')}>Historial</button>
+            </nav>
           )}
 
-          <div className={styles.topActions}>
-            {isRejected && (
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-50 border border-red-200">
-                <span className="w-2 h-2 rounded-full bg-[var(--color-error)]" />
-                <span className="text-xs font-medium text-red-700">Rechazado</span>
-              </div>
-            )}
-            {isPending && (
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200">
-                <span className="w-2 h-2 rounded-full bg-amber-500" />
-                <span className="text-xs font-medium text-amber-700">Pendiente</span>
-              </div>
-            )}
-            {isVerified && (
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200">
-                <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                <span className="text-xs font-medium text-emerald-700">Verificado</span>
-              </div>
-            )}
-            <button className={styles.logoutIconBtn} onClick={onLogout} title="Cerrar sesión">
-              <LogOut size={18} />
-            </button>
+          <div className="flex items-center gap-3">
+            {isPending && <span className="text-xs font-semibold px-3 py-1 rounded-full" style={{backgroundColor: 'var(--color-amber-50, #fffbeb)', color: 'var(--color-amber-700, #d97706)'}}>⏳ Pendiente</span>}
+            {isRejected && <span className="text-xs font-semibold px-3 py-1 rounded-full" style={{backgroundColor: '#fef2f2', color: '#dc2626'}}>❌ Rechazado</span>}
+            {isVerified && <span className="text-xs font-semibold px-3 py-1 rounded-full" style={{backgroundColor: '#ecfdf5', color: '#059669'}}>✅ Verificado</span>}
+            <button className={styles.logoutIconBtn} onClick={onLogout} title="Cerrar sesión"><LogOut size={18} /></button>
           </div>
         </header>
 
         <main id="main-content" className={styles.contentWrapper} role="main">
-          {/* Error */}
           {error && (
             <div className="mb-6 p-3 rounded-lg text-sm flex items-center gap-2" style={{ backgroundColor: 'var(--color-error)', color: 'var(--color-on-error)' }} role="alert">
               <span>❌</span> <span>{error}</span>
             </div>
           )}
 
-          {/* ─── BLOQUE: BENEFICIO / MERCADO POR RECLAMAR (CENTRO) ─── */}
-          {hasPendingClaim && (
-            <div className="mb-6 animate-slide-up">
-              <div className="p-6 rounded-2xl border-2 border-emerald-300 bg-gradient-to-br from-emerald-50 to-green-50 shadow-lg shadow-emerald-100/50">
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
-                    <span className="text-3xl">🎁</span>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-bold text-emerald-900">¡Tienes un beneficio por reclamar!</h3>
-                    <p className="text-sm text-emerald-700 mt-1">
-                      {pendingClaims.length === 1
-                        ? 'Una de tus solicitudes ha sido entregada. Acércate al punto de acopio para reclamar tu mercado.'
-                        : `${pendingClaims.length} de tus solicitudes están listas para reclamar.`}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => {
-                      const first = pendingClaims[0];
-                      setSelectedDelivery(first);
-                      setView('detalle-entrega');
-                    }}
-                    className="px-6 py-3 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 active:scale-95 transition-all shadow-md shadow-emerald-200 whitespace-nowrap cursor-pointer"
-                  >
-                    Ver detalle
-                  </button>
-                </div>
-                {pendingClaims.length > 1 && (
-                  <div className="mt-4 pt-4 border-t border-emerald-200">
-                    <p className="text-xs font-medium text-emerald-600 mb-2">MERCADOS PENDIENTES:</p>
-                    <div className="space-y-2">
-                      {pendingClaims.map((claim, idx) => (
-                        <div key={claim.id} className="flex items-center justify-between p-3 bg-white/60 rounded-xl">
-                          <div className="flex items-center gap-3">
-                            <span className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-sm font-bold text-emerald-700">
-                              {idx + 1}
-                            </span>
-                            <div>
-                              <p className="text-sm font-medium text-emerald-900">{claim.totalKg} kg · {claim.items?.length || 0} productos</p>
-                              <p className="text-xs text-emerald-600">Código: {claim.deliveryCode || '---'}</p>
-                            </div>
-                          </div>
-                          <span className="text-xs font-medium px-3 py-1 rounded-full bg-emerald-100 text-emerald-700">
-                            {new Date(claim.receivedAt || claim.updatedAt).toLocaleDateString()}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* ─── BLOQUE SUPERIOR: DOS COLUMNAS ─── */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            {/* COLUMNA IZQUIERDA: Avatar + Información personal */}
-            <div className="p-6 rounded-2xl" style={{ backgroundColor: 'var(--color-surface-container-lowest)', border: '1px solid var(--color-outline-variant)' }}>
-              <div className="flex flex-col items-center">
-                <div
-                  className="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold flex-shrink-0 shadow-md"
-                  style={{
+          {/* ═══ GRID 3 COLUMNAS ═══ */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {/* ─── LEFT COLUMN: Perfil ─── */}
+            <aside className="lg:col-span-3 space-y-6">
+              <div className="rounded-3xl p-6 shadow-sm border overflow-hidden relative" style={{backgroundColor: 'var(--color-surface-container-lowest)', borderColor: 'var(--color-outline-variant)'}}>
+                <div className="absolute top-0 right-0 w-24 h-24 rounded-bl-full" style={{backgroundColor: 'var(--color-primary-fixed)', opacity: 0.3, marginRight: '-2rem', marginTop: '-2rem'}} />
+                <div className="relative flex flex-col items-center text-center">
+                  <div className="w-24 h-24 rounded-2xl flex items-center justify-center text-3xl font-bold shadow-md mb-4 border-2" style={{
                     background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-container))',
                     color: 'var(--color-on-primary)',
-                  }}
-                >
-                  {initials}
+                    borderColor: 'var(--color-surface-container-lowest)'
+                  }}>
+                    {initials}
+                  </div>
+                  <h2 className="text-xl font-bold" style={{color: 'var(--color-on-surface)'}}>{beneficiary.fullName}</h2>
+                  <span className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1 rounded-full mt-2" style={{backgroundColor: 'var(--color-surface-container)', color: 'var(--color-primary)'}}>
+                    {isVerified && '✅ Verificado'}
+                    {isPending && '⏳ Pendiente'}
+                    {isRejected && '❌ Rechazado'}
+                  </span>
+                  <p className="text-xs mt-3 font-mono" style={{color: 'var(--color-outline)'}}>ID #{beneficiary.documentId?.slice(-6) || '---'}</p>
                 </div>
-                <div className="w-full mt-4">
-                  <h3 className="text-xl font-bold text-center" style={{ color: 'var(--color-on-surface)' }}>
-                    {beneficiary.fullName}
-                  </h3>
-                  <div className="mt-4 space-y-3">
-                    <div className="flex items-center gap-3 text-sm px-3 py-2 rounded-lg" style={{ backgroundColor: 'var(--color-surface-container-high)' }}>
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.468.767 2.943 1.868m-2.943-1.868A2.5 2.5 0 0010 16.5V17" />
-                      </svg>
-                      <span className="font-medium">{beneficiary.documentId}</span>
+
+                <hr className="my-6" style={{borderColor: 'var(--color-outline-variant)'}} />
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-3 rounded-2xl text-center" style={{backgroundColor: 'var(--color-surface-container-low)'}}>
+                    <p className="text-2xl font-bold" style={{color: 'var(--color-primary)'}}>{completedDeliveries.length}</p>
+                    <p className="text-xs font-medium uppercase tracking-wider" style={{color: 'var(--color-on-surface-variant)'}}>Entregas</p>
+                  </div>
+                  <div className="p-3 rounded-2xl text-center" style={{backgroundColor: 'var(--color-surface-container-low)'}}>
+                    <p className="text-2xl font-bold" style={{color: 'var(--color-primary)'}}>{totalKgReceived} kg</p>
+                    <p className="text-xs font-medium uppercase tracking-wider" style={{color: 'var(--color-on-surface-variant)'}}>Recibido</p>
+                  </div>
+                </div>
+
+                <div className="mt-6 space-y-1">
+                  <button onClick={() => setView('mis-solicitudes')} className="w-full flex items-center justify-between p-3 rounded-xl transition-colors group" style={{color: 'var(--color-on-surface-variant)'}}>
+                    <span className="flex items-center gap-3 text-sm font-medium">📋 Historial</span>
+                    <span className="group-hover:text-primary" style={{color: 'var(--color-outline)'}}>›</span>
+                  </button>
+                  <button onClick={() => setView('perfil')} className="w-full flex items-center justify-between p-3 rounded-xl transition-colors group" style={{color: 'var(--color-on-surface-variant)'}}>
+                    <span className="flex items-center gap-3 text-sm font-medium">⚙️ Preferencias</span>
+                    <span className="group-hover:text-primary" style={{color: 'var(--color-outline)'}}>›</span>
+                  </button>
+                </div>
+              </div>
+            </aside>
+
+            {/* ─── CENTER COLUMN: Contenido Principal ─── */}
+            <section className="lg:col-span-6 space-y-6">
+              {/* Beneficio por reclamar */}
+              {hasPendingClaim && (
+                <div className="rounded-3xl p-6 border-2 shadow-lg animate-slide-up" style={{borderColor: '#4CAF50', backgroundColor: '#d4edda'}}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="w-14 h-14 rounded-full flex items-center justify-center text-2xl" style={{backgroundColor: '#d4edda'}}>🎁</div>
+                      <div>
+                        <h3 className="text-lg font-bold" style={{color: 'var(--color-on-surface)'}}>¡Beneficio por reclamar!</h3>
+                        <p className="text-sm" style={{color: 'var(--color-on-surface-variant)'}}>{pendingClaims.length} mercado{pendingClaims.length > 1 ? 's' : ''} listo{pendingClaims.length > 1 ? 's' : ''} para recoger</p>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-3 text-sm px-3 py-2 rounded-lg" style={{ backgroundColor: 'var(--color-surface-container-high)' }}>
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                      </svg>
-                      <span className="font-medium">{beneficiary.phone}</span>
+                    <button onClick={() => { setSelectedDelivery(pendingClaims[0]); setView('detalle-entrega'); }}
+                      className="px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all active:scale-95 cursor-pointer"
+                      style={{backgroundColor: '#4CAF50'}}>Ver detalle</button>
+                  </div>
+                </div>
+              )}
+
+              {/* Card principal */}
+              <div className="rounded-3xl p-8 shadow-sm border relative overflow-hidden" style={{backgroundColor: 'var(--color-surface-container-lowest)', borderColor: 'var(--color-outline-variant)'}}>
+                <div className="absolute top-0 right-0 p-8 opacity-5">
+                  <svg width="120" height="120" viewBox="0 0 24 24" fill="currentColor" style={{color: 'var(--color-primary)'}}>
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                </div>
+                <div className="relative">
+                  <span className="text-sm font-semibold px-4 py-1.5 rounded-full" style={{backgroundColor: 'var(--color-surface-container)', color: 'var(--color-primary)'}}>
+                    {activeRequest ? '🚚 Solicitud Activa' : isVerified ? '✅ Beneficiario Verificado' : '⏳ Perfil en Revisión'}
+                  </span>
+
+                  <h2 className="text-3xl font-bold mt-4" style={{color: 'var(--color-on-surface)'}}>
+                    {activeRequest ? `${activeRequest.totalKg}kg de Alimentos` : `Bienvenido, ${beneficiary.fullName.split(' ')[0]}`}
+                  </h2>
+                  <p className="mt-2" style={{color: 'var(--color-on-surface-variant)'}}>
+                    {activeRequest
+                      ? `Estado: ${activeRequest.status.replace('_', ' ')} · Creada el ${new Date(activeRequest.createdAt).toLocaleDateString()}`
+                      : isVerified
+                        ? 'Puedes solicitar ayuda cuando lo necesites. Tu próxima entrega aparecerá aquí.'
+                        : 'Estamos revisando tu documentación. Pronto podrás acceder a todos los beneficios.'}
+                  </p>
+
+                  {activeRequest && activeRequest.items && (
+                    <>
+                      <h3 className="text-sm font-semibold uppercase tracking-widest mt-8 mb-4 pb-2 border-b" style={{color: 'var(--color-on-surface)', borderColor: 'var(--color-outline-variant)'}}>
+                        Contenido del Paquete
+                      </h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {activeRequest.items.map((item, idx) => (
+                          <div key={idx} className="flex items-start gap-4 p-4 rounded-2xl border hover:shadow-md transition-shadow" style={{backgroundColor: 'var(--color-surface-container-lowest)', borderColor: 'var(--color-outline-variant)'}}>
+                            <div className="p-2 rounded-xl" style={{backgroundColor: 'var(--color-surface-container-high)'}}>
+                              <span className="text-lg">{{
+                                no_perecederos: '🥫',
+                                frescos: '🥦',
+                                lacteos: '🥛',
+                                panaderia: '🥖'
+                              }[item.category] || '📦'}</span>
+                            </div>
+                            <div>
+                              <h4 className="font-bold text-sm" style={{color: 'var(--color-on-surface)'}}>{item.category}</h4>
+                              <p className="text-xs" style={{color: 'var(--color-outline)'}}>{item.quantity} {item.unit}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+
+                  {totalKgReceived > 0 && (
+                    <div className="mt-8 p-5 rounded-2xl flex items-center justify-between" style={{backgroundColor: 'var(--color-primary-container)'}}>
+                      <div>
+                        <p className="text-sm font-medium opacity-90" style={{color: 'var(--color-on-primary-fixed)'}}>Impacto Total</p>
+                        <p className="text-xl font-bold" style={{color: 'var(--color-on-primary-fixed)'}}>~{Math.round(totalKgReceived * 3.5)} kg CO₂ Ahorrados</p>
+                      </div>
+                      <span className="text-4xl opacity-50" style={{color: 'var(--color-on-primary-fixed)'}}>🌱</span>
                     </div>
-                    <div className="flex items-center gap-3 text-sm px-3 py-2 rounded-lg" style={{ backgroundColor: 'var(--color-surface-container-high)' }}>
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  )}
+                </div>
+              </div>
+
+              {/* Stats rápidas para no verificados */}
+              {!isVerified && (
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  <div className="p-4 rounded-xl text-center" style={{backgroundColor: 'var(--color-surface-container-high)'}}>
+                    <p className="text-2xl font-bold" style={{color: 'var(--color-primary)'}}>{completedDeliveries.length}</p>
+                    <p className="text-xs mt-1" style={{color: 'var(--color-outline)'}}>Entregas</p>
+                  </div>
+                  <div className="p-4 rounded-xl text-center" style={{backgroundColor: 'var(--color-surface-container-high)'}}>
+                    <p className="text-2xl font-bold" style={{color: 'var(--color-primary)'}}>{totalKgReceived} kg</p>
+                    <p className="text-xs mt-1" style={{color: 'var(--color-outline)'}}>Recibido</p>
+                  </div>
+                  <div className="p-4 rounded-xl text-center" style={{backgroundColor: 'var(--color-surface-container-high)'}}>
+                    <p className="text-2xl font-bold" style={{color: 'var(--color-primary)'}}>{helpRequests.length}</p>
+                    <p className="text-xs mt-1" style={{color: 'var(--color-outline)'}}>Solicitudes</p>
+                  </div>
+                  <div className="p-4 rounded-xl text-center" style={{backgroundColor: 'var(--color-surface-container-high)'}}>
+                    <p className="text-2xl font-bold" style={{color: 'var(--color-primary)'}}>{activeRequests.length}</p>
+                    <p className="text-xs mt-1" style={{color: 'var(--color-outline)'}}>Activas</p>
+                  </div>
+                </div>
+              )}
+            </section>
+
+            {/* ─── RIGHT COLUMN: Logística ─── */}
+            <aside className="lg:col-span-3 space-y-6">
+              {/* Datos de logística */}
+              <div className="rounded-3xl p-6 shadow-sm border" style={{backgroundColor: 'var(--color-surface-container-lowest)', borderColor: 'var(--color-outline-variant)'}}>
+                <h3 className="font-bold mb-4" style={{color: 'var(--color-on-surface)'}}>Datos de Entrega</h3>
+                <div className="space-y-5">
+                  <div className="flex gap-4">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{backgroundColor: 'var(--color-surface-container-high)'}}>
+                      <svg className="w-5 h-5" style={{color: 'var(--color-primary)'}} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
-                      <span className="font-medium">{typeLabel}</span>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wider" style={{color: 'var(--color-outline)'}}>Fecha</p>
+                      <p className="text-sm font-bold" style={{color: 'var(--color-on-surface)'}}>
+                        {activeRequest ? new Date(activeRequest.createdAt).toLocaleDateString('es', {weekday: 'long', month: 'long', day: 'numeric'}) : '—'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{backgroundColor: 'var(--color-surface-container-high)'}}>
+                      <svg className="w-5 h-5" style={{color: 'var(--color-primary)'}} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wider" style={{color: 'var(--color-outline)'}}>Dirección</p>
+                      <p className="text-sm font-bold" style={{color: 'var(--color-on-surface)'}}>{beneficiary.address || '—'}</p>
+                      <p className="text-xs" style={{color: 'var(--color-on-surface-variant)'}}>{beneficiary.city || ''}</p>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Estado de verificación */}
-              <div className="mt-5 pt-4" style={{ borderTop: '1px solid var(--color-outline-variant)' }}>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium" style={{ color: 'var(--color-on-surface-variant)' }}>Estado de verificación</span>
-                  {isPending && (
-                    <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                      Pendiente
-                    </span>
-                  )}
-                  {isRejected && (
-                    <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
-                      <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
-                      Rechazado
-                    </span>
-                  )}
-                  {isVerified && (
-                    <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                      Verificado
-                    </span>
-                  )}
-                </div>
-                {isRejected && beneficiary.verificationNotes && (
-                  <p className="mt-2 text-xs text-red-600 bg-red-50 p-2 rounded-lg">
-                    Motivo: {beneficiary.verificationNotes}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* COLUMNA DERECHA: Ubicación */}
-            <div className="p-6 rounded-2xl" style={{ backgroundColor: 'var(--color-surface-container-lowest)', border: '1px solid var(--color-outline-variant)' }}>
-              <h4 className="text-sm font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--color-on-surface-variant)' }}>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                Ubicación de residencia
-              </h4>
-              <div className="space-y-3">
-                <div>
-                  <p className="text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-outline)' }}>Dirección</p>
-                  <p className="text-sm font-medium mt-0.5" style={{ color: 'var(--color-on-surface)' }}>{beneficiary.address}</p>
-                </div>
-                <div>
-                  <p className="text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-outline)' }}>Ciudad</p>
-                  <p className="text-sm font-medium mt-0.5" style={{ color: 'var(--color-on-surface)' }}>{beneficiary.city}</p>
-                </div>
-                {beneficiary.latitude && beneficiary.longitude && (
-                  <div>
-                    <p className="text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-outline)' }}>Coordenadas</p>
-                    <p className="text-sm font-medium mt-0.5 font-mono" style={{ color: 'var(--color-on-surface)' }}>
-                      {beneficiary.latitude.toFixed(4)}, {beneficiary.longitude.toFixed(4)}
-                    </p>
+                {/* Mapa */}
+                {beneficiary.latitude && beneficiary.longitude ? (
+                  <div className="mt-4 rounded-2xl overflow-hidden h-32">
                     <LocationMap
                       latitude={beneficiary.latitude}
                       longitude={beneficiary.longitude}
-                      height={180}
-                      label={`${beneficiary.address}, ${beneficiary.city}`}
+                      height={128}
+                      label={beneficiary.address}
                     />
                   </div>
+                ) : (
+                  <div className="mt-4 rounded-2xl h-32 flex items-center justify-center" style={{backgroundColor: 'var(--color-surface-container-high)'}}>
+                    <span className="text-3xl">📍</span>
+                  </div>
                 )}
-              </div>
-            </div>
-          </div>
 
-          {/* ─── BLOQUE INFERIOR: BENEFICIOS OBTENIDOS ─── */}
-          <div className="p-6 rounded-2xl" style={{ backgroundColor: 'var(--color-surface-container-lowest)', border: '1px solid var(--color-outline-variant)' }}>
-            <h4 className="text-sm font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--color-on-surface-variant)' }}>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
-              Beneficios obtenidos
-            </h4>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="p-4 rounded-xl text-center" style={{ backgroundColor: 'var(--color-surface-container-high)' }}>
-                <p className="text-2xl font-bold" style={{ color: 'var(--color-primary)' }}>
-                  {completedDeliveries.length}
-                </p>
-                <p className="text-xs mt-1" style={{ color: 'var(--color-outline)' }}>Entregas recibidas</p>
-              </div>
-              <div className="p-4 rounded-xl text-center" style={{ backgroundColor: 'var(--color-surface-container-high)' }}>
-                <p className="text-2xl font-bold" style={{ color: 'var(--color-primary)' }}>
-                  {totalKgReceived} kg
-                </p>
-                <p className="text-xs mt-1" style={{ color: 'var(--color-outline)' }}>Total recibido</p>
-              </div>
-              <div className="p-4 rounded-xl text-center" style={{ backgroundColor: 'var(--color-surface-container-high)' }}>
-                <p className="text-2xl font-bold" style={{ color: 'var(--color-primary)' }}>
-                  {helpRequests.length}
-                </p>
-                <p className="text-xs mt-1" style={{ color: 'var(--color-outline)' }}>Solicitudes totales</p>
-              </div>
-              <div className="p-4 rounded-xl text-center" style={{ backgroundColor: 'var(--color-surface-container-high)' }}>
-                <p className="text-2xl font-bold" style={{ color: 'var(--color-primary)' }}>
-                  {activeRequests.length}
-                </p>
-                <p className="text-xs mt-1" style={{ color: 'var(--color-outline)' }}>Solicitudes activas</p>
-              </div>
-            </div>
-
-            {/* Barra de progreso de beneficios */}
-            {totalKgReceived > 0 && (
-              <div className="mt-4">
-                <div className="flex items-center justify-between text-xs mb-1.5" style={{ color: 'var(--color-on-surface-variant)' }}>
-                  <span>Progreso de beneficios</span>
-                  <span>{totalKgReceived} kg</span>
-                </div>
-                <div
-                  className="h-2.5 rounded-full overflow-hidden"
-                  style={{ backgroundColor: 'var(--color-surface-container-high)' }}
-                >
-                  <div
-                    className="h-full rounded-full transition-all duration-500"
-                    style={{
-                      width: `${Math.min((totalKgReceived / 100) * 100, 100)}%`,
-                      background: 'linear-gradient(90deg, var(--color-primary), var(--color-secondary))',
-                    }}
-                  />
-                </div>
-                <p className="text-xs mt-1" style={{ color: 'var(--color-outline)' }}>
-                  Meta: 100 kg
-                </p>
-              </div>
-            )}
-
-            {/* Banner informativo según estado (solo si no está verificado) */}
-            {isPending && (
-              <div className="mt-5 p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-800 flex items-start gap-3">
-                <span className="text-lg flex-shrink-0">⏳</span>
-                <div>
-                  <p className="font-semibold">Perfil en revisión</p>
-                  <p className="mt-0.5 text-amber-700">
-                    Tus datos están siendo verificados por nuestro equipo. Mientras tanto puedes ver tu información y dar seguimiento a tus beneficios.
-                  </p>
-                </div>
-              </div>
-            )}
-            {isRejected && (
-              <div className="mt-5 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-800 flex items-start gap-3">
-                <span className="text-lg flex-shrink-0">❌</span>
-                <div>
-                  <p className="font-semibold">Perfil rechazado</p>
-                  <p className="mt-0.5 text-red-700">
-                    {beneficiary.verificationNotes && <span>Motivo: {beneficiary.verificationNotes}. </span>}
-                    Para volver a enviar tu solicitud, corrige tus datos y sube los documentos requeridos.
-                  </p>
-                  <button
-                    onClick={() => setView('registro')}
-                    className="mt-3 px-5 py-2 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 active:scale-95 transition-all cursor-pointer"
-                  >
-                    Editar perfil
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Acciones según estado */}
-          <div className="mt-6">
-            {!isVerified && (
-              <div className="text-center">
-                <button
-                  onClick={() => setView('registro')}
-                  className="px-8 py-3 rounded-xl text-sm font-semibold transition-all active:scale-95 cursor-pointer"
-                  style={{
-                    backgroundColor: 'var(--color-primary)',
-                    color: 'var(--color-on-primary)',
-                  }}
-                >
-                  <span className="flex items-center gap-2 justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                    {isProfileComplete ? 'Editar mi perfil' : 'Completar mi perfil'}
-                  </span>
+                <button className="w-full py-3.5 rounded-2xl mt-4 font-bold text-sm transition-all active:scale-95 cursor-pointer" style={{backgroundColor: 'var(--color-surface-container-low)', color: 'var(--color-primary)'}}>
+                  Ver información de recogida
                 </button>
               </div>
-            )}
-            {isVerified && canCreateThisWeek && (
-              <div className="flex flex-wrap items-center justify-center gap-3">
-                <button
-                  onClick={() => setView('solicitar')}
-                  className="px-8 py-3 rounded-xl text-sm font-semibold transition-all active:scale-95 cursor-pointer flex items-center gap-2"
-                  style={{
-                    backgroundColor: 'var(--color-primary)',
-                    color: 'var(--color-on-primary)',
-                  }}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+
+              {/* Card QR */}
+              <div className="rounded-3xl p-6 text-center shadow-lg relative overflow-hidden" style={{
+                background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-container))',
+              }}>
+                <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+                  <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <path d="M0 100 C 20 0 50 0 100 100 Z" fill="white" />
                   </svg>
-                  Solicitar ayuda
-                </button>
-                <button
-                  onClick={() => setView('mis-solicitudes')}
-                  className="px-8 py-3 rounded-xl text-sm font-semibold transition-all active:scale-95 cursor-pointer flex items-center gap-2"
-                  style={{
-                    backgroundColor: 'transparent',
-                    color: 'var(--color-primary)',
-                    border: '2px solid var(--color-primary)',
-                  }}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                  </svg>
-                  Ver mis solicitudes
-                </button>
+                </div>
+                <h4 className="font-bold mb-4 relative z-10" style={{color: 'var(--color-on-primary)'}}>Código de Entrega</h4>
+                <div className="bg-white p-3 rounded-2xl inline-block shadow-xl relative z-10">
+                  <div className="w-28 h-28 flex items-center justify-center">
+                    <span className="text-6xl">📱</span>
+                  </div>
+                </div>
+                <p className="text-xs mt-4 opacity-90 font-medium px-4 relative z-10 leading-relaxed" style={{color: 'var(--color-on-primary)'}}>
+                  Presenta este código al coordinador para un check-in rápido.
+                </p>
               </div>
-            )}
+
+              {/* Estado del perfil para no verificados */}
+              {!isVerified && (
+                <div className="rounded-3xl p-5 shadow-sm border" style={{backgroundColor: 'var(--color-surface-container-lowest)', borderColor: 'var(--color-outline-variant)'}}>
+                  {isPending && (
+                    <div className="flex items-start gap-3">
+                      <span className="text-lg">⏳</span>
+                      <div>
+                        <p className="font-semibold text-sm" style={{color: '#d97706'}}>Perfil en revisión</p>
+                        <p className="text-xs mt-1" style={{color: 'var(--color-on-surface-variant)'}}>Estamos verificando tus datos.</p>
+                      </div>
+                    </div>
+                  )}
+                  {isRejected && (
+                    <div className="flex items-start gap-3">
+                      <span className="text-lg">❌</span>
+                      <div>
+                        <p className="font-semibold text-sm" style={{color: 'var(--color-error)'}}>Perfil rechazado</p>
+                        <p className="text-xs mt-1" style={{color: 'var(--color-on-surface-variant)'}}>{beneficiary.verificationNotes}</p>
+                        <button onClick={() => setView('registro')} className="mt-2 px-4 py-1.5 rounded-lg text-xs font-bold text-white cursor-pointer" style={{backgroundColor: 'var(--color-error)'}}>Editar perfil</button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Acciones para verificado */}
+              {isVerified && (
+                <button onClick={() => setView('solicitar')} className="w-full py-4 rounded-2xl font-bold text-white transition-all active:scale-95 shadow-lg flex items-center justify-center gap-2 cursor-pointer" style={{backgroundColor: 'var(--color-primary)'}}>
+                  <span>➕</span> Solicitar ayuda
+                </button>
+              )}
+            </aside>
           </div>
         </main>
       </div>
     );
   }
+
 
   // ─── VISTAS SECUNDARIAS (registro, perfil, solicitar, etc.) ───
   // Muestran solo el contenido con topbar y botón de volver al inicio

@@ -1,3 +1,12 @@
+/*
+ * ════════════════════════════════════════════════
+ *  ESTILOS DEL DASHBOARD DEL DONADOR
+ *  ════════════════════════════════════════════════
+ *  Todas las variables referencian al @theme de
+ *  Tailwind definido en src/index.css.
+ * ════════════════════════════════════════════════
+ */
+
 /* MAIN LAYOUT */
 .layout {
   display: flex;
@@ -12,7 +21,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-width: 0; /* Prevent flex overflow */
+  min-width: 0;
   width: 100%;
 }
 
