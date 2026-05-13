@@ -1,122 +1,213 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState, useEffect, lazy, Suspense } from "react";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "./config/firebase";
+
+// Lazy loaded components
+const HomePage = lazy(() => import("./features/home").then(module => ({ default: module.HomePage })));
+const LoginPage = lazy(() => import("./features/login").then(module => ({ default: module.LoginPage })));
+const DashboardPage = lazy(() => import("./features/dashboard").then(module => ({ default: module.DashboardPage })));
+const RegisterPage = lazy(() => import("./features/register").then(module => ({ default: module.RegisterPage })));
+const PasswordRecoveryPage = lazy(() => import("./features/password-recovery").then(module => ({ default: module.PasswordRecoveryPage })));
+
+// Dashboards por Rol
+const DonadorDashboard = lazy(() => import("./features/accounts/dashboard/DonadorDashboard").then(module => ({ default: module.DonadorDashboard })));
+const EmpresaDashboard = lazy(() => import("./features/accounts/dashboard/EmpresaDashboard").then(module => ({ default: module.EmpresaDashboard })));
+const BeneficiarioDashboard = lazy(() => import("./features/accounts/dashboard/BeneficiarioDashboard").then(module => ({ default: module.BeneficiarioDashboard })));
+
+import { validateFirebaseConnection } from "./services/firebaseConnectionService";
+
+// Configuración centralizada de rutas
+import { isValidRole } from "./config/routes";
+
+// Mapeo de roles a componentes dashboard
+const DASHBOARD_COMPONENTS = {
+  donador: DonadorDashboard,
+  empresa: EmpresaDashboard,
+  beneficiario: BeneficiarioDashboard,
+};
+
+
+/** @typedef {'loading'|'home'|'login'|'register'|'password-recovery'|'dashboard'} AppState */
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [appState, setAppState] = useState("loading");
+  const [role, setRole] = useState(null);
+  const [connectionOk, setConnectionOk] = useState(false);
 
+  // ─── 1. VALIDAR CONEXIÓN FIREBASE ───
+  useEffect(() => {
+    validateFirebaseConnection().then((result) => {
+      if (result.success) {
+        setConnectionOk(true);
+      } else {
+        // Si falla la conexión, mostramos error (manejado abajo)
+        setConnectionOk(false);
+        setAppState("error");
+      }
+    });
+  }, []);
+
+  // ─── 2. RESTAURAR SESIÓN AL CARGAR ───
+  useEffect(() => {
+    if (!connectionOk) return;
+
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        // ✅ Hay sesión activa en Firebase → leer rol desde Firestore
+        try {
+          const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
+          const userData = userDoc.exists() ? userDoc.data() : {};
+          const userRole = userData.role || "donador";
+
+          if (isValidRole(userRole)) {
+            setRole(userRole);
+            setAppState("dashboard");
+          } else {
+            console.warn(`[App] Rol inválido en Firestore: "${userRole}".`);
+            setAppState("home");
+          }
+        } catch (err) {
+          console.error("[App] Error al leer perfil del usuario:", err);
+          setAppState("home");
+        }
+      } else {
+        // ❌ No hay sesión → mostrar home
+        setAppState("home");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [connectionOk]);
+
+  // ─── 3. HANDLERS DE NAVEGACIÓN ───
+
+  const goToHome = () => setAppState("home");
+  const goToLogin = () => setAppState("login");
+  const goToRegister = () => setAppState("register");
+  const goToPasswordRecovery = () => setAppState("password-recovery");
+  const goToDashboard = () => setAppState("dashboard");
+
+  /**
+   * Se llama después de login/registro exitoso.
+   * Recibe el rol del usuario desde Firestore.
+   */
+  const onAuthSuccess = (userRole) => {
+    if (isValidRole(userRole)) {
+      setRole(userRole);
+      setAppState("dashboard");
+    } else {
+      console.warn(`[App] Rol inválido en auth success: "${userRole}"`);
+      setAppState("dashboard");
+    }
+  };
+
+  const onLogout = async () => {
+    try {
+      await signOut(auth);
+      setRole(null);
+      setAppState("home");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
+  // ─── RENDER POR ESTADO ───
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <Suspense fallback={
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p className="text-gray-600 font-medium">Cargando...</p>
+      </div>
+    }>
+      {renderContent()}
+    </Suspense>
+  );
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+  function renderContent() {
+    // Carga inicial
+    if (appState === "loading") {
+      return (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
+          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-gray-600 font-medium">Validando sesión...</p>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      );
+    }
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    // Error de conexión Firebase
+    if (!connectionOk) {
+      return (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-red-50 p-6 text-center">
+          <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md border border-red-100">
+            <div className="text-5xl mb-4">⚠️</div>
+            <h2 className="text-2xl font-bold text-red-800 mb-2">Error de Conexión</h2>
+            <p className="text-gray-600 mb-6">No se pudo conectar con Firebase.</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="w-full py-3 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition-colors shadow-lg shadow-red-200"
+            >
+              Reintentar Conexión
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    // Home (público)
+    if (appState === "home") {
+      return <HomePage onNavigateToLogin={goToLogin} />;
+    }
+
+    // Login
+    if (appState === "login") {
+      return (
+        <LoginPage
+          onBackToHome={goToHome}
+          onLoginSuccess={(userRole) => onAuthSuccess(userRole)}
+          onNavigateToRegister={goToRegister}
+          onNavigateToPasswordRecovery={goToPasswordRecovery}
+        />
+      );
+    }
+
+    // Register
+    if (appState === "register") {
+      return (
+        <RegisterPage
+          onBackToHome={goToHome}
+          onNavigateToLogin={goToLogin}
+          onRegisterSuccess={(userRole) => onAuthSuccess(userRole)}
+        />
+      );
+    }
+
+    // Recuperar contraseña
+    if (appState === "password-recovery") {
+      return (
+        <PasswordRecoveryPage
+          onBackToHome={goToHome}
+          onNavigateToLogin={goToLogin}
+          onRecoverySuccess={goToLogin}
+        />
+      );
+    }
+
+    // Dashboard (requiere sesión)
+    if (appState === "dashboard") {
+      if (role && isValidRole(role)) {
+        const DashboardComponent = DASHBOARD_COMPONENTS[role];
+        return <DashboardComponent onLogout={onLogout} />;
+      }
+
+      console.warn(`[App] Rol inválido en dashboard: "${role}".`);
+      return <DashboardPage onLogout={onLogout} />;
+    }
+
+    // Fallback
+    return <HomePage onNavigateToLogin={goToLogin} />;
+  }
 }
 
-console.log("API KEY:", import.meta.env.VITE_API_KEY);
-export default App
+
+export default App;

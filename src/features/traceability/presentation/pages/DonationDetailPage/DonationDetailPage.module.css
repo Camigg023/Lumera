@@ -1,0 +1,238 @@
+.container {
+  min-height: 100vh;
+  background-color: #f4f7f6;
+  font-family: 'Inter', sans-serif;
+  color: #2d3436;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.backButton {
+  background: #eef2ff;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4f46e5;
+  transition: all 0.2s;
+}
+
+.backButton:hover {
+  background: #e0e7ff;
+  transform: translateX(-2px);
+}
+
+.title {
+  flex: 1;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.spacer {
+  width: 40px;
+}
+
+.main {
+  padding: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.card {
+  background: white;
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+  position: relative;
+}
+
+.idBadge {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  background: #f1f5f9;
+  padding: 0.5rem 1rem;
+  border-radius: 100px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.timelineSection {
+  margin-bottom: 3rem;
+  margin-top: 1rem;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.timelineItem {
+  display: flex;
+  gap: 1.5rem;
+  position: relative;
+}
+
+.iconWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40px;
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+  background: #f8fafc;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  z-index: 2;
+  border: 2px solid transparent;
+  transition: all 0.3s;
+}
+
+.completed .icon {
+  background: #f0fdf4;
+  border-color: #22c55e;
+}
+
+.pending .icon {
+  opacity: 0.5;
+  filter: grayscale(1);
+}
+
+.line {
+  width: 2px;
+  height: 50px;
+  background: #e2e8f0;
+  margin-top: -2px;
+  margin-bottom: -2px;
+}
+
+.lineCompleted {
+  background: #22c55e;
+}
+
+.stepInfo {
+  padding-bottom: 2rem;
+}
+
+.stepLabel {
+  margin: 0;
+  font-weight: 700;
+  color: #334155;
+  font-size: 1.1rem;
+}
+
+.completed .stepLabel {
+  color: #0f172a;
+}
+
+.stepDate {
+  margin: 0.25rem 0 0;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.infoSection {
+  background: #f8fafc;
+  margin: 0 -2rem;
+  padding: 2rem;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 2rem;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.infoLabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.infoValue {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  margin-top: 0.5rem;
+}
+
+.itemsSection {
+  padding-top: 0.5rem;
+}
+
+.itemsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.productItem {
+  background: #eff6ff;
+  color: #1d4ed8;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dot {
+  opacity: 0.5;
+}

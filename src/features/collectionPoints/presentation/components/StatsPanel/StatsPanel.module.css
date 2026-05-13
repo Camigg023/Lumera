@@ -1,0 +1,156 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ── Shared card base ── */
+.cardCouriers,
+.cardPeak {
+  background: #ffffff;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  border: 1px solid #eef2ff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Impact card ── */
+.cardImpact {
+  background: #4f46e5;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.impactContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.impactTitle {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.25rem;
+}
+
+.impactSubtitle {
+  font-size: 16px;
+  opacity: 0.8;
+  margin-bottom: 1.5rem;
+}
+
+.impactValue {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.impactBlob {
+  position: absolute;
+  right: -2.5rem;
+  bottom: -2.5rem;
+  width: 12rem;
+  height: 12rem;
+  background: rgba(255,255,255,0.1);
+  border-radius: 9999px;
+  filter: blur(3rem);
+  transition: transform 0.5s;
+}
+
+.cardImpact:hover .impactBlob {
+  transform: scale(1.25);
+}
+
+/* ── Shared text ── */
+.cardTitle {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #131b2e;
+  margin-bottom: 0.25rem;
+}
+
+.cardSubtitle {
+  font-size: 16px;
+  color: #464555;
+  margin-bottom: 1.5rem;
+  flex: 1;
+}
+
+/* ── Couriers ── */
+.couriersRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avatarStack {
+  display: flex;
+}
+
+.avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  border: 2px solid #ffffff;
+  margin-left: -0.75rem;
+  object-fit: cover;
+}
+
+.avatar:first-child {
+  margin-left: 0;
+}
+
+.courierCount {
+  font-size: 14px;
+  font-weight: 700;
+  color: #3525cd;
+}
+
+/* ── Peak hours ── */
+.progressTrack {
+  width: 100%;
+  height: 8px;
+  background: #e2e7ff;
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.progressFill {
+  height: 100%;
+  background: #712ae2;
+  border-radius: 9999px;
+  transition: width 0.6s ease-out;
+}
+
+.progressLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 500;
+  color: #777587;
+}
+
+.capacityValue {
+  color: #712ae2;
+  font-weight: 700;
+}

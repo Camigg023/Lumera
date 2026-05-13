@@ -1,0 +1,97 @@
+.page {
+  height: 100vh;
+  display: flex;
+  font-family: Inter, sans-serif;
+  background: var(--color-surface);
+}
+
+/* LEFT IMAGE */
+.left {
+  flex: 1.2;
+  height: 100vh;
+  background-image: url("/img/loginimg.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.imageSide::before {
+  content: '';
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  top: -25%;
+  left: -25%;
+  animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+/* RIGHT SIDE */
+.right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* CARD */
+.card {
+  width: 380px;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  padding: 2.5rem;
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+/* TEXT */
+.card h2 {
+  color: var(--color-primary);
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  color: var(--color-outline);
+  margin-bottom: 1.5rem;
+}
+
+/* LINKS */
+.links {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.links button {
+  background: none;
+  border: none;
+  color: var(--color-primary-container);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.links button:hover {
+  text-decoration: underline;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .page {
+    flex-direction: column;
+  }
+
+  .left {
+    display: none;
+  }
+
+  .right {
+    height: 100vh;
+  }
+}

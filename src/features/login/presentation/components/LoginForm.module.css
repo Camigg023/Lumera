@@ -1,0 +1,87 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* INPUT GROUP */
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+/* INPUT */
+.input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 0.95rem;
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 10px;
+  outline: none;
+  background-color: #FFFFFF;
+  color: var(--color-on-surface);
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+/* FOCUS ÍNDIGO CORPORATIVO */
+.input:focus {
+  border-color: var(--color-primary);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(53, 37, 205, 0.15);
+}
+
+/* SELECT */
+.select {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 0.95rem;
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 10px;
+  outline: none;
+  background-color: #FFFFFF;
+  color: var(--color-on-surface);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.select:focus {
+  border-color: var(--color-primary);
+  background-color: #ffffff;
+}
+
+/* ERROR */
+.error {
+  color: var(--color-error);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* BOTÓN PRINCIPAL */
+.button {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-container));
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0.85rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  width: 100%;
+  box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
+  letter-spacing: 0.5px;
+}
+
+/* HOVER PRO */
+.button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(53, 37, 205, 0.25);
+}
+
+/* DISABLED */
+.button:disabled {
+  background: var(--color-outline-variant);
+  cursor: not-allowed;
+  box-shadow: none;
+}

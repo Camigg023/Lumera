@@ -1,0 +1,210 @@
+.panel {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.title {
+  color: #2D2D2D;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #F8B486;
+  padding-bottom: 0.5rem;
+}
+
+.verificationStatus {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background-color: #FFF9F3;
+  border-radius: 8px;
+  flex-wrap: wrap;
+}
+
+.status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.status.pending {
+  background-color: #FFF3E0;
+  color: #EF6C00;
+}
+
+.status.verified {
+  background-color: #E8F5E9;
+  color: #2E7D32;
+}
+
+.status.rejected {
+  background-color: #FFEBEE;
+  color: #C62828;
+}
+
+.adminActions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-weight: 500;
+  color: #666666;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #D9D9D9;
+  border-radius: 8px;
+  outline: none;
+  background-color: #FFFFFF;
+  color: #2D2D2D;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: #F28C33;
+  box-shadow: 0 0 0 2px rgba(242, 140, 51, 0.2);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+.buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  background-color: #F28C33;
+  color: white;
+}
+
+.button:hover:not(:disabled) {
+  background-color: #FF8000;
+  transform: translateY(-1px);
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.button:disabled {
+  background-color: #D9D9D9;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.buttonSecondary {
+  background-color: transparent;
+  border: 1px solid #D9D9D9;
+  color: #666666;
+}
+
+.buttonSecondary:hover:not(:disabled) {
+  background-color: #F5F5F5;
+  border-color: #BDBDBD;
+}
+
+.button.success {
+  background-color: #4CAF50;
+}
+
+.button.success:hover:not(:disabled) {
+  background-color: #388E3C;
+}
+
+.button.danger {
+  background-color: #F44336;
+}
+
+.button.danger:hover:not(:disabled) {
+  background-color: #D32F2F;
+}
+
+.loading,
+.error,
+.success {
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.loading {
+  color: #666666;
+  background-color: #FFF9F3;
+}
+
+.error {
+  color: #FF5252;
+  background-color: #FFEBEE;
+}
+
+.success {
+  color: #2E7D32;
+  background-color: #E8F5E9;
+}
+
+@media (max-width: 768px) {
+  .panel {
+    padding: 1.5rem;
+  }
+
+  .verificationStatus {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .adminActions {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .buttons {
+    flex-direction: column;
+  }
+
+  .button {
+    width: 100%;
+  }
+}

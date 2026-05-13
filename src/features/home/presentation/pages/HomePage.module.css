@@ -1,0 +1,208 @@
+/* PAGE */
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface-container-low);
+  font-family: "Inter", sans-serif;
+  color: var(--color-on-surface);
+}
+
+/* HEADER GENERAL */
+.header {
+  background: transparent;
+}
+
+/* BARRA SUPERIOR */
+.topBar {
+  background: var(--color-primary);
+  text-align: center;
+  padding: 0.1rem;
+}
+
+/* LOGO */
+.logo {
+  color: white;
+  font-size: 2rem;
+  letter-spacing: 4px;
+  font-weight: 300;
+}
+
+/* MENÚ SEPARADO */
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  background: white;
+  padding: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* BOTONES */
+.navButton {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: var(--color-on-surface);
+  cursor: pointer;
+  position: relative;
+  padding-bottom: 5px;
+}
+
+/* EFECTO HOVER */
+.navButton::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  height: 2px;
+  background: var(--color-primary);
+  transition: 0.3s;
+}
+
+.navButton:hover::after {
+  width: 100%;
+}
+/* HERO CON IMAGEN DE FONDO */
+.hero {
+  height: 70vh;
+  background: url("/img/image.jpg") no-repeat center center;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  padding: 2rem;
+  position: relative;
+}
+
+/* CAPA OSCURA */
+.overlay {
+  background: none;
+  max-width: 500px;
+  margin-left: 5%;
+  text-align: left;
+}
+
+/* TEXTO HERO */
+.heroTitle {
+  color: var(--color-primary);
+  font-size: 2rem;
+}
+
+
+.callout {
+  color: var(--color-primary);
+  font-size: 1.25rem;
+}
+
+/* BOTÓN */
+.ctaButton {
+  background: var(--color-primary);
+  font-size: 1rem;
+  color: white;
+  padding: 1rem 2.2rem;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 2rem;
+}
+
+.ctaButton:hover {
+  background: var(--color-primary-container);
+}
+
+/* SECTION */
+.section {
+  padding: 2rem;
+  text-align: center;
+}
+
+/* STATS */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.statCard {
+  background: white;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.statValue {
+  font-size: 1.8rem;
+  color: var(--color-primary);
+}
+
+/* FOOTER */
+.footer {
+  background: var(--color-primary);
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .hero {
+    height: auto;
+    padding: 3rem 1rem;
+  }
+
+  .overlay {
+    margin: auto;
+    text-align: center;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sobre {
+  min-height: 66vh;
+  background-image: url("/img/sobre.jpg");
+  background-position: center 20%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: flex-start;
+  padding: 4rem 2rem;
+}
+
+.sobreOverlay {
+  max-width: 500px;
+  color: white;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+}
+
+.sobreTabs {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.sobreBtn {
+  background: rgba(255,255,255,0.25);
+  border: none;
+  padding: 0.6rem 1.4rem;
+  border-radius: 25px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sobreBtn:hover {
+  background: rgba(255,255,255,0.45);
+}
+
+.active {
+  background: white;
+  color: var(--color-primary);
+  font-weight: 600;
+}

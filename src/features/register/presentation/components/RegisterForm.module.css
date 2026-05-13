@@ -1,0 +1,123 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.input, .select {
+  width: 100%;
+  padding: 1rem 1.2rem;
+  font-size: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  outline: none;
+  background-color: #fcfcfc;
+  color: var(--color-on-surface);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(53, 37, 205, 0.15);
+}
+
+.select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 8px;
+  outline: none;
+  background-color: #FFFFFF;
+  color: var(--color-on-surface);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.select:focus {
+  border-color: var(--color-primary-container);
+  background-color: white;
+  box-shadow: 0 10px 20px rgba(79, 70, 229, 0.1), 0 0 0 4px rgba(79, 70, 229, 0.05);
+  transform: translateY(-2px);
+}
+
+.error {
+  color: var(--color-error);
+  font-size: 0.85rem;
+  margin: -0.5rem 0 0 0.5rem;
+  font-weight: 500;
+}
+
+.button {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 1.1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
+  letter-spacing: 0.5px;
+}
+
+.button:hover:not(:disabled) {
+  background: var(--color-primary-container);
+}
+
+.button:disabled {
+  background: var(--color-outline-variant);
+  color: #aaa;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* ROLES */
+.roles {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.roleCard {
+  flex: 1;
+  border: 2px solid var(--color-primary);
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s;
+  background: #fff;
+  font-size: 0.9rem;
+}
+
+.roleCard span {
+  display: block;
+  margin-top: 0.3rem;
+  font-weight: 500;
+}
+
+.roleCard:hover {
+  background: var(--color-surface-container-low);
+}
+
+.active {
+  background: var(--color-primary);
+  color: white;
+}
+
+/* LABEL */
+.label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}

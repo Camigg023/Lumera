@@ -1,0 +1,103 @@
+.page {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--color-surface);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* IZQUIERDA - IMAGEN */
+.imageSide {
+  flex: 1;
+  background-image: url("/img/crearcuenta.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+  overflow: hidden;
+}
+
+.imageSide::before {
+  content: '';
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  top: -25%;
+  left: -25%;
+  animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* DERECHA */
+.formSide {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-container-lowest);
+  padding: 2rem;
+}
+
+.formContainer {
+  width: 100%;
+  max-width: 420px;
+}
+
+/* BOTÓN VOLVER */
+.backLink {
+  background: none;
+  border: none;
+  color: var(--color-outline);
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.backLink:hover {
+  color: var(--color-primary);
+}
+
+/* TÍTULO */
+.title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--color-primary);
+  margin-bottom: 2rem;
+}
+
+/* LINKS */
+.links {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.link {
+  background: none;
+  border: none;
+  color: var(--color-outline);
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.link:hover {
+  color: var(--color-primary-container);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .page {
+    flex-direction: column;
+  }
+
+  .imageSide {
+    height: 250px;
+    background-size: 80%;
+    background-position: center;
+  }
+}

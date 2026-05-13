@@ -32,3 +32,9 @@ dist-ssr
 .firebase/
 firebase-debug.log
 firebase-debug.*.log
+
+.cursorrules
+.openclaw/
+# Documentation
+/*.md
+!/README.md

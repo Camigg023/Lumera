@@ -1,0 +1,36 @@
+.wrapper {
+  position: relative;
+}
+
+.icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #777587;
+  font-size: 20px !important;
+  pointer-events: none;
+}
+
+.input {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3rem;
+  background-color: #ffffff;
+  border: 1px solid #c7c4d8;
+  border-radius: 1rem;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #131b2e;
+  outline: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input::placeholder {
+  color: #777587;
+}
+
+.input:focus {
+  border-color: #3525cd;
+  box-shadow: 0 0 0 3px rgba(53, 37, 205, 0.15);
+}
