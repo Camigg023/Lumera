@@ -1,23 +1,22 @@
 .card {
-  background: var(--color-surface-container-lowest, #ffffff);
+  background: var(--color-surface-container-lowest, #faf8ff);
   padding: 2rem;
-  border-radius: 24px;
+  border-radius: 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  border: 1px solid var(--color-outline-variant, #cac4d0);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid var(--color-outline-variant, #c7c4d8);
+  transition: box-shadow 0.3s ease;
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .cardTitle {
-  font-size: 1.75rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 600;
   margin-bottom: 1.5rem;
-  color: var(--color-primary, #0066cc);
-  letter-spacing: -0.5px;
+  color: var(--color-primary, #3525cd);
+  letter-spacing: -0.01em;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -33,7 +32,7 @@
   font-size: 0.875rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: var(--color-on-surface-variant, #49454f);
+  color: var(--color-on-surface-variant, #464555);
   margin-left: 0.25rem;
 }
 
@@ -46,34 +45,34 @@
 .inputIcon {
   position: absolute;
   left: 1rem;
-  color: var(--color-outline, #79747e);
+  color: var(--color-outline, #777587);
   transition: color 0.2s ease;
 }
 
 .input {
   width: 100%;
   padding: 0.875rem 1rem 0.875rem 2.75rem;
-  border-radius: 12px;
-  border: 1.5px solid var(--color-outline-variant, #cac4d0);
-  background: var(--color-surface, #fdfbff);
+  border-radius: 8px;
+  border: 1.5px solid var(--color-outline-variant, #c7c4d8);
+  background: var(--color-surface, #faf8ff);
   font-size: 1rem;
-  color: var(--color-on-surface, #1c1b1f);
+  color: var(--color-on-surface, #131b2e);
   outline: none;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .input:focus {
-  border-color: var(--color-primary, #0066cc);
-  box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
-  background: #ffffff;
+  border-color: var(--color-primary, #3525cd);
+  box-shadow: 0 0 0 4px rgba(53, 37, 205, 0.1);
+  background: var(--color-surface-bright, #faf8ff);
 }
 
 .input:focus + .inputIcon {
-  color: var(--color-primary, #0066cc);
+  color: var(--color-primary, #3525cd);
 }
 
 .input:disabled {
-  background: var(--color-surface-container-low, #f0f0f0);
+  background: var(--color-surface-container-low, #f2f3ff);
   cursor: not-allowed;
   opacity: 0.7;
 }
@@ -82,10 +81,10 @@
   width: 100%;
   padding: 1rem;
   margin-top: 1rem;
-  background: linear-gradient(135deg, var(--color-primary, #0066cc), var(--color-primary-fixed, #0052a3));
+  background: var(--color-primary, #3525cd);
   color: white;
   border: none;
-  border-radius: 14px;
+  border-radius: 8px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -94,12 +93,11 @@
   justify-content: center;
   gap: 0.5rem;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 102, 204, 0.2);
+  box-shadow: 0 4px 12px rgba(53, 37, 205, 0.2);
 }
 
 .saveButton:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 102, 204, 0.3);
+  box-shadow: 0 6px 20px rgba(53, 37, 205, 0.3);
   filter: brightness(1.1);
 }
 
@@ -108,38 +106,9 @@
 }
 
 .saveButton:disabled {
-  background: var(--color-surface-container-high, #e0e0e0);
-  color: var(--color-on-surface-variant, #49454f);
+  background: var(--color-surface-container-high, #e2e7ff);
+  color: var(--color-on-surface-variant, #464555);
   cursor: not-allowed;
   box-shadow: none;
 }
 
-.skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-  border-radius: 12px;
-}
-
-@keyframes loading {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-.skeletonHeader {
-  height: 32px;
-  width: 40%;
-  margin-bottom: 2rem;
-}
-
-.skeletonInput {
-  height: 48px;
-  width: 100%;
-  margin-bottom: 1.25rem;
-}
-
-.skeletonButton {
-  height: 52px;
-  width: 100%;
-  margin-top: 1rem;
-}

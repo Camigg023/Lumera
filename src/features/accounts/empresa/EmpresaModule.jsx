@@ -19,7 +19,8 @@ const PAGE_MAP = {
   perfil: PerfilEmpresaPage,
 };
 
-export default function EmpresaModule() {
+export default function EmpresaModule({ onLogout }) {
+
   const [view, setView] = useState('inicio');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const empresaData = useEmpresaData();
@@ -59,7 +60,9 @@ export default function EmpresaModule() {
         onNavigate={setView}
         onClose={() => setSidebarOpen(false)}
         isOpen={sidebarOpen}
+        onLogout={onLogout}
       />
+
 
       {/* Main */}
       <div className="empresa-main">

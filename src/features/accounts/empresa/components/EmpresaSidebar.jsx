@@ -11,7 +11,7 @@ const NAV_ITEMS = [
   { id: 'perfil',     label: 'Perfil',      icon: Building2 },
 ];
 
-export default function EmpresaSidebar({ view, onNavigate, onClose, isOpen }) {
+export default function EmpresaSidebar({ view, onNavigate, onClose, isOpen, onLogout }) {
   return (
     <aside className={`empresa-sidebar${isOpen ? ' open' : ''}`}>
       {/* Logo */}
@@ -70,14 +70,7 @@ export default function EmpresaSidebar({ view, onNavigate, onClose, isOpen }) {
       <div className="empresa-sidebar-footer">
         <button
           className="empresa-logout-btn"
-          onClick={() => {
-            import('firebase/auth').then(({ signOut }) => {
-              import('../../../../config/firebase').then(({ auth }) => {
-                signOut(auth).catch(() => {});
-              });
-            });
-            window.location.reload();
-          }}
+          onClick={onLogout}
         >
           <LogOut size={16} />
           <span>Cerrar sesión</span>
@@ -86,3 +79,4 @@ export default function EmpresaSidebar({ view, onNavigate, onClose, isOpen }) {
     </aside>
   );
 }
+

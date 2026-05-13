@@ -35,4 +35,6 @@ firebase-debug.*.log
 
 .cursorrules
 .openclaw/
-*.md
+# Documentation
+/*.md
+!/README.md

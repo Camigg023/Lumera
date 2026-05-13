@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Search, AlertCircle, CheckCircle, ClipboardCheck } from 'lucide-react';
 import { validarCodigoDonacion, marcarDonacionEntregada } from '../../../services/donationService';
 
 /**
@@ -65,7 +66,7 @@ export default function CodeValidator() {
   return (
     <div className="space-y-6">
       {/* Input de búsqueda */}
-      <div className="bg-white rounded-3xl p-8 shadow-sm border border-indigo-50 space-y-6">
+      <div className="bg-surface rounded-2xl p-8 shadow-sm border border-outline-variant/40 space-y-6">
         <div>
           <h2 className="text-h3 font-h3 text-on-surface mb-2">
             Validar código de donación
@@ -97,7 +98,7 @@ export default function CodeValidator() {
           <button
             onClick={handleBuscar}
             disabled={buscando || !codigo.trim()}
-            className="h-12 px-6 bg-primary hover:bg-primary-container disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-all active:scale-[0.98] cursor-pointer flex items-center gap-2 shadow-md shadow-indigo-200"
+            className="h-12 px-6 bg-primary hover:bg-primary-container disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-all active:scale-[0.98] cursor-pointer flex items-center gap-2 shadow-md"
           >
             {buscando ? (
               <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
@@ -106,7 +107,7 @@ export default function CodeValidator() {
               </svg>
             ) : (
               <>
-                <span className="material-symbols-outlined">search</span>
+                <Search size={18} />
                 Validar
               </>
             )}
@@ -116,38 +117,38 @@ export default function CodeValidator() {
         {/* Error */}
         {error && (
           <div className="flex items-center gap-2 px-4 py-3 bg-error-container rounded-xl">
-            <span className="material-symbols-outlined text-error">error</span>
+            <AlertCircle size={18} className="text-error shrink-0" />
             <p className="text-on-error-container text-sm font-medium">{error}</p>
           </div>
         )}
 
         {/* Éxito al marcar */}
         {exito && (
-          <div className="flex items-center gap-2 px-4 py-3 bg-green-50 rounded-xl border border-green-200">
-            <span className="material-symbols-outlined text-green-600">check_circle</span>
-            <p className="text-green-700 text-sm font-medium">{exito}</p>
+          <div className="flex items-center gap-2 px-4 py-3 bg-success-container rounded-xl border border-success">
+            <CheckCircle size={18} className="text-success shrink-0" />
+            <p className="text-success text-sm font-medium">{exito}</p>
           </div>
         )}
       </div>
 
       {/* Resultado de la búsqueda */}
       {donacion && (
-        <div className="bg-white rounded-3xl p-8 shadow-sm border border-indigo-50 space-y-6 animate-fade-in">
+        <div className="bg-surface rounded-2xl p-8 shadow-sm border border-outline-variant/40 space-y-6 animate-fade-in">
           <div className="flex items-center justify-between">
             <h3 className="text-h3 font-h3 text-on-surface">Donación encontrada</h3>
             <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
               donacion.estado === 'entregado' || donacion.estado === 'validado'
-                ? 'bg-green-100 text-green-700'
-                : 'bg-amber-100 text-amber-700'
+                ? 'bg-success-container text-success'
+                : 'bg-accent-bg text-accent'
             }`}>
               {donacion.estado === 'entregado' || donacion.estado === 'validado' ? '✅ Entregado' : '⏳ Pendiente'}
             </span>
           </div>
 
           {/* Código destacado */}
-          <div className="text-center py-4 bg-indigo-50 rounded-2xl border-2 border-indigo-200">
-            <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Código único</p>
-            <p className="font-mono font-bold text-3xl tracking-[0.25em] text-indigo-700">
+          <div className="text-center py-4 bg-surface-container-low rounded-2xl border-2 border-outline-variant">
+            <p className="text-xs text-on-surface-variant uppercase tracking-wider mb-1">Código único</p>
+            <p className="font-mono font-bold text-3xl tracking-[0.25em] text-primary">
               {donacion.codigoUnico}
             </p>
           </div>
@@ -155,7 +156,7 @@ export default function CodeValidator() {
           {/* Detalles de la donación */}
           <div className="space-y-3">
             <h4 className="font-semibold text-on-surface">Productos</h4>
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-outline-variant/50">
               {donacion.productos?.map((producto, i) => (
                 <div key={i} className="flex items-center justify-between py-2">
                   <div>
@@ -188,7 +189,7 @@ export default function CodeValidator() {
             <button
               onClick={handleMarcarEntregado}
               disabled={marcando}
-              className="w-full h-14 bg-gradient-to-r from-green-500 to-green-600 text-white font-bold text-body-md rounded-2xl shadow-lg shadow-green-200 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-14 bg-success hover:bg-[#43a047] text-white font-bold text-body-md rounded-2xl shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {marcando ? (
                 <>
@@ -200,7 +201,7 @@ export default function CodeValidator() {
                 </>
               ) : (
                 <>
-                  <span className="material-symbols-outlined">how_to_reg</span>
+                  <ClipboardCheck size={20} />
                   Marcar como entregado
                 </>
               )}
@@ -208,8 +209,8 @@ export default function CodeValidator() {
           )}
 
           {donacion.estado !== 'pendiente' && (
-            <div className="text-center py-4 bg-green-50 rounded-2xl border border-green-200">
-              <p className="text-green-700 font-semibold">
+            <div className="text-center py-4 bg-success-container rounded-2xl border border-success">
+              <p className="text-success font-semibold">
                 ✅ Esta donación ya fue entregada
               </p>
             </div>

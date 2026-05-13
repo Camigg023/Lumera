@@ -1,3 +1,4 @@
+import { ShieldCheck } from 'lucide-react';
 import { Donacion } from '../../../services/donationService';
 
 interface Props {
@@ -17,7 +18,7 @@ export default function DeliveryEvidence({ donacion }: Props) {
   return (
     <div className="mt-4 p-5 bg-surface-container-lowest rounded-2xl border border-outline-variant/40 animate-fade-in">
       <div className="flex items-center gap-2 mb-4">
-        <span className="material-symbols-outlined text-green-600">verified_user</span>
+        <ShieldCheck size={20} className="text-success" />
         <h4 className="font-h3 text-h3 text-on-surface">Evidencia de Entrega</h4>
       </div>
       
@@ -44,7 +45,7 @@ export default function DeliveryEvidence({ donacion }: Props) {
         {/* Firma */}
         <div className="space-y-2">
           <p className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Firma del encargado</p>
-          <div className="h-40 rounded-xl bg-white border border-outline-variant/30 flex items-center justify-center p-4">
+          <div className="h-40 rounded-xl bg-surface border border-outline-variant/30 flex items-center justify-center p-4">
             <img 
               src={firmaUrl} 
               alt="Firma digital" 

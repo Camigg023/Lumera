@@ -94,11 +94,11 @@ export function DonadorProfile() {
   if (loading) {
     return (
       <div className={styles.card}>
-        <div className={`${styles.skeleton} ${styles.skeletonHeader}`}></div>
-        <div className={`${styles.skeleton} ${styles.skeletonInput}`}></div>
-        <div className={`${styles.skeleton} ${styles.skeletonInput}`}></div>
-        <div className={`${styles.skeleton} ${styles.skeletonInput}`}></div>
-        <div className={`${styles.skeleton} ${styles.skeletonButton}`}></div>
+        <div className="h-7 w-2/5 bg-surface-container-high rounded-lg animate-pulse mb-8"></div>
+        <div className="h-12 w-full bg-surface-container-high rounded-lg animate-pulse mb-5"></div>
+        <div className="h-12 w-full bg-surface-container-high rounded-lg animate-pulse mb-5"></div>
+        <div className="h-12 w-full bg-surface-container-high rounded-lg animate-pulse mb-5"></div>
+        <div className="h-13 w-full bg-surface-container-high rounded-lg animate-pulse mt-4"></div>
       </div>
     );
   }
@@ -126,7 +126,7 @@ export function DonadorProfile() {
               {name.charAt(0) || currentUser?.displayName?.charAt(0) || "U"}
             </div>
           )}
-          <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 border-2 border-white rounded-full"></div>
+          <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-success border-2 border-surface rounded-full"></div>
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-on-surface font-bold text-lg truncate">{name || "Usuario Lumera"}</p>
