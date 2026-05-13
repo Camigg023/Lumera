@@ -1,26 +1,35 @@
+/*
+ * ════════════════════════════════════════════════
+ *  ESTILOS DEL DASHBOARD DEL DONADOR
+ *  ════════════════════════════════════════════════
+ *  Todas las variables referencian al @theme de
+ *  Tailwind definido en src/index.css.
+ * ════════════════════════════════════════════════
+ */
+
 /* MAIN LAYOUT */
 .layout {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: var(--lumera-bg);
-  color: var(--lumera-text);
-  font-family: var(--sans);
+  background: var(--color-background);
+  color: var(--color-on-surface);
+  font-family: var(--font-sans);
 }
 
 .main {
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-width: 0; /* Prevent flex overflow */
+  min-width: 0;
   width: 100%;
 }
 
 /* TOP NAVBAR */
 .topbar {
   height: 72px;
-  background: var(--lumera-bg);
-  border-bottom: 1px solid var(--lumera-border);
+  background: var(--color-surface-container-lowest);
+  border-bottom: 1px solid var(--color-outline-variant);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -40,7 +49,7 @@
 .logo {
   font-size: 1.25rem;
   font-weight: 800;
-  color: var(--lumera-primary);
+  color: var(--color-primary);
   letter-spacing: -0.5px;
   margin: 0;
   line-height: 1;
@@ -49,7 +58,7 @@
 .roleBadge {
   font-size: 0.6rem;
   font-weight: 700;
-  color: var(--lumera-text-muted);
+  color: var(--color-outline);
   letter-spacing: 1px;
   margin-top: 0.15rem;
 }
@@ -69,7 +78,7 @@
   gap: 0.5rem;
   padding: 0.6rem 1rem;
   border-radius: 10px;
-  color: var(--lumera-text-secondary);
+  color: var(--color-on-surface-variant);
   font-weight: 500;
   font-size: 0.9rem;
   transition: all 0.2s ease;
@@ -79,21 +88,21 @@
 }
 
 .topMenuItem:hover {
-  background: var(--lumera-bg-secondary);
-  color: var(--lumera-primary);
+  background: var(--color-surface-container-low);
+  color: var(--color-primary);
 }
 
 .topMenuItem.active {
-  background: var(--lumera-primary-light);
-  color: var(--lumera-primary);
+  background: var(--color-primary-fixed);
+  color: var(--color-on-primary-fixed);
   font-weight: 600;
 }
 
 .searchBox {
   display: flex;
   align-items: center;
-  background: var(--lumera-bg-secondary);
-  border: 1px solid var(--lumera-border);
+  background: var(--color-surface-container-low);
+  border: 1px solid var(--color-outline-variant);
   border-radius: 12px;
   padding: 0 1rem;
   width: 320px;
@@ -102,11 +111,11 @@
 }
 
 .searchBox:focus-within {
-  border-color: var(--lumera-primary);
+  border-color: var(--color-primary);
 }
 
 .searchIcon {
-  color: var(--lumera-text-muted);
+  color: var(--color-outline);
 }
 
 .searchBox input {
@@ -116,7 +125,7 @@
   padding: 0 0.75rem;
   width: 100%;
   font-size: 0.9rem;
-  color: var(--lumera-text);
+  color: var(--color-on-surface);
 }
 
 .topActions {
@@ -132,18 +141,18 @@
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  color: var(--lumera-text-secondary);
+  color: var(--color-on-surface-variant);
   background: transparent;
-  border: 1px solid var(--lumera-border);
+  border: 1px solid var(--color-outline-variant);
   cursor: pointer;
   position: relative;
   transition: all 0.2s;
 }
 
 .iconBtn:hover {
-  background: var(--lumera-bg-tertiary);
-  color: var(--lumera-primary);
-  border-color: var(--lumera-primary-border);
+  background: var(--color-surface-container-high);
+  color: var(--color-primary);
+  border-color: var(--color-outline);
 }
 
 .notifBadge {
@@ -152,9 +161,9 @@
   right: 8px;
   width: 8px;
   height: 8px;
-  background: var(--lumera-error);
+  background: var(--color-error);
   border-radius: 50%;
-  border: 2px solid var(--lumera-bg);
+  border: 2px solid var(--color-surface-container-lowest);
 }
 
 .userProfile {
@@ -162,7 +171,7 @@
   align-items: center;
   gap: 0.75rem;
   padding-left: 1.25rem;
-  border-left: 1px solid var(--lumera-border);
+  border-left: 1px solid var(--color-outline-variant);
 }
 
 .userInfo {
@@ -174,7 +183,7 @@
 .userName {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--lumera-text);
+  color: var(--color-on-surface);
   line-height: 1.2;
 }
 
@@ -183,7 +192,7 @@
   height: 36px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid var(--lumera-bg-tertiary);
+  border: 2px solid var(--color-surface-container-high);
 }
 
 .logoutIconBtn {
@@ -193,7 +202,7 @@
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  color: var(--lumera-text-muted);
+  color: var(--color-outline);
   background: transparent;
   border: none;
   cursor: pointer;
@@ -202,8 +211,8 @@
 }
 
 .logoutIconBtn:hover {
-  color: var(--lumera-error);
-  background: rgba(229, 57, 53, 0.05);
+  color: var(--color-error);
+  background: var(--color-error-container);
 }
 
 .contentWrapper {
