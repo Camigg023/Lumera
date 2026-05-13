@@ -3,16 +3,16 @@ import { auth, db } from "../../../config/firebase";
 import { onSnapshot, collection, query, where } from "firebase/firestore";
 import { DonadorProfile } from "../pages/DonadorProfile";
 import NearbyAcopio from "../../collectionPoints/presentation/components/NearbyAcopio/NearbyAcopio";
-import AddProductsPanel from "../../addProducts/AddProductsPanel";
-import DonationHistory from "../../codeValidation/DonationHistory";
 import {
   Bell,
   Search,
+  HelpCircle,
   User,
   LogOut,
   LayoutDashboard,
   PackagePlus,
-  Settings
+  Settings,
+  History
 } from "lucide-react";
 import styles from "./DonadorDashboard.module.css";
 import toast, { Toaster } from 'react-hot-toast';
@@ -53,7 +53,7 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
       snapshot.forEach((doc) => {
         const data = doc.data();
         totalProductos += data.totalProductos || 0;
-        const kgDoc = data.productos?.reduce((acc, p) => acc + (p.pesoUnidad * p.cantidad), 0) || 0;
+        const kgDoc = data.productos?.reduce((acc: number, p: any) => acc + (p.pesoUnidad * p.cantidad), 0) || 0;
         totalKg += kgDoc;
       });
 
@@ -69,13 +69,17 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
     }
 
     return () => unsubscribe();
-  }, []);
+  }, [auth.currentUser]);
+
+  const handleLogout = () => {
+    auth.signOut();
+    if (onLogout) onLogout();
+  };
 
   return (
-    <div className={`${styles.layout} bg-background`}>
+    <div className={`${styles.layout} bg-surface `}>
       <Toaster position="top-right" />
 
-      {/* MAIN */}
       <main className={styles.main}>
         {/* TOP NAVBAR */}
         <header className={styles.topbar}>
@@ -85,15 +89,15 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
           </div>
 
           <nav className={styles.topMenu}>
-            <button 
+            <button
               className={`${styles.topMenuItem} ${view === "inicio" ? styles.active : ""}`}
               onClick={() => setView("inicio")}
             >
               <LayoutDashboard size={20} />
               <span>Inicio</span>
             </button>
-            
-            <button 
+
+            <button
               className={`${styles.topMenuItem} ${view === "nueva-donacion" ? styles.active : ""}`}
               onClick={() => setView("nueva-donacion")}
             >
@@ -101,28 +105,12 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
               <span>Nueva donación</span>
             </button>
 
-            <button 
+            <button
               className={`${styles.topMenuItem} ${view === "mis-donaciones" ? styles.active : ""}`}
               onClick={() => setView("mis-donaciones")}
             >
-              <LayoutDashboard size={20} />
+              <History size={20} />
               <span>Mis donaciones</span>
-            </button>
-
-            <button 
-              className={`${styles.topMenuItem} ${view === "perfil" ? styles.active : ""}`}
-              onClick={() => setView("perfil")}
-            >
-              <User size={20} />
-              <span>Mi Perfil</span>
-            </button>
-
-            <button 
-              className={`${styles.topMenuItem} ${view === "configuracion" ? styles.active : ""}`}
-              onClick={() => setView("configuracion")}
-            >
-              <Settings size={20} />
-              <span>Configuración</span>
             </button>
           </nav>
 
@@ -136,9 +124,23 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
               <Bell size={20} />
               <span className={styles.notifBadge}></span>
             </button>
-            
+
             <div className={styles.userProfile}>
-              <button className={styles.logoutIconBtn} onClick={onLogout} title="Cerrar sesión">
+              <div className={styles.userInfo}>
+                <span className={styles.userName}>{auth.currentUser?.displayName || "Usuario"}</span>
+              </div>
+              {auth.currentUser?.photoURL ? (
+                <img
+                  src={auth.currentUser.photoURL}
+                  alt="Profile"
+                  className={styles.avatar}
+                />
+              ) : (
+                <div className={`${styles.avatar} flex items-center justify-center bg-indigo-100 text-primary font-bold`}>
+                  {auth.currentUser?.displayName?.charAt(0) || "U"}
+                </div>
+              )}
+              <button className={styles.logoutIconBtn} onClick={handleLogout} title="Cerrar sesión">
                 <LogOut size={18} />
               </button>
             </div>
@@ -146,76 +148,155 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
         </header>
 
         <div className={styles.contentWrapper}>
-          {/* ========== INICIO ========== */}
+          {/* INICIO */}
           {view === "inicio" && (
-            <>
-              {/* Stats desde Firebase */}
-              <div className="max-w-4xl mx-auto pt-6 animate-fade-in">
-                <div className="text-center mb-10">
-                  <div className="w-24 h-24 mx-auto rounded-3xl bg-surface-container-low flex items-center justify-center mb-6">
-                    <span className="material-symbols-outlined text-5xl text-primary">volunteer_activism</span>
-                  </div>
-                  <h1 className="text-h2 font-h2 text-on-surface mb-3">
-                    Bienvenido, Donador
-                  </h1>
-                  <p className="text-body-md text-outline mb-8 max-w-md mx-auto">
-                    Cada donación cuenta. Agrega los productos que deseas donar y ayúdanos a llevarlos a quienes más lo necesitan.
-                  </p>
-                  <button
-                    onClick={() => setView("nueva-donacion")}
-                    className="h-14 px-10 bg-gradient-to-r from-primary to-primary-container text-white font-bold text-body-md rounded-2xl shadow-lg shadow-indigo-200 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 mx-auto cursor-pointer"
-                  >
-                    <span className="material-symbols-outlined">add_circle</span>
-                    Nueva donación
-                  </button>
+            <div className="max-w-7xl mx-auto px-5 md:px-10 mt-4 space-y-12 animate-fade-in pb-20">
+              {/* Header de bienvenida */}
+              <section className="flex items-center justify-between gap-4 bg-white px-6 py-5 rounded-3xl border border-outline-variant/40 shadow-sm">
+                <div className="w-12 h-12 rounded-xl bg-primary-container/10 flex items-center justify-center text-primary shrink-0">
+                  <span className="material-symbols-outlined text-2xl">volunteer_activism</span>
                 </div>
 
-                {/* Stats rápidas (Conectadas a Firebase) */}
-                <div className="grid grid-cols-3 gap-6 mt-12 max-w-2xl mx-auto">
-                  <div className="bg-white rounded-3xl p-6 border border-outline-variant/40 shadow-sm text-center">
-                    <p className="text-4xl font-bold text-primary mb-2">{stats.donaciones}</p>
-                    <p className="text-sm font-medium text-outline uppercase tracking-wider">Donaciones</p>
-                  </div>
-                  <div className="bg-white rounded-3xl p-6 border border-outline-variant/40 shadow-sm text-center">
-                    <p className="text-4xl font-bold text-primary mb-2">{stats.productos}</p>
-                    <p className="text-sm font-medium text-outline uppercase tracking-wider">Productos</p>
-                  </div>
-                  <div className="bg-white rounded-3xl p-6 border border-outline-variant/40 shadow-sm text-center">
-                    <p className="text-4xl font-bold text-primary mb-2">{stats.kg.toFixed(1)} <span className="text-lg">kg</span></p>
-                    <p className="text-sm font-medium text-outline uppercase tracking-wider">Donados</p>
+                <div className="flex-1 min-w-0">
+                  <h1 className="text-h3 font-h3 text-on-surface truncate">Bienvenido, {auth.currentUser?.displayName?.split(' ')[0] || "Donador"}</h1>
+                  <p className="text-body-md text-on-surface-variant truncate">Tu contribución está haciendo la diferencia hoy.</p>
+                </div>
+
+                <button
+                  onClick={() => setView("nueva-donacion")}
+                  className="h-11 px-5 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer shrink-0"
+                >
+                  <PackagePlus size={18} />
+                  <span>Nueva Donación</span>
+                </button>
+              </section>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Columna Izquierda: Mi Perfil */}
+                <div className="lg:col-span-1">
+                  <div className="sticky top-24">
+                    <DonadorProfile />
                   </div>
                 </div>
-              </div>
 
-              {/* Centro de acopio */}
-              <div className="max-w-2xl mx-auto mt-10">
-                <NearbyAcopio autoDetectar={true} />
+                {/* Columna Derecha: Stats y Más */}
+                <div className="lg:col-span-2 space-y-8">
+                  {/* Stats Rápidas */}
+                  <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <div className="bg-white rounded-3xl p-8 border border-outline-variant/30 shadow-sm group hover:border-primary/30 transition-colors">
+                      <div className="w-12 h-12 rounded-xl bg-primary-fixed/30 flex items-center justify-center text-primary mb-4">
+                        <History size={24} />
+                      </div>
+                      <p className="text-4xl font-bold text-on-surface mb-1">{stats.donaciones}</p>
+                      <p className="text-sm font-medium text-on-surface-variant uppercase tracking-wider">Donaciones totales</p>
+                    </div>
+                    <div className="bg-white rounded-3xl p-8 border border-outline-variant/30 shadow-sm group hover:border-primary/30 transition-colors">
+                      <div className="w-12 h-12 rounded-xl bg-secondary-fixed/30 flex items-center justify-center text-secondary mb-4">
+                        <PackagePlus size={24} />
+                      </div>
+                      <p className="text-4xl font-bold text-on-surface mb-1">{stats.productos}</p>
+                      <p className="text-sm font-medium text-on-surface-variant uppercase tracking-wider">Productos entregados</p>
+                    </div>
+                    <div className="bg-white rounded-3xl p-8 border border-outline-variant/30 shadow-sm group hover:border-primary/30 transition-colors md:col-span-2 xl:col-span-1">
+                      <div className="w-12 h-12 rounded-xl bg-tertiary-fixed/30 flex items-center justify-center text-tertiary mb-4">
+                        <span className="material-symbols-outlined text-2xl">weight</span>
+                      </div>
+                      <p className="text-4xl font-bold text-on-surface mb-1">{stats.kg.toFixed(1)} <span className="text-xl font-semibold">kg</span></p>
+                      <p className="text-sm font-medium text-on-surface-variant uppercase tracking-wider">Peso total donado</p>
+                    </div>
+                  </section>
+
+                  {/* Centros de acopio cercanos */}
+                  <section className="space-y-6">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-h3 font-h3 text-on-surface">Puntos de Acopio Cercanos</h3>
+                      <button className="text-primary text-sm font-bold hover:underline">Ver mapa completo</button>
+                    </div>
+                    <NearbyAcopio autoDetectar={true} />
+                  </section>
+
+                  {/* Tutorial Rápido */}
+                  <section className="bg-surface-container-lowest rounded-3xl p-8 border border-outline-variant/40 space-y-8">
+                    <h3 className="text-h3 font-h3 text-on-surface">¿Cómo funciona?</h3>
+                    <div className="space-y-6">
+                      <div className="flex gap-4">
+                        <div className="w-10 h-10 rounded-full bg-primary-container text-primary flex items-center justify-center shrink-0 font-bold">1</div>
+                        <p className="text-on-surface-variant">Registra los productos que quieres donar en la pestaña <b>"Nueva Donación"</b>.</p>
+                      </div>
+                      <div className="flex gap-4">
+                        <div className="w-10 h-10 rounded-full bg-primary-container text-primary flex items-center justify-center shrink-0 font-bold">2</div>
+                        <p className="text-on-surface-variant">Obtén tu <b>código QR único</b> generado automáticamente para tu donación.</p>
+                      </div>
+                      <div className="flex gap-4">
+                        <div className="w-10 h-10 rounded-full bg-primary-container text-primary flex items-center justify-center shrink-0 font-bold">3</div>
+                        <p className="text-on-surface-variant">Lleva tus productos al <b>centro de acopio</b> y muestra tu código al personal.</p>
+                      </div>
+                    </div>
+                  </section>
+                </div>
               </div>
-            </>
+            </div>
           )}
 
           {/* NUEVA DONACIÓN */}
           {view === "nueva-donacion" && (
-            <div className="max-w-3xl mx-auto pt-6">
+            <div className="max-w-4xl mx-auto py-6 animate-fade-in">
               <AddProductsPanel />
             </div>
           )}
 
           {/* MIS DONACIONES */}
           {view === "mis-donaciones" && (
-            <div className="max-w-3xl mx-auto pt-6">
+            <div className="max-w-4xl mx-auto py-6 animate-fade-in">
               <DonationHistory userId={auth.currentUser?.uid} />
             </div>
           )}
 
           {/* PERFIL */}
           {view === "perfil" && (
-            <div className="max-w-2xl mx-auto pt-6">
+            <div className="max-w-2xl mx-auto py-6 animate-fade-in">
               <DonadorProfile />
+            </div>
+          )}
+
+          {/* CONFIGURACIÓN */}
+          {view === "configuracion" && (
+            <div className="max-w-2xl mx-auto py-20 text-center animate-fade-in">
+              <div className="w-20 h-20 bg-surface-container-high rounded-full flex items-center justify-center mx-auto mb-6 text-outline">
+                <Settings size={40} />
+              </div>
+              <h2 className="text-h2 font-h2 text-on-surface">Configuración</h2>
+              <p className="text-body-md text-outline mt-2">Opciones de cuenta y preferencias próximamente.</p>
             </div>
           )}
         </div>
       </main>
+
+      {/* MOBILE BOTTOM NAV */}
+      <nav className="fixed bottom-0 left-0 w-full z-50 bg-white/90 backdrop-blur-xl border-t border-outline-variant/20 shadow-[0_-8px_30px_rgba(0,0,0,0.05)] md:hidden">
+        <div className="flex justify-around items-center px-2 py-3">
+          {[
+            { key: "inicio", icon: <LayoutDashboard size={22} />, label: "Inicio" },
+            { key: "nueva-donacion", icon: <PackagePlus size={22} />, label: "Donar" },
+            { key: "mis-donaciones", icon: <History size={22} />, label: "Historial" },
+          ].map((item) => {
+            const activo = view === item.key;
+            return (
+              <button
+                key={item.key}
+                onClick={() => setView(item.key)}
+                className={`flex flex-col items-center justify-center min-w-[70px] py-1 transition-all duration-200 ${activo ? "text-primary" : "text-outline"
+                  }`}
+              >
+                <div className={`p-1 rounded-xl transition-colors ${activo ? "bg-primary/10" : ""}`}>
+                  {item.icon}
+                </div>
+                <span className="text-[10px] font-bold mt-1">{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </nav>
     </div>
   );
 }
