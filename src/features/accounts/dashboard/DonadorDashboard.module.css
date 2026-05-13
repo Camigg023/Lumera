@@ -2,243 +2,132 @@
  * ════════════════════════════════════════════════
  *  ESTILOS DEL DASHBOARD DEL DONADOR
  *  ════════════════════════════════════════════════
- *  Todas las variables referencian al @theme de
- *  Tailwind definido en src/index.css.
+ *  Diseño: sidebar lateral (heredado de donation-tracking-ui)
+ *  Variables: todas referencian al @theme de Tailwind
  * ════════════════════════════════════════════════
  */
 
-/* MAIN LAYOUT */
+/* LAYOUT PRINCIPAL */
 .layout {
   display: flex;
-  flex-direction: column;
   min-height: 100vh;
-  background: var(--lumera-bg);
-  color: var(--lumera-text);
-  font-family: var(--sans);
+  background: var(--color-background);
 }
 
-.main {
-  flex: 1;
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width: 260px;
+  background: var(--color-surface-container-lowest);
+  border-right: 1px solid var(--color-outline-variant);
+  padding: 2rem 1.2rem;
   display: flex;
   flex-direction: column;
-  min-width: 0;
-  width: 100%;
-}
-
-/* TOP NAVBAR */
-.topbar {
-  height: 72px;
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--color-outline-variant);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 2rem;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.logoSection {
-  display: flex;
-  flex-direction: column;
-  min-width: 140px;
+  flex-shrink: 0;
 }
 
 .logo {
-  font-size: 1.25rem;
+  font-size: 1.4rem;
   font-weight: 800;
   color: var(--color-primary);
+  margin-bottom: 2rem;
   letter-spacing: -0.5px;
-  margin: 0;
-  line-height: 1;
 }
 
-.roleBadge {
-  font-size: 0.6rem;
-  font-weight: 700;
-  color: var(--color-outline);
-  letter-spacing: 1px;
-  margin-top: 0.15rem;
-}
-
-.topMenu {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.menu {
   flex: 1;
-  justify-content: center;
-  margin: 0 2rem;
-}
-
-.topMenuItem {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1rem;
-  border-radius: 10px;
-  color: var(--color-on-surface-variant);
-  font-weight: 500;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
-  border: none;
-  background: transparent;
-  cursor: pointer;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
-.topMenuItem:hover {
-  background: var(--color-surface-container-low);
-  color: var(--color-primary);
-}
-
-.topMenuItem.active {
-  background: var(--color-primary-fixed);
-  color: var(--color-primary);
-  font-weight: 600;
-}
-
-.searchBox {
-  display: flex;
-  align-items: center;
-  background: var(--color-surface-container-low);
-  border: 1px solid var(--color-outline-variant);
-  border-radius: 12px;
-  padding: 0 1rem;
-  width: 320px;
-  height: 40px;
-  transition: border-color 0.2s;
-}
-
-.searchBox:focus-within {
-  border-color: var(--color-primary);
-}
-
-.searchIcon {
-  color: var(--color-outline);
-}
-
-.searchBox input {
-  background: transparent;
-  border: none;
-  outline: none;
-  padding: 0 0.75rem;
-  width: 100%;
-  font-size: 0.9rem;
-  color: var(--color-on-surface);
-}
-
-.topActions {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-}
-
-.iconBtn {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  color: var(--color-on-surface-variant);
-  background: transparent;
-  border: 1px solid var(--color-outline-variant);
-  cursor: pointer;
-  position: relative;
-  transition: all 0.2s;
-}
-
-.iconBtn:hover {
-  background: var(--color-surface-container-high);
-  color: var(--color-primary);
-  border-color: var(--color-primary);
-}
-
-.notifBadge {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 8px;
-  height: 8px;
-  background: var(--color-error);
-  border-radius: 50%;
-  border: 2px solid var(--color-surface);
-}
-
-.userProfile {
+.menuItem {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding-left: 1.25rem;
-  border-left: 1px solid var(--color-outline-variant);
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  color: var(--color-on-surface-variant);
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+  background: transparent;
+  text-align: left;
+  width: 100%;
 }
 
-.userInfo {
-  display: flex;
-  flex-direction: column;
-  text-align: right;
+.menuItem:hover {
+  background: var(--color-surface-container-low);
+  color: var(--color-primary);
 }
 
-.userName {
-  font-size: 0.85rem;
+.menuItem.active {
+  background: var(--color-primary-fixed);
+  color: var(--color-on-primary-fixed);
   font-weight: 600;
-  color: var(--color-on-surface);
-  line-height: 1.2;
 }
 
-.avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--color-surface-container-high);
-}
-
-.logoutIconBtn {
+/* Botón de cerrar sesión en el sidebar */
+.logoutBtn {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  color: var(--color-outline);
-  background: transparent;
-  border: none;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
   cursor: pointer;
-  transition: all 0.2s;
-  margin-left: 0.25rem;
+  color: var(--color-outline);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+  background: transparent;
+  text-align: left;
+  width: 100%;
+  margin-top: auto;
 }
 
-.logoutIconBtn:hover {
+.logoutBtn:hover {
   color: var(--color-error);
   background: var(--color-error-container);
 }
 
-.contentWrapper {
-  padding: 2rem;
+/* ─── MAIN ─── */
+.main {
   flex: 1;
+  padding: 2.5rem;
   overflow-y: auto;
-  background: var(--color-background);
 }
 
+/* ─── RESPONSIVE ─── */
 @media (max-width: 1024px) {
   .sidebar {
     width: 80px;
+    padding: 1.5rem 0.75rem;
+    align-items: center;
   }
-  .sidebarHeader h2, .roleBadge, .menuItem span, .sidebarFooter span, .userInfo {
+
+  .logo {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .menuItem span:not(:first-child),
+  .logoutBtn span {
     display: none;
   }
-  .sidebarHeader {
-    padding: 1.5rem 0;
-    display: flex;
-    justify-content: center;
-  }
+
   .menuItem {
     justify-content: center;
-    padding: 1rem;
+    padding: 0.9rem;
   }
-  .searchBox {
-    width: 200px;
+
+  .logoutBtn {
+    justify-content: center;
+    padding: 0.9rem;
+  }
+
+  .main {
+    padding: 1.5rem;
   }
 }
