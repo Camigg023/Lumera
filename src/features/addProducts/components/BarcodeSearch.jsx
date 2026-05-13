@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { Scan, Search, Package, CheckCircle, AlertCircle, SearchX, X } from 'lucide-react';
 import { buscarPorCodigoBarras } from '../../../services/openFoodFactsService';
 
 /**
@@ -63,9 +64,7 @@ export default function BarcodeSearch({ onSeleccionar }) {
 
       <form onSubmit={(e) => e.preventDefault()} className="flex gap-2">
         <div className="relative flex-1">
-          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-xl pointer-events-none">
-            scan
-          </span>
+          <Scan size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none" />
           <input
             ref={inputRef}
             type="text"
@@ -83,7 +82,7 @@ export default function BarcodeSearch({ onSeleccionar }) {
           type="button"
           onClick={handleBuscar}
           disabled={buscando || !barcode.trim()}
-          className="h-12 px-5 bg-primary hover:bg-primary-container disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-all active:scale-[0.98] cursor-pointer flex items-center gap-2 shadow-md shadow-indigo-200"
+          className="h-12 px-5 bg-primary hover:bg-primary-container disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-all active:scale-[0.98] cursor-pointer flex items-center gap-2 shadow-md"
         >
           {buscando ? (
             <svg className="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24">
@@ -92,7 +91,7 @@ export default function BarcodeSearch({ onSeleccionar }) {
             </svg>
           ) : (
             <>
-              <span className="material-symbols-outlined text-lg">search</span>
+              <Search size={18} />
               Buscar
             </>
           )}
@@ -101,7 +100,7 @@ export default function BarcodeSearch({ onSeleccionar }) {
 
       {/* Tarjeta de resultado */}
       {mostrarCard && (
-        <div className="bg-white border border-outline-variant rounded-2xl p-5 shadow-lg animate-fade-in">
+        <div className="bg-surface border border-outline-variant rounded-2xl p-5 shadow-lg animate-fade-in">
           {resultado?.encontrado && resultado.producto ? (
             <div className="space-y-4">
               <div className="flex items-start gap-4">
@@ -118,7 +117,7 @@ export default function BarcodeSearch({ onSeleccionar }) {
                     />
                   ) : null}
                   <div className={`w-full h-full items-center justify-center text-2xl text-outline/40 ${resultado.producto.imagen ? 'hidden' : 'flex'}`}>
-                    <span className="material-symbols-outlined text-3xl">inventory_2</span>
+                    <Package size={28} />
                   </div>
                 </div>
                 <div className="flex-1 min-w-0">
@@ -151,7 +150,7 @@ export default function BarcodeSearch({ onSeleccionar }) {
                   onClick={handleSeleccionar}
                   className="flex-1 h-10 bg-primary hover:bg-primary-container text-white text-sm font-semibold rounded-xl transition-all active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2"
                 >
-                  <span className="material-symbols-outlined text-lg">check_circle</span>
+                  <CheckCircle size={18} />
                   Usar este producto
                 </button>
                 <button
@@ -165,7 +164,7 @@ export default function BarcodeSearch({ onSeleccionar }) {
             </div>
           ) : resultado?.error ? (
             <div className="text-center py-3">
-              <span className="material-symbols-outlined text-error text-3xl mb-2">error_outline</span>
+              <AlertCircle size={28} className="text-error mx-auto mb-2" />
               <p className="text-error text-sm font-medium">{resultado.error}</p>
               {resultado.statusVerbose && (
                 <p className="text-xs text-outline mt-1">Detalle: {resultado.statusVerbose}</p>
@@ -176,7 +175,7 @@ export default function BarcodeSearch({ onSeleccionar }) {
             </div>
           ) : (
             <div className="text-center py-3">
-              <span className="material-symbols-outlined text-outline text-3xl mb-2">search_off</span>
+              <SearchX size={28} className="text-outline mx-auto mb-2" />
               <p className="text-on-surface-variant text-sm font-medium">Producto no encontrado en Open Food Facts</p>
               {resultado?.statusVerbose && (
                 <p className="text-xs text-outline mt-1">API dice: &ldquo;{resultado.statusVerbose}&rdquo;</p>
@@ -191,7 +190,7 @@ export default function BarcodeSearch({ onSeleccionar }) {
       )}
 
       {!mostrarCard && !barcode && (
-        <p className="text-xs text-outline/60">
+        <p className="text-xs text-on-surface-variant/60">
           💡 Ingresa un código de barras y presiona &ldquo;Buscar&rdquo; o Enter para consultar Open Food Facts
         </p>
       )}

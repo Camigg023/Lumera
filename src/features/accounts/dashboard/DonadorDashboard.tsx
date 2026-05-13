@@ -144,7 +144,7 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
           </nav>
 
           <div className="flex items-center gap-3">
-            <span className="text-xs font-semibold px-3 py-1 rounded-full" style={{backgroundColor: '#ecfdf5', color: '#059669'}}>✅ Activo</span>
+            <span className="text-xs font-semibold px-3 py-1 rounded-full bg-success-container text-success">✅ Activo</span>
             <button className={styles.logoutIconBtn} onClick={onLogout} title="Cerrar sesión"><LogOut size={18} /></button>
           </div>
         </header>
@@ -154,7 +154,7 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* ─── LEFT COLUMN: Perfil ─── */}
             <aside className="lg:col-span-3 space-y-6">
-              <div className="rounded-3xl p-6 shadow-sm border overflow-hidden relative" style={{backgroundColor: 'var(--color-surface-container-lowest)', borderColor: 'var(--color-outline-variant)'}}>
+              <div className="rounded-2xl p-6 shadow-sm border overflow-hidden relative" style={{backgroundColor: 'var(--color-surface-container-lowest)', borderColor: 'var(--color-outline-variant)'}}>
                 <div className="absolute top-0 right-0 w-24 h-24 rounded-bl-full" style={{backgroundColor: 'var(--color-primary-fixed)', opacity: 0.3, marginRight: '-2rem', marginTop: '-2rem'}} />
                 <div className="relative flex flex-col items-center text-center">
                   <div className="w-24 h-24 rounded-2xl flex items-center justify-center text-3xl font-bold shadow-md mb-4 border-2" style={{
@@ -200,7 +200,7 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
             {/* ─── CENTER COLUMN: Contenido Principal ─── */}
             <section className="lg:col-span-6 space-y-6">
               {/* Card principal: Bienvenida y donación */}
-              <div className="rounded-3xl p-8 shadow-sm border relative overflow-hidden" style={{backgroundColor: 'var(--color-surface-container-lowest)', borderColor: 'var(--color-outline-variant)'}}>
+              <div className="rounded-2xl p-8 shadow-sm border relative overflow-hidden" style={{backgroundColor: 'var(--color-surface-container-lowest)', borderColor: 'var(--color-outline-variant)'}}>
                 <div className="absolute top-0 right-0 p-8 opacity-5">
                   <svg width="120" height="120" viewBox="0 0 24 24" fill="currentColor" style={{color: 'var(--color-primary)'}}>
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
@@ -293,7 +293,7 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
             {/* ─── RIGHT COLUMN: Logística ─── */}
             <aside className="lg:col-span-3 space-y-6">
               {/* Datos de donación */}
-              <div className="rounded-3xl p-6 shadow-sm border" style={{backgroundColor: 'var(--color-surface-container-lowest)', borderColor: 'var(--color-outline-variant)'}}>
+              <div className="rounded-2xl p-6 shadow-sm border" style={{backgroundColor: 'var(--color-surface-container-lowest)', borderColor: 'var(--color-outline-variant)'}}>
                 <h3 className="font-bold mb-4" style={{color: 'var(--color-on-surface)'}}>Centro de Acopio</h3>
                 <div className="space-y-5">
                   <div className="flex gap-4">
@@ -321,7 +321,7 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
               </div>
 
               {/* Card donación rápida */}
-              <div className="rounded-3xl p-6 text-center shadow-lg relative overflow-hidden" style={{
+              <div className="rounded-2xl p-6 text-center shadow-lg relative overflow-hidden" style={{
                 background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-container))',
               }}>
                 <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
@@ -330,19 +330,19 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
                   </svg>
                 </div>
                 <h4 className="font-bold mb-4 relative z-10" style={{color: 'var(--color-on-primary)'}}>¿Listo para donar?</h4>
-                <div className="bg-white p-3 rounded-2xl inline-block shadow-xl relative z-10">
+                <div className="bg-surface p-3 rounded-2xl inline-block shadow-xl relative z-10">
                   <div className="w-28 h-28 flex items-center justify-center">
                     <span className="text-6xl">🎁</span>
                   </div>
                 </div>
-                <button onClick={() => setView("nueva-donacion")} className="mt-4 w-full py-3.5 rounded-2xl font-bold text-sm bg-white/20 text-white transition-all active:scale-95 cursor-pointer relative z-10">
+                <button onClick={() => setView("nueva-donacion")} className="mt-4 w-full py-3.5 rounded-2xl font-bold text-sm bg-white/10 text-white transition-all active:scale-95 cursor-pointer relative z-10">
                   Hacer una donación
                 </button>
               </div>
 
               {/* Barra de progreso */}
               {stats.kg > 0 && (
-                <div className="rounded-3xl p-5 shadow-sm border" style={{backgroundColor: 'var(--color-surface-container-lowest)', borderColor: 'var(--color-outline-variant)'}}>
+                <div className="rounded-2xl p-5 shadow-sm border" style={{backgroundColor: 'var(--color-surface-container-lowest)', borderColor: 'var(--color-outline-variant)'}}>
                   <p className="text-xs font-semibold mb-2" style={{color: 'var(--color-on-surface-variant)'}}>Progreso: {Math.min((stats.kg / 100) * 100, 100).toFixed(0)}%</p>
                   <div className="h-2.5 rounded-full overflow-hidden" style={{backgroundColor: 'var(--color-surface-container-high)'}}>
                     <div className="h-full rounded-full transition-all duration-500" style={{

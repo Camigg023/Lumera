@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Package, Scale, Box, PlusCircle, AlertCircle } from 'lucide-react';
 import BarcodeSearch from './BarcodeSearch';
 
 const initialState = {
@@ -66,7 +67,7 @@ export default function ProductForm({ onAgregar }) {
   };
 
   return (
-    <div className="bg-surface-container-lowest rounded-3xl p-8 shadow-sm border border-outline-variant/40 space-y-8">
+    <div className="bg-surface-container-lowest rounded-2xl p-8 shadow-sm border border-outline-variant/40 space-y-8">
       {/* Sección: Código de barras */}
       <section>
         <BarcodeSearch onSeleccionar={handleSeleccionarProducto} />
@@ -78,9 +79,7 @@ export default function ProductForm({ onAgregar }) {
           2. Nombre del producto
         </label>
         <div className="relative">
-          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-xl pointer-events-none">
-            inventory
-          </span>
+          <Package size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none" />
           <input
             type="text"
             name="nombre"
@@ -99,9 +98,7 @@ export default function ProductForm({ onAgregar }) {
             <span className="tracking-[0.7px]">3. Peso por unidad (kg)</span>
           </label>
           <div className="relative">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-xl pointer-events-none">
-              scale
-            </span>
+            <Scale size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none" />
             <input
               type="number"
               name="pesoUnidad"
@@ -119,9 +116,7 @@ export default function ProductForm({ onAgregar }) {
             4. Cantidad
           </label>
           <div className="relative">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-xl pointer-events-none">
-              package
-            </span>
+            <Box size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none" />
             <input
               type="number"
               name="cantidad"
@@ -138,7 +133,7 @@ export default function ProductForm({ onAgregar }) {
       {/* Mensaje de error */}
       {error && (
         <div className="flex items-center gap-2 px-4 py-3 bg-error-container rounded-xl">
-          <span className="material-symbols-outlined text-error text-lg">error</span>
+          <AlertCircle size={18} className="text-error shrink-0" />
           <p className="text-on-error-container text-sm font-medium">{error}</p>
         </div>
       )}
@@ -147,9 +142,9 @@ export default function ProductForm({ onAgregar }) {
       <button
         type="button"
         onClick={handleSubmit}
-        className="w-full h-14 bg-gradient-to-r from-primary to-primary-container text-white font-bold text-body-md rounded-2xl shadow-lg shadow-indigo-200 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+        className="w-full h-14 bg-primary hover:bg-primary-container text-white font-bold text-body-md rounded-2xl shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
       >
-        <span className="material-symbols-outlined">add_circle</span>
+        <PlusCircle size={20} />
         Agregar producto
       </button>
     </div>

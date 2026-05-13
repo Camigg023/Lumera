@@ -1,3 +1,5 @@
+import { QrCode, Weight, Box, X } from 'lucide-react';
+
 /**
  * Componente que renderiza un producto individual dentro de la lista.
  *
@@ -25,15 +27,15 @@ export default function ProductListItem({ producto, index, onEliminar }) {
           </h4>
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-xs text-on-surface-variant">
             <span className="flex items-center gap-1">
-              <span className="material-symbols-outlined text-[14px]">qr_code_scanner</span>
+              <QrCode size={14} />
               {producto.codigoBarras}
             </span>
             <span className="flex items-center gap-1">
-              <span className="material-symbols-outlined text-[14px]">weight</span>
+              <Weight size={14} />
               {producto.pesoUnidad} kg/u
             </span>
             <span className="flex items-center gap-1">
-              <span className="material-symbols-outlined text-[14px]">package</span>
+              <Box size={14} />
               x{producto.cantidad}
             </span>
           </div>
@@ -52,7 +54,7 @@ export default function ProductListItem({ producto, index, onEliminar }) {
         className="ml-3 w-9 h-9 rounded-xl bg-error-container/0 hover:bg-error-container text-outline hover:text-error flex items-center justify-center transition-all cursor-pointer flex-shrink-0 opacity-0 group-hover:opacity-100"
         title="Eliminar producto"
       >
-        <span className="material-symbols-outlined text-lg">close</span>
+        <X size={18} />
       </button>
     </div>
   );

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { AlertCircle, Package, Weight } from 'lucide-react';
 import CodeDisplay from './components/CodeDisplay';
 import DeliveryEvidence from './components/DeliveryEvidence';
 import { obtenerDonacionesPorUsuario } from '../../services/donationService';
@@ -37,7 +38,7 @@ export default function DonationHistory({ userId }) {
       <div className="space-y-4 py-4">
         {/* Skeleton loading para historial */}
         {[1, 2, 3].map((i) => (
-          <div key={i} className="bg-white rounded-2xl p-5 border border-outline-variant/40 animate-pulse flex items-start justify-between gap-4">
+          <div key={i} className="bg-surface rounded-2xl p-5 border border-outline-variant/40 animate-pulse flex items-start justify-between gap-4">
             <div className="flex-1 space-y-3">
               <div className="h-4 bg-surface-container-highest rounded w-1/4"></div>
               <div className="h-3 bg-surface-container-high rounded w-1/2"></div>
@@ -56,7 +57,7 @@ export default function DonationHistory({ userId }) {
   if (error) {
     return (
       <div className="flex items-center gap-2 px-4 py-3 bg-error-container rounded-xl">
-        <span className="material-symbols-outlined text-error">error</span>
+        <AlertCircle size={18} className="text-error shrink-0" />
         <p className="text-on-error-container text-sm">{error}</p>
       </div>
     );
@@ -66,7 +67,7 @@ export default function DonationHistory({ userId }) {
     return (
       <div className="text-center py-12">
         <div className="w-16 h-16 mx-auto rounded-2xl bg-surface-container-low flex items-center justify-center mb-4">
-          <span className="material-symbols-outlined text-3xl text-outline/50">inventory_2</span>
+          <Package size={32} className="text-outline/50" />
         </div>
         <p className="font-semibold text-on-surface">Aún no hay donaciones registradas</p>
         <p className="text-sm text-outline mt-1">Las donaciones que realices aparecerán aquí con su código único</p>
@@ -94,7 +95,7 @@ export default function DonationHistory({ userId }) {
           return (
             <div
               key={donacion.id}
-              className="bg-white rounded-2xl p-5 border border-outline-variant/40 shadow-sm hover:shadow-md transition"
+              className="bg-surface rounded-2xl p-5 border border-outline-variant/40 shadow-sm hover:shadow-md transition"
             >
               <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                 {/* Info de la donación */}
@@ -102,19 +103,19 @@ export default function DonationHistory({ userId }) {
                   <div className="flex items-center gap-2 mb-3">
                     <span className={`text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider ${
                       donacion.estado === 'entregado' || donacion.estado === 'validado'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-amber-100 text-amber-800'
+                        ? 'bg-success-container text-success'
+                        : 'bg-accent-bg text-accent'
                     }`}>
                       {donacion.estado === 'entregado' || donacion.estado === 'validado'
                         ? '✅ Entregado'
                         : '⏳ Pendiente'}
                     </span>
                     <span className="text-xs font-medium text-outline flex items-center gap-1">
-                      <span className="material-symbols-outlined text-[14px]">inventory_2</span>
+                      <Package size={14} />
                       {donacion.totalProductos}
                     </span>
                     <span className="text-xs font-medium text-outline flex items-center gap-1">
-                      <span className="material-symbols-outlined text-[14px]">weight</span>
+                      <Weight size={14} />
                       {totalKg} kg
                     </span>
                   </div>

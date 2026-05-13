@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { AlertCircle, CheckCircle, Share2, ClipboardCheck, List, Package, Trash2, PlusCircle } from 'lucide-react';
 import ProductForm from './components/ProductForm';
 import ProductListItem from './components/ProductListItem';
 import { guardarDonacion } from '../../services/donationService';
@@ -53,7 +54,7 @@ export default function AddProductsPanel() {
     <div className="space-y-8">
       {/* Encabezado */}
       <header>
-        <h1 className="font-h1 text-h1 mb-2 bg-gradient-to-r from-primary to-indigo-600 bg-clip-text text-transparent">
+        <h1 className="font-h1 text-h1 mb-2 text-primary">
           Food Validator &amp; Registration
         </h1>
         <p className="text-body-md text-outline">
@@ -67,18 +68,18 @@ export default function AddProductsPanel() {
       {/* Mensaje de éxito/error */}
       {mensaje && mensaje.tipo === 'error' && (
         <div className="flex items-center gap-3 px-5 py-4 rounded-2xl border bg-error-container text-on-error-container border-error-container">
-          <span className="material-symbols-outlined text-lg text-error">error</span>
+          <AlertCircle size={20} className="text-error shrink-0" />
           <p className="text-sm font-medium">{mensaje.texto}</p>
         </div>
       )}
 
       {mensaje && mensaje.tipo === 'exito' && (
-        <div className="bg-green-50 rounded-3xl p-8 border border-green-200 text-center animate-fade-in flex flex-col items-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-            <span className="material-symbols-outlined text-4xl text-green-600">check_circle</span>
+        <div className="bg-success-container rounded-2xl p-8 border border-success text-center animate-fade-in flex flex-col items-center">
+          <div className="w-16 h-16 bg-success rounded-full flex items-center justify-center mb-4">
+            <CheckCircle size={32} className="text-white" />
           </div>
-          <h2 className="text-2xl font-bold text-green-800 mb-2">¡Donación registrada!</h2>
-          <p className="text-green-700 mb-6 max-w-md">
+          <h2 className="text-2xl font-bold text-success mb-2">¡Donación registrada!</h2>
+          <p className="text-success mb-6 max-w-md opacity-80">
             Lleva tus productos al centro de acopio más cercano y presenta este código.
           </p>
           
@@ -91,12 +92,12 @@ export default function AddProductsPanel() {
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 h-12 px-6 bg-[#25D366] text-white font-bold rounded-xl hover:bg-[#128C7E] transition-colors w-full sm:w-auto"
             >
-              <span className="material-symbols-outlined">share</span>
+              <Share2 size={18} />
               Compartir por WhatsApp
             </a>
             <button
               onClick={() => setMensaje(null)}
-              className="flex items-center justify-center h-12 px-6 bg-white text-green-800 font-bold rounded-xl border border-green-200 hover:bg-green-100 transition-colors w-full sm:w-auto cursor-pointer"
+              className="flex items-center justify-center h-12 px-6 bg-surface text-success font-bold rounded-xl border border-success hover:bg-success-container transition-colors w-full sm:w-auto cursor-pointer"
             >
               Nueva Donación
             </button>
@@ -110,7 +111,7 @@ export default function AddProductsPanel() {
           {/* Header de la lista */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary-container">list_alt</span>
+              <List size={20} className="text-primary-container" />
               <h3 className="font-h3 text-h3 text-on-surface">
                 Productos agregados
               </h3>
@@ -127,7 +128,7 @@ export default function AddProductsPanel() {
                 onClick={() => setProductos([])}
                 className="text-xs text-outline hover:text-error flex items-center gap-1 transition cursor-pointer"
               >
-                <span className="material-symbols-outlined text-[16px]">delete_sweep</span>
+                <Trash2 size={16} />
                 Limpiar todo
               </button>
             </div>
@@ -159,7 +160,7 @@ export default function AddProductsPanel() {
           <button
             onClick={guardarProductos}
             disabled={guardando}
-            className="w-full h-14 bg-gradient-to-r from-primary-container to-secondary-container text-white font-bold text-body-md rounded-2xl shadow-lg shadow-indigo-200 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            className="w-full h-14 bg-[#FF8000] hover:bg-[#e67300] text-white font-bold text-body-md rounded-2xl shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#FF8000]"
           >
             {guardando ? (
               <>
@@ -171,7 +172,7 @@ export default function AddProductsPanel() {
               </>
             ) : (
               <>
-                <span className="material-symbols-outlined">how_to_reg</span>
+                <ClipboardCheck size={20} />
                 Complete Registration
               </>
             )}
@@ -182,8 +183,8 @@ export default function AddProductsPanel() {
       {/* Estado vacío */}
       {productos.length === 0 && !mensaje && (
         <div className="text-center py-16">
-          <div className="w-20 h-20 mx-auto rounded-3xl bg-surface-container-low flex items-center justify-center mb-5">
-            <span className="material-symbols-outlined text-4xl text-outline/50">inventory</span>
+          <div className="w-20 h-20 mx-auto rounded-2xl bg-surface-container-low flex items-center justify-center mb-5">
+            <Package size={36} className="text-outline/50" />
           </div>
           <p className="font-h3 text-h3 text-on-surface">No hay productos agregados</p>
           <p className="text-body-md text-outline mt-1">

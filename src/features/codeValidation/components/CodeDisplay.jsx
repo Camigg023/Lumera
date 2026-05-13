@@ -14,25 +14,25 @@ export default function CodeDisplay({ codigo, estado = 'pendiente', tamaño = 'l
   return (
     <div
       className={`
-        inline-flex flex-col items-center gap-3 p-5 rounded-3xl border-2
+        inline-flex flex-col items-center gap-3 p-5 rounded-2xl border-2
         ${estado === 'entregado' || estado === 'validado'
-          ? 'bg-green-50 border-green-300'
-          : 'bg-indigo-50 border-indigo-200'
+          ? 'bg-success-container border-success'
+          : 'bg-surface-container-low border-outline-variant'
         }
       `}
     >
       {/* Label */}
-      <span className={`font-medium ${isLg ? 'text-sm' : 'text-xs'} text-gray-500 uppercase tracking-wider`}>
+      <span className={`font-medium ${isLg ? 'text-sm' : 'text-xs'} text-on-surface-variant uppercase tracking-wider`}>
         Código de donación
       </span>
 
       {/* QR Code (Solo para tamaño grande) */}
       {isLg && (
-        <div className="bg-white p-3 rounded-2xl shadow-sm border border-indigo-100">
+        <div className="bg-surface p-3 rounded-2xl shadow-sm border border-outline-variant">
           <QRCode 
             value={codigo} 
             size={160}
-            fgColor={estado === 'entregado' || estado === 'validado' ? "#166534" : "#4338ca"}
+            fgColor={estado === 'entregado' || estado === 'validado' ? "#1b5e20" : "#3525cd"}
             level="H"
           />
         </div>
@@ -41,7 +41,7 @@ export default function CodeDisplay({ codigo, estado = 'pendiente', tamaño = 'l
       {/* Código en texto */}
       <span
         className={`
-          font-mono font-bold tracking-widest text-indigo-700
+          font-mono font-bold tracking-widest text-primary
           ${isLg ? 'text-3xl mt-2' : 'text-xl'}
         `}
       >
@@ -53,8 +53,8 @@ export default function CodeDisplay({ codigo, estado = 'pendiente', tamaño = 'l
         className={`
           text-xs font-semibold px-4 py-1 rounded-full mt-1
           ${estado === 'entregado' || estado === 'validado'
-            ? 'bg-green-200 text-green-800'
-            : 'bg-amber-200 text-amber-800'
+            ? 'bg-success-container text-success'
+            : 'bg-accent-bg text-accent'
           }
         `}
       >
