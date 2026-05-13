@@ -126,297 +126,240 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
 
   // ─── VISTA DE INICIO ───
   if (view === "inicio") {
+
     return (
       <div className={styles.layout} role="application" aria-label="Panel de donador">
+        {/* ═══ TOPBAR ═══ */}
         <header className={styles.topbar}>
-          <div className={styles.logoSection}>
+          <div className="flex items-center gap-3">
             <h2 className={styles.logo}>LUMERA</h2>
             <span className={styles.roleBadge}>DONADOR</span>
           </div>
 
-          <nav className={styles.topMenu}>
-            <button
-              className={`${styles.topMenuItem} ${styles.active}`}
-              onClick={() => setView("inicio")}
-            >
-              <LayoutDashboard size={20} />
-              <span>Inicio</span>
-            </button>
-            <button
-              className={styles.topMenuItem}
-              onClick={() => setView("nueva-donacion")}
-            >
-              <PackagePlus size={20} />
-              <span>Nueva donación</span>
-            </button>
-            <button
-              className={styles.topMenuItem}
-              onClick={() => setView("mis-donaciones")}
-            >
-              <History size={20} />
-              <span>Mis donaciones</span>
-            </button>
+          <nav className="hidden md:flex items-center gap-6">
+            <button className="text-sm font-semibold" style={{color: 'var(--color-primary)'}} onClick={() => setView("inicio")}>Inicio</button>
+            <button className="text-sm font-medium" style={{color: 'var(--color-on-surface-variant)'}} onClick={() => setView("nueva-donacion")}>Nueva donación</button>
+            <button className="text-sm font-medium" style={{color: 'var(--color-on-surface-variant)'}} onClick={() => setView("mis-donaciones")}>Mis donaciones</button>
+            <button className="text-sm font-medium" style={{color: 'var(--color-on-surface-variant)'}} onClick={() => setView("perfil")}>Perfil</button>
           </nav>
 
-          <div className={styles.topActions}>
-            <div className={styles.searchBox}>
-              <Search size={18} className={styles.searchIcon} />
-              <input type="text" placeholder="Buscar..." />
-            </div>
-            <button className={styles.iconBtn} aria-label="Notificaciones">
-              <Bell size={20} />
-              <span className={styles.notifBadge}></span>
-            </button>
-            <button className={styles.logoutIconBtn} onClick={onLogout} title="Cerrar sesión">
-              <LogOut size={18} />
-            </button>
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-semibold px-3 py-1 rounded-full" style={{backgroundColor: '#ecfdf5', color: '#059669'}}>✅ Activo</span>
+            <button className={styles.logoutIconBtn} onClick={onLogout} title="Cerrar sesión"><LogOut size={18} /></button>
           </div>
         </header>
 
         <main id="main-content" className={styles.contentWrapper} role="main">
-          {/* ─── BLOQUE SUPERIOR: DOS COLUMNAS ─── */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            {/* COLUMNA IZQUIERDA: Avatar + Información personal */}
-            <div
-              className="p-6 rounded-2xl"
-              style={{
-                backgroundColor: "var(--color-surface-container-lowest)",
-                border: "1px solid var(--color-outline-variant)",
-              }}
-            >
-              <div className="flex flex-col items-center">
-                {/* Avatar con iniciales */}
-                <div
-                  className="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold flex-shrink-0 shadow-md"
-                  style={{
-                    background: "linear-gradient(135deg, var(--color-primary), var(--color-primary-container))",
-                    color: "var(--color-on-primary)",
-                  }}
-                >
-                  {initials}
+          {/* ═══ GRID 3 COLUMNAS ═══ */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {/* ─── LEFT COLUMN: Perfil ─── */}
+            <aside className="lg:col-span-3 space-y-6">
+              <div className="rounded-3xl p-6 shadow-sm border overflow-hidden relative" style={{backgroundColor: 'var(--color-surface-container-lowest)', borderColor: 'var(--color-outline-variant)'}}>
+                <div className="absolute top-0 right-0 w-24 h-24 rounded-bl-full" style={{backgroundColor: 'var(--color-primary-fixed)', opacity: 0.3, marginRight: '-2rem', marginTop: '-2rem'}} />
+                <div className="relative flex flex-col items-center text-center">
+                  <div className="w-24 h-24 rounded-2xl flex items-center justify-center text-3xl font-bold shadow-md mb-4 border-2" style={{
+                    background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-container))',
+                    color: 'var(--color-on-primary)',
+                    borderColor: 'var(--color-surface-container-lowest)'
+                  }}>
+                    {initials}
+                  </div>
+                  <h2 className="text-xl font-bold" style={{color: 'var(--color-on-surface)'}}>{donorName}</h2>
+                  <span className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1 rounded-full mt-2" style={{backgroundColor: 'var(--color-surface-container)', color: 'var(--color-primary)'}}>
+                    ✅ Donador Activo
+                  </span>
+                  <p className="text-xs mt-3 font-mono" style={{color: 'var(--color-outline)'}}>ID #{userId?.slice(-6) || '---'}</p>
                 </div>
 
-                <div className="w-full mt-4">
-                  <h3 className="text-xl font-bold text-center" style={{ color: "var(--color-on-surface)" }}>
-                    {donorName}
-                  </h3>
+                <hr className="my-6" style={{borderColor: 'var(--color-outline-variant)'}} />
 
-                  <div className="mt-4 space-y-3">
-                    {/* Email */}
-                    {donorEmail && (
-                      <div
-                        className="flex items-center gap-3 text-sm px-3 py-2 rounded-lg"
-                        style={{ backgroundColor: "var(--color-surface-container-high)" }}
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                        <span className="font-medium truncate">{donorEmail}</span>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-3 rounded-2xl text-center" style={{backgroundColor: 'var(--color-surface-container-low)'}}>
+                    <p className="text-2xl font-bold" style={{color: 'var(--color-primary)'}}>{stats.donaciones}</p>
+                    <p className="text-xs font-medium uppercase tracking-wider" style={{color: 'var(--color-on-surface-variant)'}}>Donaciones</p>
+                  </div>
+                  <div className="p-3 rounded-2xl text-center" style={{backgroundColor: 'var(--color-surface-container-low)'}}>
+                    <p className="text-2xl font-bold" style={{color: 'var(--color-primary)'}}>{stats.kg.toFixed(1)} kg</p>
+                    <p className="text-xs font-medium uppercase tracking-wider" style={{color: 'var(--color-on-surface-variant)'}}>Donados</p>
+                  </div>
+                </div>
+
+                <div className="mt-6 space-y-1">
+                  <button onClick={() => setView("mis-donaciones")} className="w-full flex items-center justify-between p-3 rounded-xl transition-colors group" style={{color: 'var(--color-on-surface-variant)'}}>
+                    <span className="flex items-center gap-3 text-sm font-medium">📋 Historial</span>
+                    <span className="group-hover:text-primary" style={{color: 'var(--color-outline)'}}>›</span>
+                  </button>
+                  <button onClick={() => setView("perfil")} className="w-full flex items-center justify-between p-3 rounded-xl transition-colors group" style={{color: 'var(--color-on-surface-variant)'}}>
+                    <span className="flex items-center gap-3 text-sm font-medium">⚙️ Preferencias</span>
+                    <span className="group-hover:text-primary" style={{color: 'var(--color-outline)'}}>›</span>
+                  </button>
+                </div>
+              </div>
+            </aside>
+
+            {/* ─── CENTER COLUMN: Contenido Principal ─── */}
+            <section className="lg:col-span-6 space-y-6">
+              {/* Card principal: Bienvenida y donación */}
+              <div className="rounded-3xl p-8 shadow-sm border relative overflow-hidden" style={{backgroundColor: 'var(--color-surface-container-lowest)', borderColor: 'var(--color-outline-variant)'}}>
+                <div className="absolute top-0 right-0 p-8 opacity-5">
+                  <svg width="120" height="120" viewBox="0 0 24 24" fill="currentColor" style={{color: 'var(--color-primary)'}}>
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                </div>
+                <div className="relative">
+                  <span className="text-sm font-semibold px-4 py-1.5 rounded-full" style={{backgroundColor: 'var(--color-surface-container)', color: 'var(--color-primary)'}}>
+                    🫶 Bienvenido Donador
+                  </span>
+
+                  <h2 className="text-3xl font-bold mt-4" style={{color: 'var(--color-on-surface)'}}>
+                    ¡Hola, {donorName.split(' ')[0]}!
+                  </h2>
+                  <p className="mt-2" style={{color: 'var(--color-on-surface-variant)'}}>
+                    Cada donación cuenta. Agrega los productos que deseas donar y ayúdanos a llevarlos a quienes más lo necesitan.
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
+                    <div className="flex items-start gap-4 p-4 rounded-2xl border hover:shadow-md transition-shadow" style={{backgroundColor: 'var(--color-surface-container-lowest)', borderColor: 'var(--color-outline-variant)'}}>
+                      <div className="p-2 rounded-xl" style={{backgroundColor: 'var(--color-surface-container-high)'}}>
+                        <span className="text-lg">🥫</span>
                       </div>
-                    )}
-
-                    {/* Teléfono */}
-                    {donorPhone && (
-                      <div
-                        className="flex items-center gap-3 text-sm px-3 py-2 rounded-lg"
-                        style={{ backgroundColor: "var(--color-surface-container-high)" }}
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                        </svg>
-                        <span className="font-medium">{donorPhone}</span>
+                      <div>
+                        <h4 className="font-bold text-sm" style={{color: 'var(--color-on-surface)'}}>No Perecederos</h4>
+                        <p className="text-xs" style={{color: 'var(--color-outline)'}}>Arroz, pasta, legumbres</p>
                       </div>
-                    )}
+                    </div>
+                    <div className="flex items-start gap-4 p-4 rounded-2xl border hover:shadow-md transition-shadow" style={{backgroundColor: 'var(--color-surface-container-lowest)', borderColor: 'var(--color-outline-variant)'}}>
+                      <div className="p-2 rounded-xl" style={{backgroundColor: 'var(--color-surface-container-high)'}}>
+                        <span className="text-lg">🥦</span>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-sm" style={{color: 'var(--color-on-surface)'}}>Frescos</h4>
+                        <p className="text-xs" style={{color: 'var(--color-outline)'}}>Frutas, verduras</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4 p-4 rounded-2xl border hover:shadow-md transition-shadow" style={{backgroundColor: 'var(--color-surface-container-lowest)', borderColor: 'var(--color-outline-variant)'}}>
+                      <div className="p-2 rounded-xl" style={{backgroundColor: 'var(--color-surface-container-high)'}}>
+                        <span className="text-lg">🥛</span>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-sm" style={{color: 'var(--color-on-surface)'}}>Lácteos</h4>
+                        <p className="text-xs" style={{color: 'var(--color-outline)'}}>Leche, yogurt</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4 p-4 rounded-2xl border hover:shadow-md transition-shadow" style={{backgroundColor: 'var(--color-surface-container-lowest)', borderColor: 'var(--color-outline-variant)'}}>
+                      <div className="p-2 rounded-xl" style={{backgroundColor: 'var(--color-surface-container-high)'}}>
+                        <span className="text-lg">🥖</span>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-sm" style={{color: 'var(--color-on-surface)'}}>Panadería</h4>
+                        <p className="text-xs" style={{color: 'var(--color-outline)'}}>Pan, tortas</p>
+                      </div>
+                    </div>
+                  </div>
 
-                    {/* Rol */}
-                    <div
-                      className="flex items-center gap-3 text-sm px-3 py-2 rounded-lg"
-                      style={{ backgroundColor: "var(--color-surface-container-high)" }}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  {stats.kg > 0 && (
+                    <div className="mt-8 p-5 rounded-2xl flex items-center justify-between" style={{backgroundColor: 'var(--color-primary-container)'}}>
+                      <div>
+                        <p className="text-sm font-medium opacity-90" style={{color: 'var(--color-on-primary-fixed)'}}>Impacto Total</p>
+                        <p className="text-xl font-bold" style={{color: 'var(--color-on-primary-fixed)'}}>~{Math.round(stats.kg * 3.5)} kg CO₂ Ahorrados</p>
+                      </div>
+                      <span className="text-4xl opacity-50" style={{color: 'var(--color-on-primary-fixed)'}}>🌱</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Stats grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div className="p-4 rounded-xl text-center" style={{backgroundColor: 'var(--color-surface-container-high)'}}>
+                  <p className="text-2xl font-bold" style={{color: 'var(--color-primary)'}}>{stats.donaciones}</p>
+                  <p className="text-xs mt-1" style={{color: 'var(--color-outline)'}}>Donaciones</p>
+                </div>
+                <div className="p-4 rounded-xl text-center" style={{backgroundColor: 'var(--color-surface-container-high)'}}>
+                  <p className="text-2xl font-bold" style={{color: 'var(--color-primary)'}}>{stats.productos}</p>
+                  <p className="text-xs mt-1" style={{color: 'var(--color-outline)'}}>Productos</p>
+                </div>
+                <div className="p-4 rounded-xl text-center" style={{backgroundColor: 'var(--color-surface-container-high)'}}>
+                  <p className="text-2xl font-bold" style={{color: 'var(--color-primary)'}}>{stats.kg.toFixed(1)} kg</p>
+                  <p className="text-xs mt-1" style={{color: 'var(--color-outline)'}}>Donados</p>
+                </div>
+                <div className="p-4 rounded-xl text-center" style={{backgroundColor: 'var(--color-surface-container-high)'}}>
+                  <p className="text-2xl font-bold" style={{color: 'var(--color-primary)'}}>{stats.productos > 0 ? '🎯' : '—'}</p>
+                  <p className="text-xs mt-1" style={{color: 'var(--color-outline)'}}>Meta activa</p>
+                </div>
+              </div>
+            </section>
+
+            {/* ─── RIGHT COLUMN: Logística ─── */}
+            <aside className="lg:col-span-3 space-y-6">
+              {/* Datos de donación */}
+              <div className="rounded-3xl p-6 shadow-sm border" style={{backgroundColor: 'var(--color-surface-container-lowest)', borderColor: 'var(--color-outline-variant)'}}>
+                <h3 className="font-bold mb-4" style={{color: 'var(--color-on-surface)'}}>Centro de Acopio</h3>
+                <div className="space-y-5">
+                  <div className="flex gap-4">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{backgroundColor: 'var(--color-surface-container-high)'}}>
+                      <svg className="w-5 h-5" style={{color: 'var(--color-primary)'}} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
-                      <span className="font-medium">Donador</span>
                     </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Estado de cuenta */}
-              <div className="mt-5 pt-4" style={{ borderTop: "1px solid var(--color-outline-variant)" }}>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium" style={{ color: "var(--color-on-surface-variant)" }}>
-                    Estado de cuenta
-                  </span>
-                  <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                    Activo
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* COLUMNA DERECHA: Ubicación */}
-            <div
-              className="p-6 rounded-2xl"
-              style={{
-                backgroundColor: "var(--color-surface-container-lowest)",
-                border: "1px solid var(--color-outline-variant)",
-              }}
-            >
-              <h4
-                className="text-sm font-semibold mb-4 flex items-center gap-2"
-                style={{ color: "var(--color-on-surface-variant)" }}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                Ubicación de recogida
-              </h4>
-
-              <div className="space-y-3">
-                {donorAddress ? (
-                  <>
                     <div>
-                      <p className="text-xs font-medium uppercase tracking-wider" style={{ color: "var(--color-outline)" }}>
-                        Dirección
-                      </p>
-                      <p className="text-sm font-medium mt-0.5" style={{ color: "var(--color-on-surface)" }}>
-                        {donorAddress}
-                      </p>
+                      <p className="text-xs font-semibold uppercase tracking-wider" style={{color: 'var(--color-outline)'}}>Dirección</p>
+                      <p className="text-sm font-bold" style={{color: 'var(--color-on-surface)'}}>{donorAddress || 'No configurada'}</p>
+                      <p className="text-xs" style={{color: 'var(--color-on-surface-variant)'}}>Centro de acopio más cercano</p>
                     </div>
-                    <LocationMap
-                      latitude={4.7110}
-                      longitude={-74.0721}
-                      height={180}
-                      label={donorAddress}
-                    />
-                  </>
-                ) : (
-                  <div className="flex flex-col items-center justify-center py-8 text-center">
-                    <span className="text-3xl mb-2">📍</span>
-                    <p className="text-sm" style={{ color: "var(--color-outline)" }}>
-                      No has configurado tu dirección aún.
-                    </p>
-                    <p className="text-xs mt-1" style={{ color: "var(--color-on-surface-variant)" }}>
-      Ve a tu perfil para agregarla.
-                    </p>
                   </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* ─── BLOQUE INFERIOR: ESTADÍSTICAS ─── */}
-          <div
-            className="p-6 rounded-2xl"
-            style={{
-              backgroundColor: "var(--color-surface-container-lowest)",
-              border: "1px solid var(--color-outline-variant)",
-            }}
-          >
-            <h4
-              className="text-sm font-semibold mb-4 flex items-center gap-2"
-              style={{ color: "var(--color-on-surface-variant)" }}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
-              Mis donaciones
-            </h4>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="p-4 rounded-xl text-center" style={{ backgroundColor: "var(--color-surface-container-high)" }}>
-                <p className="text-2xl font-bold" style={{ color: "var(--color-primary)" }}>
-                  {stats.donaciones}
-                </p>
-                <p className="text-xs mt-1" style={{ color: "var(--color-outline)" }}>Donaciones totales</p>
-              </div>
-              <div className="p-4 rounded-xl text-center" style={{ backgroundColor: "var(--color-surface-container-high)" }}>
-                <p className="text-2xl font-bold" style={{ color: "var(--color-primary)" }}>
-                  {stats.productos}
-                </p>
-                <p className="text-xs mt-1" style={{ color: "var(--color-outline)" }}>Productos donados</p>
-              </div>
-              <div className="p-4 rounded-xl text-center" style={{ backgroundColor: "var(--color-surface-container-high)" }}>
-                <p className="text-2xl font-bold" style={{ color: "var(--color-primary)" }}>
-                  {stats.kg.toFixed(1)} kg
-                </p>
-                <p className="text-xs mt-1" style={{ color: "var(--color-outline)" }}>Peso total donado</p>
-              </div>
-              <div className="p-4 rounded-xl text-center" style={{ backgroundColor: "var(--color-surface-container-high)" }}>
-                <p className="text-2xl font-bold" style={{ color: "var(--color-primary)" }}>
-                  {stats.kg > 0 ? ((stats.kg / 100) * 100).toFixed(0) : 0}%
-                </p>
-                <p className="text-xs mt-1" style={{ color: "var(--color-outline)" }}>Meta: 100 kg</p>
-              </div>
-            </div>
-
-            {/* Barra de progreso */}
-            {stats.kg > 0 && (
-              <div className="mt-4">
-                <div
-                  className="h-2.5 rounded-full overflow-hidden"
-                  style={{ backgroundColor: "var(--color-surface-container-high)" }}
-                >
-                  <div
-                    className="h-full rounded-full transition-all duration-500"
-                    style={{
-                      width: `${Math.min((stats.kg / 100) * 100, 100)}%`,
-                      background: "linear-gradient(90deg, var(--color-primary), var(--color-secondary))",
-                    }}
-                  />
                 </div>
-              </div>
-            )}
-          </div>
 
-          {/* ─── BOTÓN DE ACCIÓN: REALIZAR DONACIÓN ─── */}
-          <div className="mt-6">
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              <button
-                onClick={() => setView("nueva-donacion")}
-                className="px-8 py-3 rounded-xl text-sm font-semibold transition-all active:scale-95 cursor-pointer flex items-center gap-2"
-                style={{
-                  backgroundColor: "var(--color-primary)",
-                  color: "var(--color-on-primary)",
-                }}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                </svg>
-                Realizar donación
-              </button>
-              <button
-                onClick={() => setView("mis-donaciones")}
-                className="px-8 py-3 rounded-xl text-sm font-semibold transition-all active:scale-95 cursor-pointer flex items-center gap-2"
-                style={{
-                  backgroundColor: "transparent",
-                  color: "var(--color-primary)",
-                  border: "2px solid var(--color-primary)",
-                }}
-              >
-                <History size={18} />
-                Ver historial
-              </button>
-              <button
-                onClick={() => setView("perfil")}
-                className="px-8 py-3 rounded-xl text-sm font-semibold transition-all active:scale-95 cursor-pointer flex items-center gap-2"
-                style={{
-                  backgroundColor: "transparent",
-                  color: "var(--color-on-surface-variant)",
-                  border: "2px solid var(--color-outline-variant)",
-                }}
-              >
-                <User size={18} />
-                Mi perfil
-              </button>
-            </div>
+                <div className="mt-4 rounded-2xl h-32 flex items-center justify-center" style={{backgroundColor: 'var(--color-surface-container-high)'}}>
+                  <span className="text-3xl">📍</span>
+                </div>
+
+                <button onClick={() => setView("nueva-donacion")} className="w-full py-3.5 rounded-2xl mt-4 font-bold text-sm transition-all active:scale-95 cursor-pointer" style={{backgroundColor: 'var(--color-surface-container-low)', color: 'var(--color-primary)'}}>
+                  Ver puntos de acopio
+                </button>
+              </div>
+
+              {/* Card donación rápida */}
+              <div className="rounded-3xl p-6 text-center shadow-lg relative overflow-hidden" style={{
+                background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-container))',
+              }}>
+                <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+                  <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <path d="M0 100 C 20 0 50 0 100 100 Z" fill="white" />
+                  </svg>
+                </div>
+                <h4 className="font-bold mb-4 relative z-10" style={{color: 'var(--color-on-primary)'}}>¿Listo para donar?</h4>
+                <div className="bg-white p-3 rounded-2xl inline-block shadow-xl relative z-10">
+                  <div className="w-28 h-28 flex items-center justify-center">
+                    <span className="text-6xl">🎁</span>
+                  </div>
+                </div>
+                <button onClick={() => setView("nueva-donacion")} className="mt-4 w-full py-3.5 rounded-2xl font-bold text-sm bg-white/20 text-white transition-all active:scale-95 cursor-pointer relative z-10">
+                  Hacer una donación
+                </button>
+              </div>
+
+              {/* Barra de progreso */}
+              {stats.kg > 0 && (
+                <div className="rounded-3xl p-5 shadow-sm border" style={{backgroundColor: 'var(--color-surface-container-lowest)', borderColor: 'var(--color-outline-variant)'}}>
+                  <p className="text-xs font-semibold mb-2" style={{color: 'var(--color-on-surface-variant)'}}>Progreso: {Math.min((stats.kg / 100) * 100, 100).toFixed(0)}%</p>
+                  <div className="h-2.5 rounded-full overflow-hidden" style={{backgroundColor: 'var(--color-surface-container-high)'}}>
+                    <div className="h-full rounded-full transition-all duration-500" style={{
+                      width: Math.min((stats.kg / 100) * 100, 100) + '%',
+                      background: 'linear-gradient(90deg, var(--color-primary), var(--color-secondary))'
+                    }} />
+                  </div>
+                  <p className="text-xs mt-1 text-right" style={{color: 'var(--color-outline)'}}>Meta: 100 kg</p>
+                </div>
+              )}
+            </aside>
           </div>
         </main>
       </div>
     );
+
+
   }
 
   // ─── VISTAS SECUNDARIAS ───
