@@ -7,7 +7,7 @@ import { obtenerDonacionesPorUsuario } from '../../services/donationService';
 /**
  * Historial de donaciones del usuario con sus códigos de validación.
  */
-export default function DonationHistory({ userId }) {
+export default function DonationHistory({ userId, onViewDetail }) {
   const [donaciones, setDonaciones] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
@@ -135,6 +135,18 @@ export default function DonationHistory({ userId }) {
                 <div className="w-full sm:w-auto shrink-0 mt-4 sm:mt-0 flex justify-center">
                   <CodeDisplay codigo={donacion.codigoUnico} estado={donacion.estado} tamaño="sm" />
                 </div>
+              </div>
+
+
+              <div className="mt-6 pt-4 border-t border-outline-variant/30 flex justify-between items-center">
+                <button 
+                  onClick={() => onViewDetail && onViewDetail(donacion.codigoUnico, donacion)}
+                  className="text-xs font-bold text-primary flex items-center gap-1 hover:underline cursor-pointer"
+                >
+                  <Package size={14} />
+                  Ver detalles de trazabilidad
+                </button>
+                <span className="text-[10px] text-outline opacity-70">ID: {donacion.id?.slice(0, 8)}...</span>
               </div>
 
               {/* Evidencia de entrega (si aplica) */}
