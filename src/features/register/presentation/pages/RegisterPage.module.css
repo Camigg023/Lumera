@@ -17,21 +17,22 @@
 }
 
 /* ══════════════════════════════════════
-   IZQUIERDA — HERO VISUAL (fijo, no cambia por rol)
+   IZQUIERDA — HERO VISUAL (siempre la misma imagen)
    ══════════════════════════════════════ */
 .imageSide {
   flex: 1.1;
   background-image: url("/img/crearcuenta.png");
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: center 35%;
   background-size: cover;
   position: relative;
   overflow: hidden;
   isolation: isolate;
+  min-height: 100vh;
 }
 
 /* ══════════════════════════════════════
-   PANEL SUPERIOR — GLASS CARD
+   PANEL SUPERIOR — GLASS CARD (fijo, no cambia por rol)
    ══════════════════════════════════════ */
 .imageOverlay {
   position: absolute;
@@ -40,12 +41,12 @@
   right: 0;
   z-index: 2;
   padding: 3rem 2.5rem;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   background: linear-gradient(
     180deg,
-    var(--role-overlay, rgba(53, 37, 205, 0.6)) 0%,
-    var(--role-overlay, rgba(53, 37, 205, 0.2)) 60%,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.2) 60%,
     transparent 100%
   );
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);

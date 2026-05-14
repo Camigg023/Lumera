@@ -8,34 +8,26 @@ export type RegisterPageProps = {
   onRegisterSuccess?: (role?: string) => void;
 };
 
-/* ─── Mapa de roles a contenido visual ─── */
+/* ─── Mapa de roles a contenido (solo texto, el fondo no cambia) ─── */
 const ROLE_VISUALS: Record<RoleType, {
   icon: string;
   title: string;
   description: string;
-  overlayColor: string;
-  glowColor: string;
 }> = {
   donador: {
     icon: '🤝',
     title: 'Donador',
     description: 'Conecta tu generosidad con quienes más lo necesitan.',
-    overlayColor: 'rgba(53, 37, 205, 0.55)',
-    glowColor: 'rgba(53, 37, 205, 0.2)',
   },
   empresa: {
     icon: '🏢',
     title: 'Empresa',
     description: 'Transforma tu excedente en impacto social medible.',
-    overlayColor: 'rgba(242, 140, 51, 0.55)',
-    glowColor: 'rgba(242, 140, 51, 0.2)',
   },
   beneficiario: {
     icon: '👨‍👩‍👧',
     title: 'Beneficiario',
     description: 'Accede a alimentos frescos y ayuda comunitaria.',
-    overlayColor: 'rgba(113, 42, 226, 0.55)',
-    glowColor: 'rgba(113, 42, 226, 0.2)',
   },
 };
 
@@ -48,14 +40,8 @@ export const RegisterPage = ({ onBackToHome, onNavigateToLogin, onRegisterSucces
   return (
     <div className={styles.page}>
 
-      {/* ─── LEFT: HERO VISUAL ─── */}
-      <div
-        className={styles.imageSide}
-        style={{
-          '--role-overlay': visual.overlayColor,
-          '--role-glow': visual.glowColor,
-        } as React.CSSProperties}
-      >
+      {/* ─── LEFT: HERO VISUAL (fondo fijo, solo texto cambia) ─── */}
+      <div className={styles.imageSide}>
         {/* Indicador de pasos */}
         <div className={styles.stepsIndicator}>
           {steps.map((s) => (
@@ -70,7 +56,7 @@ export const RegisterPage = ({ onBackToHome, onNavigateToLogin, onRegisterSucces
         <div className={styles.imageOverlay}>
           <div className={styles.roleBadge}>
             <span className={styles.roleBadgeIcon}>{visual.icon}</span>
-            {role === 'donador' ? 'Donante individual' : role === 'empresa' ? 'Entidad corporativa' : 'Organización social'}
+            {role === 'donador' ? 'DONANTE INDIVIDUAL' : role === 'empresa' ? 'ENTIDAD CORPORATIVA' : 'ORGANIZACIÓN SOCIAL'}
           </div>
           <h2 className={styles.roleTitle}>{visual.title}</h2>
           <p className={styles.roleDescription}>{visual.description}</p>
