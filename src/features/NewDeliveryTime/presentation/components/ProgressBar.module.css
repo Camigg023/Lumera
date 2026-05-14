@@ -1,0 +1,39 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+.label {
+  color: #3525cd;
+  font-weight: 700;
+}
+
+.percent {
+  color: #464555;
+}
+
+.track {
+  width: 100%;
+  background-color: #e2e7ff;
+  height: 0.75rem;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.fill {
+  background: linear-gradient(to right, #3525cd, #712ae2);
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.6s ease;
+}

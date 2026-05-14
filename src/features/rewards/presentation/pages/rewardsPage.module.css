@@ -1,0 +1,23 @@
+.container {
+  padding: 24px;
+  background: #222223;
+  min-height: 100vh;
+}
+
+.section {
+  margin-top: 24px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 16px;
+}
+
+/* History */
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

@@ -1,0 +1,49 @@
+.page {
+  min-height: 100dvh;
+  background: #232323;
+  color: #131b2e;
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.main {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 8rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: 3fr 9fr;
+  }
+}
+
+.content {
+  min-width: 0;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #464555;
+  font-size: 16px;
+  font-family: Inter, sans-serif;
+}
+
+.error {
+  padding: 1.5rem;
+  background: #ffdad6;
+  border-radius: 0.75rem;
+  color: #93000a;
+  font-size: 14px;
+  font-family: Inter, sans-serif;
+}

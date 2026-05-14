@@ -1,0 +1,29 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  background: #ffffff;
+  border-radius: 1rem;
+  border: 1px solid #eef2ff;
+}
+
+.icon {
+  font-size: 3rem;
+  color: #c7c4d8;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #131b2e;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: #464555;
+}
