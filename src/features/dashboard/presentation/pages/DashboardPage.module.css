@@ -175,7 +175,7 @@
 .mapVerified {
   margin: 0.25rem 0 0 0;
   font-size: 0.75rem;
-  color: #22c55e;
+  color: var(--color-success);
 }
 
 /* Rewards Card */
