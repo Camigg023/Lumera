@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useRegister } from '../hooks/useRegister';
 import styles from './RegisterForm.module.css';
 
-export const RegisterForm = ({ onSuccess }: any) => {
-  const { signUp, isLoading, error } = useRegister();
+export type RoleType = "donador" | "empresa" | "beneficiario";
 
-  const [role, setRole] = useState<"donador" | "empresa" | "beneficiario">("donador");
+export const RegisterForm = ({ role, onRoleChange, onSuccess }: { role: RoleType; onRoleChange: (r: RoleType) => void; onSuccess?: any }) => {
+  const { signUp, isLoading, error } = useRegister();
 
   // 🔹 CAMPOS GENERALES
   const [name, setName] = useState('');
@@ -50,7 +50,7 @@ export const RegisterForm = ({ onSuccess }: any) => {
       <div className={styles.roles}>
         <div
           className={`${styles.roleCard} ${role === "donador" ? styles.active : ""}`}
-          onClick={() => setRole("donador")}
+          onClick={() => onRoleChange("donador")}
         >
           🤝
           <span>Donador</span>
@@ -58,7 +58,7 @@ export const RegisterForm = ({ onSuccess }: any) => {
 
         <div
           className={`${styles.roleCard} ${role === "empresa" ? styles.active : ""}`}
-          onClick={() => setRole("empresa")}
+          onClick={() => onRoleChange("empresa")}
         >
           🏢
           <span>Empresa</span>
@@ -66,7 +66,7 @@ export const RegisterForm = ({ onSuccess }: any) => {
 
         <div
           className={`${styles.roleCard} ${role === "beneficiario" ? styles.active : ""}`}
-          onClick={() => setRole("beneficiario")}
+          onClick={() => onRoleChange("beneficiario")}
         >
           👨‍👩‍👧
           <span>Beneficiario</span>
