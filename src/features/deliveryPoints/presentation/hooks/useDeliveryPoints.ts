@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import type { DeliveryPoint, EligibilityCycle } from "../../domain/entities";
-import { DeliveryPointRepositoryImpl } from "../../data/repositories/deliveryPointRepositoryImpl";
+import { DeliveryPointRepositoryImpl } from "../../data/repositories/DeliveryPointRepositoryImpl";
 import {
   GetNearbyDeliveryPoints,
   SelectDeliveryPoint,

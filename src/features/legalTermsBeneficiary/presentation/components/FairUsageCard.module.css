@@ -1,5 +1,5 @@
 .card {
-  background-color: #4f46e5;
+  background-color: var(--color-primary-container);
   border-radius: 1rem;
   box-shadow: 0 10px 25px rgba(79, 70, 229, 0.25);
   padding: 2rem;
@@ -43,13 +43,13 @@
   letter-spacing: -0.01em;
   line-height: 1.4;
   margin-bottom: 1rem;
-  color: #ffffff;
+  color: var(--color-surface-container-lowest);
 }
 
 .description {
   font-size: 1rem;
   line-height: 1.5;
-  color: #e0e7ff;
+  color: var(--color-surface-container-high);
 }
 
 .badges {
@@ -65,5 +65,5 @@
   gap: 0.5rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #ffffff;
+  color: var(--color-surface-container-lowest);
 }

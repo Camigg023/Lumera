@@ -21,7 +21,7 @@
 .link {
   padding: 0.5rem 1rem;
   border-radius: 0.75rem;
-  color: #464555;
+  color: var(--color-on-surface-variant);
   font-size: 14px;
   font-weight: 500;
   font-family: Inter, sans-serif;
@@ -31,14 +31,14 @@
 }
 
 .link:hover {
-  background: #eaedff;
+  background: var(--color-surface-container);
 }
 
 .linkActive {
   padding: 0.5rem 1rem;
   border-radius: 0.75rem;
-  background: #eef2ff;
-  color: #3525cd;
+  background: var(--color-outline-variant);
+  color: var(--color-primary);
   font-size: 14px;
   font-weight: 600;
   font-family: Inter, sans-serif;
@@ -59,7 +59,7 @@
 .metaText {
   font-size: 14px;
   font-weight: 500;
-  color: #712ae2;
+  color: var(--color-secondary);
   line-height: 1.4;
   letter-spacing: 0.05em;
   font-family: Inter, sans-serif;

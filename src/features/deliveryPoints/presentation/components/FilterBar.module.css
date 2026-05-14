@@ -16,8 +16,8 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 1.25rem;
-  background-color: #4f46e5;
-  color: #ffffff;
+  background-color: var(--color-primary-container);
+  color: var(--color-surface-container-lowest);
   border-radius: 9999px;
   font-size: 14px;
   line-height: 1.2;
@@ -39,14 +39,14 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 1.25rem;
-  background-color: #ffffff;
-  color: #464555;
+  background-color: var(--color-surface-container-lowest);
+  color: var(--color-on-surface-variant);
   border-radius: 9999px;
   font-size: 14px;
   line-height: 1.2;
   letter-spacing: 0.05em;
   font-weight: 500;
-  border: 1px solid #eef2ff;
+  border: 1px solid var(--color-outline-variant);
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   white-space: nowrap;
@@ -54,7 +54,7 @@
 }
 
 .btnInactive:hover {
-  background-color: #eef2ff;
+  background-color: var(--color-outline-variant);
 }
 
 .btnInactive:active {

@@ -8,8 +8,8 @@
   gap: 0.5rem;
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
-  background: #eef2ff;
-  color: #4338ca;
+  background: var(--color-outline-variant);
+  color: var(--color-primary);
   font-size: 14px;
   font-weight: 500;
   font-family: Inter, sans-serif;
@@ -22,7 +22,7 @@
   line-height: 1.2;
   letter-spacing: -0.02em;
   font-weight: 700;
-  color:#712ae2;
+  color:var(--color-secondary);
   font-family: Inter, sans-serif;
   margin-bottom: 1rem;
 }
@@ -31,7 +31,7 @@
   font-size: 18px;
   line-height: 1.6;
   font-weight: 400;
-  color: #fffafa;
+  color: var(--color-surface-bright);
   font-family: Inter, sans-serif;
   max-width: 42rem;
 }

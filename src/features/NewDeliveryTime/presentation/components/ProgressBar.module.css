@@ -15,24 +15,24 @@
 }
 
 .label {
-  color: #3525cd;
+  color: var(--color-primary);
   font-weight: 700;
 }
 
 .percent {
-  color: #464555;
+  color: var(--color-on-surface-variant);
 }
 
 .track {
   width: 100%;
-  background-color: #e2e7ff;
+  background-color: var(--color-surface-container-high);
   height: 0.75rem;
   border-radius: 9999px;
   overflow: hidden;
 }
 
 .fill {
-  background: linear-gradient(to right, #3525cd, #712ae2);
+  background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
   height: 100%;
   border-radius: 9999px;
   transition: width 0.6s ease;

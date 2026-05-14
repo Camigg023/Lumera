@@ -3,8 +3,8 @@
   position: fixed;
   bottom: 2rem;
   right: 2rem;
-  background-color: #8a4cfc;
-  color: #ffffff;
+  background-color: var(--color-secondary-container);
+  color: var(--color-surface-container-lowest);
   padding: 1rem;
   border-radius: 1rem;
   box-shadow: 0 20px 40px rgba(138, 76, 252, 0.4);

@@ -4,7 +4,7 @@
   border-radius: 1rem;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  border: 1px solid #eef2ff;
+  border: 1px solid var(--color-outline-variant);
 }
 
 .mapImg {
@@ -30,8 +30,8 @@
 .pin {
   width: 2.5rem;
   height: 2.5rem;
-  background-color: #4f46e5;
-  color: #ffffff;
+  background-color: var(--color-primary-container);
+  color: var(--color-surface-container-lowest);
   border-radius: 9999px;
   display: flex;
   align-items: center;
@@ -47,18 +47,18 @@
 
 .pinLabel {
   margin-top: 0.5rem;
-  background: #ffffff;
+  background: var(--color-surface-container-lowest);
   padding: 0.25rem 0.75rem;
   border-radius: 0.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border: 1px solid #eef2ff;
+  border: 1px solid var(--color-outline-variant);
 }
 
 .pinLabelText {
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.05em;
-  color: #3525cd;
+  color: var(--color-primary);
 }
 
 /* Map controls */
@@ -75,18 +75,18 @@
 .controlBtn {
   width: 3rem;
   height: 3rem;
-  background: #ffffff;
+  background: var(--color-surface-container-lowest);
   border-radius: 0.75rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #464555;
+  color: var(--color-on-surface-variant);
   border: none;
   cursor: pointer;
   transition: color 0.15s;
 }
 
 .controlBtn:hover {
-  color: #3525cd;
+  color: var(--color-primary);
 }

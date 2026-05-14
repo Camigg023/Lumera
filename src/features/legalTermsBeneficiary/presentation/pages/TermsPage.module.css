@@ -53,7 +53,7 @@
 
 .loadingText {
   font-size: 1rem;
-  color: #464555;
+  color: var(--color-on-surface-variant);
 }
 
 .errorWrapper {
@@ -67,5 +67,5 @@
 
 .errorText {
   font-size: 1rem;
-  color: #ba1a1a;
+  color: var(--color-error);
 }

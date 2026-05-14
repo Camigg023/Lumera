@@ -1,8 +1,8 @@
 .panel {
-  background-color: #1e1b4b;
+  background-color: var(--color-surface-dim);
   border-radius: 1.5rem;
   padding: 2rem;
-  color: #ffffff;
+  color: var(--color-surface-container-lowest);
   box-shadow: 0 20px 40px rgba(30, 27, 75, 0.4);
 }
 
@@ -18,7 +18,7 @@
 }
 
 .titleIcon {
-  color: #a5b4fc;
+  color: var(--color-primary-fixed-dim);
 }
 
 .info {
@@ -29,7 +29,7 @@
 }
 
 .infoLabel {
-  color: #818cf8;
+  color: var(--color-inverse-primary);
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -53,8 +53,8 @@
 
 .btn {
   width: 100%;
-  background-color: #ffffff;
-  color: #1e1b4b;
+  background-color: var(--color-surface-container-lowest);
+  color: var(--color-surface-dim);
   padding: 0.75rem;
   border-radius: 1rem;
   font-weight: 700;
@@ -69,5 +69,5 @@
 }
 
 .btn:hover {
-  background-color: #eef2ff;
+  background-color: var(--color-outline-variant);
 }

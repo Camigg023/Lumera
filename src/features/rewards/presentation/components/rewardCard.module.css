@@ -56,7 +56,7 @@
 
   font-size: 13px;
   font-weight: 500;
-  color: #1e1b4b;;
+  color: var(--color-surface-dim);;
 
   border: 1px solid rgba(255,255,255,0.6);
 
@@ -84,12 +84,12 @@
 .title {
   font-size: 18px;
   font-weight: 600;
-  color: #000000; /* 🔥 negro real */
+  color: var(--color-on-surface); /* 🔥 negro real */
 }
 
 .description {
   font-size: 14px;
-  color: #000000; /* o si quieres jerarquía: #4b5563 */
+  color: var(--color-on-surface); /* o si quieres jerarquía: #4b5563 */
 }
 
 /* BOTÓN */
@@ -101,21 +101,21 @@
 
   background: white;
 
-  color: #4f46e5; /* 🫐 texto azul arándano */
+  color: var(--color-primary-container); /* 🫐 texto azul arándano */
   font-weight: 500;
 
   cursor: pointer;
 
-  border: 1px solid #4f46e5; /* 🫐 borde igual */
+  border: 1px solid var(--color-primary-container); /* 🫐 borde igual */
 
   transition: all 0.25s ease;
 }
 
 /* 🔥 HOVER BOTÓN */
 .button:hover {
-  background: #1e1b4b; /* azul oscuro */
+  background: var(--color-surface-dim); /* azul oscuro */
   color: white;
-  border-color: #1e1b4b;
+  border-color: var(--color-surface-dim);
 }
 
 /* CLICK */

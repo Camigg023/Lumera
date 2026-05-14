@@ -8,7 +8,7 @@
   background: white;
   border-radius: 1rem;
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-  border: 1px solid #eef2ff;
+  border: 1px solid var(--color-outline-variant);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -41,12 +41,12 @@
 }
 
 .scrollArea::-webkit-scrollbar-thumb {
-  background: #d2d9f4;
+  background: var(--color-surface-dim);
   border-radius: 10px;
 }
 
 .scrollArea::-webkit-scrollbar-thumb:hover {
-  background: #4f46e5;
+  background: var(--color-primary-container);
 }
 
 .helpGrid {

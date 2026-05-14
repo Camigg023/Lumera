@@ -6,7 +6,7 @@
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid #eef2ff;
+  border-bottom: 1px solid var(--color-outline-variant);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
@@ -26,13 +26,13 @@
 }
 
 .brandIcon {
-  color: #4f46e5;
+  color: var(--color-primary-container);
 }
 
 .brandName {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #4f46e5;
+  color: var(--color-primary-container);
   font-family: "Inter", sans-serif;
   letter-spacing: -0.02em;
   -webkit-font-smoothing: antialiased;
@@ -42,8 +42,8 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 9999px;
-  background-color: #e2e7ff;
-  border: 2px solid #4f46e5;
+  background-color: var(--color-surface-container-high);
+  border: 2px solid var(--color-primary-container);
   overflow: hidden;
 }
 

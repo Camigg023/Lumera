@@ -15,11 +15,11 @@
   top: 2rem;
   width: 2px;
   height: 100%;
-  background-color: #c3c0ff;
+  background-color: var(--color-primary-fixed-dim);
 }
 
 .connectorDim {
-  background-color: #e2e7ff;
+  background-color: var(--color-surface-container-high);
 }
 
 /* Step icon states */
@@ -32,8 +32,8 @@
   width: 2rem;
   height: 2rem;
   border-radius: 9999px;
-  background-color: #4f46e5;
-  color: #ffffff;
+  background-color: var(--color-primary-container);
+  color: var(--color-surface-container-lowest);
   flex-shrink: 0;
 }
 
@@ -46,10 +46,10 @@
   width: 2rem;
   height: 2rem;
   border-radius: 9999px;
-  background-color: #3525cd;
-  color: #ffffff;
+  background-color: var(--color-primary);
+  color: var(--color-surface-container-lowest);
   flex-shrink: 0;
-  box-shadow: 0 0 0 4px #e2dfff;
+  box-shadow: 0 0 0 4px var(--color-primary-fixed);
 }
 
 .iconUpcoming {
@@ -61,10 +61,10 @@
   width: 2rem;
   height: 2rem;
   border-radius: 9999px;
-  background-color: #eaedff;
-  color: #464555;
+  background-color: var(--color-surface-container);
+  color: var(--color-on-surface-variant);
   flex-shrink: 0;
-  border: 2px solid #e2e7ff;
+  border: 2px solid var(--color-surface-container-high);
 }
 
 .iconSymbol {
@@ -109,7 +109,7 @@
   line-height: 1.4;
   letter-spacing: -0.01em;
   font-weight: 600;
-  color: #131b2e;
+  color: var(--color-on-surface);
 }
 
 .stepTitleCurrent {
@@ -117,7 +117,7 @@
   line-height: 1.4;
   letter-spacing: -0.01em;
   font-weight: 600;
-  color: #3525cd;
+  color: var(--color-primary);
 }
 
 .timeLabel {
@@ -125,7 +125,7 @@
   line-height: 1.2;
   letter-spacing: 0.05em;
   font-weight: 500;
-  color: #464555;
+  color: var(--color-on-surface-variant);
 }
 
 .timeLabelCurrent {
@@ -133,13 +133,13 @@
   line-height: 1.2;
   letter-spacing: 0.05em;
   font-weight: 700;
-  color: #3525cd;
+  color: var(--color-primary);
 }
 
 .description {
   font-size: 16px;
   line-height: 1.5;
   font-weight: 400;
-  color: #464555;
+  color: var(--color-on-surface-variant);
   margin-top: 0.25rem;
 }

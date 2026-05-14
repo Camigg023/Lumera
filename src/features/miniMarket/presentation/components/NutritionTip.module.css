@@ -1,14 +1,14 @@
 .tip {
   font-size: 0.75rem;
-  color: #464555;
+  color: var(--color-on-surface-variant);
   background-color: rgba(240, 253, 244, 0.5);
   padding: 0.75rem;
   border-radius: 0.75rem;
-  border: 1px solid #bbf7d0;
+  border: 1px solid var(--color-success-container);
 }
 
 .label {
-  color: #166534;
+  color: var(--color-on-success-container);
   text-transform: uppercase;
   font-size: 0.625rem;
   letter-spacing: 0.1em;

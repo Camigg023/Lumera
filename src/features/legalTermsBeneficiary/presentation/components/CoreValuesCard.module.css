@@ -1,9 +1,9 @@
 .card {
-  background-color: #ffffff;
+  background-color: var(--color-surface-container-lowest);
   border-radius: 1rem;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
   padding: 2rem;
-  border: 1px solid #e2e7ff;
+  border: 1px solid var(--color-surface-container-high);
   transition: box-shadow 0.2s ease;
 }
 
@@ -26,7 +26,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #3525cd;
+  color: var(--color-primary);
   flex-shrink: 0;
 }
 
@@ -35,21 +35,21 @@
   font-weight: 600;
   letter-spacing: -0.01em;
   line-height: 1.3;
-  color: #131b2e;
+  color: var(--color-on-surface);
 }
 
 .subtitle {
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.05em;
-  color: #3525cd;
+  color: var(--color-primary);
   margin-top: 0.125rem;
 }
 
 .body {
   font-size: 1rem;
   line-height: 1.5;
-  color: #464555;
+  color: var(--color-on-surface-variant);
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -68,5 +68,5 @@
   display: flex;
   gap: 0.75rem;
   align-items: flex-start;
-  color: #464555;
+  color: var(--color-on-surface-variant);
 }

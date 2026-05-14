@@ -1,5 +1,5 @@
 .card {
-  background: linear-gradient(135deg, #4f46e5, #712ae2);
+  background: linear-gradient(135deg, var(--color-primary-container), var(--color-secondary));
   padding: 32px;
   border-radius: var(--radius-2xl);
   color: white;

@@ -1,9 +1,9 @@
 .card {
-  background-color: #ffffff;
+  background-color: var(--color-surface-container-lowest);
   border-radius: 1rem;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
   padding: 2rem;
-  border: 1px solid #e2e7ff;
+  border: 1px solid var(--color-surface-container-high);
   height: 100%;
 }
 
@@ -22,7 +22,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #712ae2;
+  color: var(--color-secondary);
   flex-shrink: 0;
 }
 
@@ -31,13 +31,13 @@
   font-weight: 600;
   letter-spacing: -0.01em;
   line-height: 1.4;
-  color: #131b2e;
+  color: var(--color-on-surface);
 }
 
 .description {
   font-size: 1rem;
   line-height: 1.5;
-  color: #464555;
+  color: var(--color-on-surface-variant);
   margin-bottom: 1rem;
 }
 
@@ -53,15 +53,15 @@
 .ruleItem {
   padding: 1rem;
   border-radius: 0.75rem;
-  background-color: #f2f3ff;
-  border: 1px solid #eef2ff;
+  background-color: var(--color-surface-container-low);
+  border: 1px solid var(--color-outline-variant);
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
 
 .ruleTitle {
-  color: #131b2e;
+  color: var(--color-on-surface);
   font-weight: 600;
   display: block;
   font-size: 0.9375rem;
@@ -70,5 +70,5 @@
 .ruleDesc {
   font-size: 1rem;
   line-height: 1.5;
-  color: #464555;
+  color: var(--color-on-surface-variant);
 }

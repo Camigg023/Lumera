@@ -1,7 +1,7 @@
 .details {
-  background-color: #ffffff;
+  background-color: var(--color-surface-container-lowest);
   border-radius: 1rem;
-  border: 1px solid #eef2ff;
+  border: 1px solid var(--color-outline-variant);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   transition: border-color 0.2s;
 }
@@ -57,12 +57,12 @@
   font-weight: 600;
   line-height: 1.4;
   letter-spacing: -0.01em;
-  color: #131b2e;
+  color: var(--color-on-surface);
 }
 
 .categoryDesc {
   font-size: 0.875rem;
-  color: #464555;
+  color: var(--color-on-surface-variant);
   line-height: 1.3;
 }
 
@@ -75,12 +75,12 @@
 .quantity {
   font-weight: 700;
   font-size: 1.125rem;
-  color: #131b2e;
+  color: var(--color-on-surface);
 }
 
 .expandIcon {
   transition: transform 0.3s ease;
-  color: #464555;
+  color: var(--color-on-surface-variant);
 }
 
 /* Rotate when open */
@@ -123,18 +123,18 @@
   justify-content: space-between;
   padding: 0.75rem;
   border-radius: 0.75rem;
-  background-color: #f2f3ff;
+  background-color: var(--color-surface-container-low);
   border: 1px solid rgba(199, 196, 216, 0.2);
 }
 
 .foodItemName {
   font-weight: 500;
   font-size: 0.875rem;
-  color: #131b2e;
+  color: var(--color-on-surface);
 }
 
 .foodItemQty {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #464555;
+  color: var(--color-on-surface-variant);
 }

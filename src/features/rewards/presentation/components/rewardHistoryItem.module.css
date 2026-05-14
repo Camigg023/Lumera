@@ -4,7 +4,7 @@
   flex-direction: column;
   gap: 10px;
 
-  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  background: linear-gradient(180deg, var(--color-surface-container-lowest) 0%, var(--color-surface-container-low) 100%);
   border-radius: 24px;
   padding: 16px;
   margin-top: 10px;
@@ -59,7 +59,7 @@
 
   border-radius: 14px;
 
-  background: linear-gradient(135deg, #eef2ff, #e0f2fe);
+  background: linear-gradient(135deg, var(--color-outline-variant), #e0f2fe);
 
   display: flex;
   align-items: center;
@@ -80,7 +80,7 @@
 .title {
   font-size: 14px;
   font-weight: 700;
-  color: #000000 !important;
+  color: var(--color-on-surface) !important;
   margin: 0;
   line-height: 1.1;
   letter-spacing: -0.2px;
@@ -88,7 +88,7 @@
 
 .date {
   font-size: 11px;
-  color: #666;
+  color: var(--color-on-surface-variant);
   text-transform: uppercase;
   margin: 0;
 }
@@ -104,8 +104,8 @@
   font-size: 15px;
 }
 
-.credit { color: #16a34a; }
-.debit { color: #dc2626; }
+.credit { color: var(--color-success); }
+.debit { color: var(--color-error); }
 
 /* 🔹 STATUS */
 .status {
@@ -117,6 +117,6 @@
   font-weight: 600;
 }
 
-.completed { background: #dcfce7; color: #15803d; }
-.pending { background: #fef9c3; color: #a16207; }
-.system { background: #f1f5f9; color: #475569; }
+.completed { background: var(--color-success-container); color: var(--color-on-success-container); }
+.pending { background: var(--color-warning-container); color: var(--color-warning); }
+.system { background: var(--color-surface-container-low); color: #475569; }

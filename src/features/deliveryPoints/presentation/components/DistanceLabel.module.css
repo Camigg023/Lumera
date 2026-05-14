@@ -1,6 +1,6 @@
 .label {
   font-size: 0.875rem;
-  color: #464555;
+  color: var(--color-on-surface-variant);
   display: flex;
   align-items: center;
   gap: 0.25rem;

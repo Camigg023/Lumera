@@ -1,6 +1,6 @@
 .page {
-  background-color: #19191a;
-  color: #131b2e;
+  background-color: var(--color-inverse-surface);
+  color: var(--color-on-surface);
   min-height: 100dvh;
   padding-bottom: 6rem;
   font-family: "Inter", sans-serif;
@@ -63,7 +63,7 @@
 
 .skeleton {
   border-radius: 1rem;
-  background: linear-gradient(90deg, #eaedff 25%, #f2f3ff 50%, #eaedff 75%);
+  background: linear-gradient(90deg, var(--color-surface-container) 25%, var(--color-surface-container-low) 50%, var(--color-surface-container) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -83,9 +83,9 @@
 }
 
 .errorBox {
-  background-color: #ffdad6;
-  border: 1px solid #ba1a1a;
-  color: #93000a;
+  background-color: var(--color-error-container);
+  border: 1px solid var(--color-error);
+  color: var(--color-on-error-container);
   padding: 1rem 1.5rem;
   border-radius: 0.75rem;
 }

@@ -1,6 +1,6 @@
 .container {
   padding: 24px;
-  background: #222223;
+  background: var(--color-inverse-surface);
   min-height: 100vh;
 }
 
@@ -11,7 +11,7 @@
 .title {
   font-size: 18px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--color-on-surface);
   margin-bottom: 16px;
 }
 

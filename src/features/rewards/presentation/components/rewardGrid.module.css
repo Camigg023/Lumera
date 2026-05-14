@@ -74,7 +74,7 @@
 .skeleton {
   height: 280px;
   border-radius: 16px;
-  background: #eee;
+  background: var(--color-surface-container-low);
   animation: pulse 1.5s infinite;
 }
 

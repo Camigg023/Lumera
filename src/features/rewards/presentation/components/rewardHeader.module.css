@@ -10,7 +10,7 @@
 
 /* IZQUIERDA (BALANCE) */
 .banner {
-  background: linear-gradient(135deg, #4f46e5, #712ae2);
+  background: linear-gradient(135deg, var(--color-primary-container), var(--color-secondary));
   padding: 24px;
   border-radius: var(--ui-radius-2xl);
   color: white;
@@ -20,7 +20,7 @@
 
 /* DERECHA (STREAK) */
 .streak {
-  background: #fff;
+  background: var(--color-surface-container-lowest);
   padding: 24px;
   border-radius: var(--ui-radius-2xl);
   border: 1px solid rgba(199,196,216,0.3);
@@ -84,7 +84,7 @@
 
 /* HOVER */
 .button:hover {
-  background: #5b21b6;
+  background: var(--color-secondary-container);
 }
 
 /* CLICK EFECTO */

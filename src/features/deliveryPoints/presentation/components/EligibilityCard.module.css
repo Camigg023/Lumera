@@ -1,9 +1,9 @@
 .card {
-  background: linear-gradient(135deg, #8a4cfc, #712ae2);
+  background: linear-gradient(135deg, var(--color-secondary-container), var(--color-secondary));
   padding: 1.5rem;
   border-radius: 1rem;
   box-shadow: 0 8px 24px rgba(113, 42, 226, 0.35);
-  color: #ffffff;
+  color: var(--color-surface-container-lowest);
 }
 
 .topRow {
@@ -46,7 +46,7 @@
 
 .progressFill {
   height: 100%;
-  background: #ffffff;
+  background: var(--color-surface-container-lowest);
   border-radius: 9999px;
   transition: width 0.6s ease;
 }
