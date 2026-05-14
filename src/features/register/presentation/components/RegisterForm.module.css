@@ -55,6 +55,16 @@
   box-shadow: 0 0 0 3px rgba(53, 37, 205, 0.08);
 }
 
+/* ─── DARK MODE: inputs visibles ─── */
+@media (prefers-color-scheme: dark) {
+  .input {
+    background: var(--color-surface-container);
+  }
+  .input:focus {
+    background: var(--color-surface-container);
+  }
+}
+
 .select {
   cursor: pointer;
   appearance: none;
