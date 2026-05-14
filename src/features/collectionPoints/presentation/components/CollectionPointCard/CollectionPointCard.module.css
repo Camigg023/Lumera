@@ -1,8 +1,17 @@
+/*
+ * ═══════════════════════════════════════════════════════
+ *  COLLECTION POINT CARD — Alineado con Lumera Design System
+ *  ═══════════════════════════════════════════════════════
+ *  Todas las variables referencian al @theme de
+ *  Tailwind definido en src/index.css.
+ * ═══════════════════════════════════════════════════════
+ */
+
 .card {
-  background: #ffffff;
+  background: var(--color-surface-container-lowest);
   border-radius: 1rem;
   padding: 1.25rem;
-  border: 1px solid #eef2ff;
+  border: 1px solid var(--color-outline-variant);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
   position: relative;
   overflow: hidden;
@@ -39,9 +48,9 @@
   letter-spacing: 0.03em;
 }
 
-.badgeActive   { background: #f0fdf4; color: #15803d; }
-.badgeHighDemand { background: #fff7ed; color: #c2410c; }
-.badgeInactive { background: #f1f5f9; color: #64748b; }
+.badgeActive   { background: var(--color-success-container); color: var(--color-on-success-container); }
+.badgeHighDemand { background: var(--color-warning-container); color: var(--color-warning); }
+.badgeInactive { background: var(--color-surface-container-low); color: var(--color-outline); }
 
 .dot {
   width: 6px;
@@ -50,9 +59,9 @@
   flex-shrink: 0;
 }
 
-.dotActive    { background: #22c55e; animation: pulse 1.5s infinite; }
-.dotHighDemand { background: #f97316; }
-.dotInactive  { background: #94a3b8; }
+.dotActive    { background: var(--color-success); animation: pulse 1.5s infinite; }
+.dotHighDemand { background: var(--color-warning); }
+.dotInactive  { background: var(--color-outline); }
 
 @keyframes pulse {
   0%, 100% { opacity: 1; }
@@ -64,7 +73,7 @@
   font-size: 20px;
   font-weight: 600;
   line-height: 1.4;
-  color: #3525cd;
+  color: var(--color-primary);
   margin-bottom: 0.25rem;
   padding-right: 6rem; /* avoid overlap with badge */
 }
@@ -74,7 +83,7 @@
   align-items: center;
   gap: 0.25rem;
   font-size: 14px;
-  color: #464555;
+  color: var(--color-on-surface-variant);
   margin-bottom: 1rem;
 }
 
@@ -83,7 +92,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 1px solid #eef2ff;
+  border-top: 1px solid var(--color-outline-variant);
   padding-top: 1rem;
 }
 
@@ -96,13 +105,13 @@
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.05em;
-  color: #777587;
+  color: var(--color-outline);
 }
 
 .distanceValue {
   font-size: 20px;
   font-weight: 600;
-  color: #131b2e;
+  color: var(--color-on-surface);
 }
 
 .actions {
@@ -114,8 +123,8 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 0.75rem;
-  background: #eef2ff;
-  color: #3525cd;
+  background: var(--color-outline-variant);
+  color: var(--color-primary);
   border: none;
   cursor: pointer;
   display: flex;
@@ -125,8 +134,8 @@
 }
 
 .iconBtn:hover:not(:disabled) {
-  background: #3525cd;
-  color: #ffffff;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
 }
 
 .iconBtn:disabled {
@@ -136,8 +145,8 @@
 
 .detailsBtn {
   padding: 0.5rem 1rem;
-  background: #712ae2;
-  color: #ffffff;
+  background: var(--color-secondary);
+  color: var(--color-on-secondary);
   border: none;
   border-radius: 0.75rem;
   font-size: 14px;
@@ -152,9 +161,8 @@
 }
 
 .detailsBtnDisabled {
-  ime-mode: detailsBtn;
-  background: #e2e8f0;
-  color: #94a3b8;
+  background: var(--color-surface-container);
+  color: var(--color-outline);
   cursor: not-allowed;
   box-shadow: none;
 }

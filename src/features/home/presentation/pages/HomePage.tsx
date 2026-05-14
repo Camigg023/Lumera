@@ -3,7 +3,12 @@ import styles from "./HomePage.module.css";
 
 export type HomeNavTab = "inicio" | "sobre" | "estadisticas";
 
-export function HomePage({ onNavigateToLogin }: any) {
+interface HomePageProps {
+  onNavigateToLogin?: () => void;
+  onNavigateToRegister?: () => void;
+}
+
+export function HomePage({ onNavigateToLogin, onNavigateToRegister }: HomePageProps) {
   const [tab, setTab] = useState<HomeNavTab>("inicio");
   const [sobreTab, setSobreTab] = useState<"mision" | "vision">("mision");
 
@@ -46,15 +51,15 @@ export function HomePage({ onNavigateToLogin }: any) {
             <div className={styles.overlay}>
 
               <h2 className={styles.heroTitle}>
-                Un proyecto para el ODS 2
+                Transforma el exceso en esperanza
               </h2>
 
               <p className={styles.callout}>
-                Eso que ya no necesitas puede convertirse en esperanza para alguien más.
-                Con Lumera, tu donación sí llega, sí importa y sí transforma.
+                Cada alimento que donas viaja con trazabilidad hasta quien más lo necesita.
+                Lumera conecta voluntad con necesidad, con transparencia y dignidad.
               </p>
 
-              <button className={styles.ctaButton}>
+              <button className={styles.ctaButton} onClick={onNavigateToRegister}>
                 QUIERO DONAR
               </button>
 
@@ -85,16 +90,17 @@ export function HomePage({ onNavigateToLogin }: any) {
 
               {sobreTab === "mision" && (
                 <p>
-                  Nuestra misión es reducir el desperdicio de alimentos conectando
-                  donadores con comunidades vulnerables de manera eficiente,
-                  transparente y digna.
+                  Reducir el desperdicio de alimentos conectando donadores con 
+                  comunidades vulnerables de manera eficiente, trazable y digna. 
+                  Transformamos lo que sobra en puentes de solidaridad.
                 </p>
               )}
 
               {sobreTab === "vision" && (
                 <p>
-                  Nuestra visión es construir una red inteligente a nivel nacional
-                  que garantice el acceso equitativo a alimentos y elimine el hambre.
+                  Construir una red inteligente a nivel nacional donde el hambre 
+                  sea cosa del pasado y cada alimento excedente encuentre su camino 
+                  hacia quien lo necesita.
                 </p>
               )}
 
@@ -105,19 +111,19 @@ export function HomePage({ onNavigateToLogin }: any) {
         {/* ESTADISTICAS */}
         {tab === "estadisticas" && (
           <div className={styles.section}>
-            <h2>Estadísticas</h2>
+            <h2 className={styles.sectionTitle}>Impacto hasta ahora</h2>
             <div className={styles.statsGrid}>
               <div className={styles.statCard}>
                 <p className={styles.statValue}>1.2t</p>
-                <p>Alimentos donados</p>
+                <p className={styles.statLabel}>Alimentos donados</p>
               </div>
               <div className={styles.statCard}>
                 <p className={styles.statValue}>48</p>
-                <p>Organizaciones</p>
+                <p className={styles.statLabel}>Organizaciones activas</p>
               </div>
               <div className={styles.statCard}>
                 <p className={styles.statValue}>3.1k</p>
-                <p>Beneficiarios</p>
+                <p className={styles.statLabel}>Beneficiarios alcanzados</p>
               </div>
             </div>
           </div>
@@ -127,7 +133,7 @@ export function HomePage({ onNavigateToLogin }: any) {
 
       {/* FOOTER */}
       <footer className={styles.footer}>
-        <p>Lumera © 2026 - Tu donación sí importa</p>
+        <p>Lumera © {new Date().getFullYear()} — Tu donación sí importa</p>
       </footer>
 
     </div>

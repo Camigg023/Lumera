@@ -1,3 +1,12 @@
+/*
+ * ═══════════════════════════════════════════════════════
+ *  BOTTOM NAV — Alineado con Lumera Design System
+ *  ═══════════════════════════════════════════════════════
+ *  Todas las variables referencian al @theme de
+ *  Tailwind definido en src/index.css.
+ * ═══════════════════════════════════════════════════════
+ */
+
 .nav {
   position: fixed;
   bottom: 0;
@@ -9,7 +18,7 @@
   justify-content: space-around;
   align-items: center;
   padding: 0.75rem 1rem 1.5rem;
-  border-top: 1px solid #eef2ff;
+  border-top: 1px solid var(--color-outline-variant);
   box-shadow: 0 -8px 30px rgba(79, 70, 229, 0.08);
   border-radius: 1.5rem 1.5rem 0 0;
   z-index: 50;
@@ -26,7 +35,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #94a3b8;
+  color: var(--color-outline);
   text-decoration: none;
   padding: 0.5rem 1.25rem;
   border-radius: 1rem;
@@ -34,7 +43,7 @@
 }
 
 .item:hover {
-  color: #4f46e5;
+  color: var(--color-primary-container);
 }
 
 .itemActive {
@@ -42,12 +51,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #4338ca;
+  color: var(--color-primary);
   text-decoration: none;
   padding: 0.5rem 1.25rem;
   border-radius: 1rem;
   transition: color 0.2s;
-  background: #eef2ff;
+  background: var(--color-outline-variant);
 }
 
 .label {

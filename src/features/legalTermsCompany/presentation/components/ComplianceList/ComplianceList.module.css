@@ -1,0 +1,15 @@
+.list {
+  list-style: disc;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.item {
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--color-on-surface-variant);
+  font-family: Inter, sans-serif;
+}

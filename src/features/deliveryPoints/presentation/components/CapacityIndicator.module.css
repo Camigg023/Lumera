@@ -1,0 +1,60 @@
+.box {
+  background-color: var(--color-surface-container-low);
+  padding: 1rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  color: var(--color-on-surface-variant);
+  margin-bottom: 0.25rem;
+}
+
+.slots {
+  font-size: 20px;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+  color: var(--color-on-surface);
+}
+
+.avatarGroup {
+  display: flex;
+}
+
+.avatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  border: 2px solid var(--color-surface-container-lowest);
+  margin-left: -0.5rem;
+}
+
+.avatar:first-child {
+  margin-left: 0;
+}
+
+.avatarPlain {
+  background-color: var(--color-surface-container);
+}
+
+.avatarMd {
+  background-color: var(--color-outline-variant);
+}
+
+.avatarCount {
+  background-color: var(--color-surface-container-high);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}

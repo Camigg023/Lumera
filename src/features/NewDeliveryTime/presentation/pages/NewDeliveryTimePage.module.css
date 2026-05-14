@@ -1,0 +1,74 @@
+.page {
+  background-color: var(--color-inverse-surface);
+  color: var(--color-on-surface);
+  min-height: 100dvh;
+  padding-bottom: 6rem;
+}
+
+.main {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .main {
+    padding: 2rem 2.5rem;
+  }
+}
+
+.bentoGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .bentoGrid {
+    grid-template-columns: 1fr 2fr;
+  }
+}
+
+.bottomSection {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .bottomSection {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.skeleton {
+  border-radius: 1rem;
+  background: linear-gradient(90deg, var(--color-surface-container) 25%, var(--color-surface-container-low) 50%, var(--color-surface-container) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeletonCard {
+  height: 16rem;
+}
+
+.skeletonBig {
+  height: 20rem;
+}
+
+.errorBox {
+  background-color: var(--color-error-container);
+  border: 1px solid var(--color-error);
+  color: var(--color-on-error-container);
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  font-size: 16px;
+}

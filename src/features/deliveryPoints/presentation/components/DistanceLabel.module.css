@@ -1,0 +1,11 @@
+.label {
+  font-size: 0.875rem;
+  color: var(--color-on-surface-variant);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.icon {
+  font-size: 1rem;
+}

@@ -1,0 +1,71 @@
+.card {
+  background: linear-gradient(135deg, var(--color-secondary), #3730a3);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  color: var(--color-surface-container-lowest);
+  box-shadow: 0 8px 32px rgba(113, 42, 226, 0.35);
+  overflow: hidden;
+  position: relative;
+}
+
+.content {
+  position: relative;
+  z-index: 10;
+}
+
+.icon {
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.title {
+  font-size: 20px;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+  color: var(--color-surface-container-lowest);
+  margin-bottom: 0.5rem;
+}
+
+.description {
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1.5rem;
+}
+
+.button {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--color-surface-container-lowest);
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.decor {
+  position: absolute;
+  bottom: -2.5rem;
+  right: -2.5rem;
+  width: 10rem;
+  height: 10rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  filter: blur(48px);
+  pointer-events: none;
+}

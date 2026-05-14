@@ -10,6 +10,15 @@ const DashboardPage = lazy(() => import("./features/dashboard").then(module => (
 const RegisterPage = lazy(() => import("./features/register").then(module => ({ default: module.RegisterPage })));
 const PasswordRecoveryPage = lazy(() => import("./features/password-recovery").then(module => ({ default: module.PasswordRecoveryPage })));
 
+// Nuevas vistas desde feat/views
+const CollectionPointsPage = lazy(() => import("./features/collectionPoints").then(module => ({ default: module.CollectionPointsPage })));
+const DeliveryPointsPage = lazy(() => import("./features/deliveryPoints").then(module => ({ default: module.DeliveryPointsPage })));
+const NewDeliveryTimePage = lazy(() => import("./features/NewDeliveryTime").then(module => ({ default: module.NewDeliveryTimePage })));
+const MiniMarketPage = lazy(() => import("./features/miniMarket").then(module => ({ default: module.MiniMarketPage })));
+const RewardsPage = lazy(() => import("./features/rewards").then(module => ({ default: module.RewardsPage })));
+const TermsPage = lazy(() => import("./features/legalTermsBeneficiary").then(module => ({ default: module.TermsPage })));
+const LegalTermsCompanyPage = lazy(() => import("./features/legalTermsCompany").then(module => ({ default: module.LegalTermsCompanyPage })));
+
 // Dashboards por Rol
 const DonadorDashboard = lazy(() => import("./features/accounts/dashboard/DonadorDashboard").then(module => ({ default: module.DonadorDashboard })));
 const EmpresaDashboard = lazy(() => import("./features/accounts/dashboard/EmpresaDashboard").then(module => ({ default: module.EmpresaDashboard })));
@@ -87,6 +96,13 @@ function App() {
   const goToRegister = () => setAppState("register");
   const goToPasswordRecovery = () => setAppState("password-recovery");
   const goToDashboard = () => setAppState("dashboard");
+  const goToCollectionPoints = () => setAppState("collection-points");
+  const goToDeliveryPoints = () => setAppState("delivery-points");
+  const goToDeliveryTime = () => setAppState("delivery-time");
+  const goToMiniMarket = () => setAppState("mini-market");
+  const goToRewards = () => setAppState("rewards");
+  const goToLegalTerms = () => setAppState("legal-terms-beneficiary");
+  const goToLegalTermsCompany = () => setAppState("legal-terms-company");
 
   /**
    * Se llama después de login/registro exitoso.
@@ -156,7 +172,7 @@ function App() {
 
     // Home (público)
     if (appState === "home") {
-      return <HomePage onNavigateToLogin={goToLogin} />;
+      return <HomePage onNavigateToLogin={goToLogin} onNavigateToRegister={goToRegister} />;
     }
 
     // Login
@@ -193,6 +209,41 @@ function App() {
       );
     }
 
+    // Collection Points
+    if (appState === "collection-points") {
+      return <CollectionPointsPage onBackToHome={goToHome} />;
+    }
+
+    // Delivery Points
+    if (appState === "delivery-points") {
+      return <DeliveryPointsPage onBackToHome={goToHome} onNavigateToDeliveryTime={goToDeliveryTime} />;
+    }
+
+    // Delivery Time (NewDeliveryTime)
+    if (appState === "delivery-time") {
+      return <NewDeliveryTimePage onBackToHome={goToHome} />;
+    }
+
+    // Mini Market
+    if (appState === "mini-market") {
+      return <MiniMarketPage onBackToHome={goToHome} />;
+    }
+
+    // Rewards
+    if (appState === "rewards") {
+      return <RewardsPage onBackToHome={goToHome} />;
+    }
+
+    // Legal Terms Beneficiary
+    if (appState === "legal-terms-beneficiary") {
+      return <TermsPage onBackToHome={goToHome} />;
+    }
+
+    // Legal Terms Company
+    if (appState === "legal-terms-company") {
+      return <LegalTermsCompanyPage onBackToHome={goToHome} />;
+    }
+
     // Dashboard (requiere sesión)
     if (appState === "dashboard") {
       if (role && isValidRole(role)) {
@@ -205,7 +256,7 @@ function App() {
     }
 
     // Fallback
-    return <HomePage onNavigateToLogin={goToLogin} />;
+    return <HomePage onNavigateToLogin={goToLogin} onNavigateToRegister={goToRegister} />;
   }
 }
 

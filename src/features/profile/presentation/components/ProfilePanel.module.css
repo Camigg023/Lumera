@@ -39,7 +39,7 @@
   border: 1px solid var(--color-outline-variant);
   border-radius: 8px;
   outline: none;
-  background-color: #FFFFFF;
+  background-color: var(--color-surface-container-lowest);
   color: var(--color-on-surface);
   transition: border-color 0.2s, box-shadow 0.2s;
   box-sizing: border-box;
@@ -57,7 +57,7 @@
   border: 1px solid var(--color-outline-variant);
   border-radius: 8px;
   outline: none;
-  background-color: #FFFFFF;
+  background-color: var(--color-surface-container-lowest);
   color: var(--color-on-surface);
   cursor: pointer;
 }
@@ -129,8 +129,8 @@
 }
 
 .success {
-  color: #22c55e;
-  background: #f0fdf4;
+  color: var(--color-on-success-container);
+  background: var(--color-success-container);
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1rem;

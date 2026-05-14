@@ -6,6 +6,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { DonadorProfile } from "../pages/DonadorProfile";
 import AddProductsPanel from "../../addProducts/AddProductsPanel";
 import DonationHistory from "../../codeValidation/DonationHistory";
+import { DonacionConfirmada } from "./DonacionConfirmada";
+import { DonadorRewards } from "./DonadorRewards";
 import { LocationMap } from "../../beneficiary/presentation/components/LocationMap";
 import {
   Bell,
@@ -16,6 +18,7 @@ import {
   History,
   Settings,
   User,
+  Gift,
 } from "lucide-react";
 import styles from "./DonadorDashboard.module.css";
 
@@ -30,6 +33,7 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
   const [donorProfile, setDonorProfile] = useState(null);
   const [profileLoading, setProfileLoading] = useState(true);
   const [stats, setStats] = useState({ donaciones: 0, productos: 0, kg: 0 });
+  const [lastDonation, setLastDonation] = useState<{ codigo: string; data?: any } | null>(null);
 
   // Obtener userId desde Firebase Auth
   useEffect(() => {
@@ -100,6 +104,11 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
     ? donorName.split(" ").map((n) => n.charAt(0)).join("").slice(0, 2).toUpperCase()
     : "??";
 
+  const onDonationSuccess = (codigo: string, data: any) => {
+    setLastDonation({ codigo, data });
+    setView("confirmacion");
+  };
+
   // ─── LOADING ───
   if (!authReady || (profileLoading && !donorProfile && userId)) {
     return (
@@ -137,10 +146,11 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
           </div>
 
           <nav className="hidden md:flex items-center gap-6">
-            <button className="text-sm font-semibold" style={{color: 'var(--color-primary)'}} onClick={() => setView("inicio")}>Inicio</button>
-            <button className="text-sm font-medium" style={{color: 'var(--color-on-surface-variant)'}} onClick={() => setView("nueva-donacion")}>Nueva donación</button>
-            <button className="text-sm font-medium" style={{color: 'var(--color-on-surface-variant)'}} onClick={() => setView("mis-donaciones")}>Mis donaciones</button>
-            <button className="text-sm font-medium" style={{color: 'var(--color-on-surface-variant)'}} onClick={() => setView("perfil")}>Perfil</button>
+            <button className={`text-sm font-${view === "inicio" ? "semibold" : "medium"}`} style={{color: view === "inicio" ? "var(--color-primary)" : "var(--color-on-surface-variant)"}} onClick={() => setView("inicio")}>Inicio</button>
+            <button className={`text-sm font-${view === "nueva-donacion" ? "semibold" : "medium"}`} style={{color: view === "nueva-donacion" ? "var(--color-primary)" : "var(--color-on-surface-variant)"}} onClick={() => setView("nueva-donacion")}>Nueva donación</button>
+            <button className={`text-sm font-${view === "mis-donaciones" ? "semibold" : "medium"}`} style={{color: view === "mis-donaciones" ? "var(--color-primary)" : "var(--color-on-surface-variant)"}} onClick={() => setView("mis-donaciones")}>Mis donaciones</button>
+            <button className={`text-sm font-${view === "beneficios" ? "semibold" : "medium"}`} style={{color: view === "beneficios" ? "var(--color-primary)" : "var(--color-on-surface-variant)"}} onClick={() => setView("beneficios")}>Beneficios</button>
+            <button className={`text-sm font-${view === "perfil" ? "semibold" : "medium"}`} style={{color: view === "perfil" ? "var(--color-primary)" : "var(--color-on-surface-variant)"}} onClick={() => setView("perfil")}>Perfil</button>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -189,8 +199,12 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
                     <span className="flex items-center gap-3 text-sm font-medium">📋 Historial</span>
                     <span className="group-hover:text-primary" style={{color: 'var(--color-outline)'}}>›</span>
                   </button>
+                  <button onClick={() => setView("beneficios")} className="w-full flex items-center justify-between p-3 rounded-xl transition-colors group" style={{color: 'var(--color-on-surface-variant)'}}>
+                    <span className="flex items-center gap-3 text-sm font-medium">🎁 Beneficios</span>
+                    <span className="group-hover:text-primary" style={{color: 'var(--color-outline)'}}>›</span>
+                  </button>
                   <button onClick={() => setView("perfil")} className="w-full flex items-center justify-between p-3 rounded-xl transition-colors group" style={{color: 'var(--color-on-surface-variant)'}}>
-                    <span className="flex items-center gap-3 text-sm font-medium">⚙️ Preferencias</span>
+                    <span className="flex items-center gap-3 text-sm font-medium">👤 Mi Perfil</span>
                     <span className="group-hover:text-primary" style={{color: 'var(--color-outline)'}}>›</span>
                   </button>
                 </div>
@@ -391,14 +405,25 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
         {/* NUEVA DONACIÓN */}
         {view === "nueva-donacion" && (
           <div className="max-w-4xl mx-auto py-6 animate-fade-in">
-            <AddProductsPanel />
+            <AddProductsPanel onSuccess={onDonationSuccess} />
+          </div>
+        )}
+
+        {/* CONFIRMACIÓN / TRAZABILIDAD */}
+        {view === "confirmacion" && lastDonation && (
+          <div className="max-w-6xl mx-auto py-6">
+            <DonacionConfirmada 
+              codigoDonacion={lastDonation.codigo} 
+              donacion={lastDonation.data}
+              onBackToDashboard={() => setView("inicio")} 
+            />
           </div>
         )}
 
         {/* MIS DONACIONES */}
         {view === "mis-donaciones" && (
           <div className="max-w-4xl mx-auto py-6 animate-fade-in">
-            <DonationHistory userId={userId} />
+            <DonationHistory userId={userId} onViewDetail={onDonationSuccess} />
           </div>
         )}
 
@@ -406,6 +431,13 @@ export function DonadorDashboard({ onLogout }: { onLogout: () => void }) {
         {view === "perfil" && (
           <div className="max-w-2xl mx-auto py-6 animate-fade-in">
             <DonadorProfile />
+          </div>
+        )}
+
+        {/* BENEFICIOS */}
+        {view === "beneficios" && (
+          <div className="max-w-5xl mx-auto py-6 animate-fade-in">
+            <DonadorRewards stats={stats} />
           </div>
         )}
 

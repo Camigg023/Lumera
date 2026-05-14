@@ -1,0 +1,23 @@
+.container {
+  padding: 24px;
+  background: var(--color-inverse-surface);
+  min-height: 100vh;
+}
+
+.section {
+  margin-top: 24px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-on-surface);
+  margin-bottom: 16px;
+}
+
+/* History */
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
