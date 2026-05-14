@@ -53,12 +53,18 @@
   --color-success: #4CAF50;
   --color-success-container: #d4edda;
   --color-on-success: #ffffff;
+  --color-on-success-container: #1b5e20;
 
   /* ─── COLOR DE ERROR ─── */
   --color-error: #ba1a1a;
   --color-error-container: #ffdad6;
   --color-on-error: #ffffff;
   --color-on-error-container: #93000a;
+
+  /* ─── COLOR DE WARNING ─── */
+  --color-warning: #EF6C00;
+  --color-warning-container: #fff3e0;
+  --color-on-warning: #ffffff;
 
   /* ─── SUPERFICIES Y FONDOS ─── */
   --color-background: #faf8ff;
@@ -125,6 +131,16 @@
   --radius-lg: 1rem;
   --radius-xl: 1.5rem;
   --radius-full: 9999px;
+
+  /* ─── SOMBRAS / ELEVACIÓN ─── */
+  /* Level 1 (Base): Flat / sombra ligera */
+  --shadow-sm: 0 1px 3px rgba(79, 70, 229, 0.05);
+  /* Level 2 (Cards): Sutil para tarjetas informativas */
+  --shadow-md: 0 4px 12px rgba(79, 70, 229, 0.08);
+  /* Level 3 (Active/Hover): Interactividad */
+  --shadow-lg: 0 6px 20px rgba(79, 70, 229, 0.12);
+  /* Level 4 (Modals/Overlays): Separación profunda */
+  --shadow-xl: 0 10px 30px rgba(79, 70, 229, 0.15);
 
   /* ─── ANIMACIONES ─── */
   --animate-fade-in: fade-in 0.25s ease-out;
