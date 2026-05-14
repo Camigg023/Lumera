@@ -1,0 +1,74 @@
+.card {
+  background-color: var(--color-surface-container-lowest);
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  padding: 2rem;
+  border: 1px solid var(--color-surface-container-high);
+  height: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.iconWrapper {
+  height: 3rem;
+  width: 3rem;
+  border-radius: 0.75rem;
+  background-color: rgba(113, 42, 226, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-secondary);
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  color: var(--color-on-surface);
+}
+
+.description {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-on-surface-variant);
+  margin-bottom: 1rem;
+}
+
+.rulesList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ruleItem {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background-color: var(--color-surface-container-low);
+  border: 1px solid var(--color-outline-variant);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.ruleTitle {
+  color: var(--color-on-surface);
+  font-weight: 600;
+  display: block;
+  font-size: 0.9375rem;
+}
+
+.ruleDesc {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-on-surface-variant);
+}

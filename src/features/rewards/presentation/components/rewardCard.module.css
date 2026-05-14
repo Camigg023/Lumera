@@ -1,0 +1,125 @@
+/* CARD */
+.card {
+  background: white; /* crema suave elegante */
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(199,196,216,0.2);
+
+  box-shadow: 0 6px 18px rgba(38, 38, 48, 0.08);
+
+  transition: all 0.25s ease;
+}
+
+/* HOVER SUAVE */
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+/* IMAGE WRAPPER */
+.imageWrapper {
+  position: relative;
+  height: 160px;
+  width: 100%;
+}
+
+/* IMAGE */
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* FALLBACK */
+.fallback {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 40px;
+}
+
+/* 💎 LUMENS (ARRIBA DERECHA) */
+.priceTag {
+  position: absolute;
+  bottom: 100px;
+  right: 10px;
+
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(6px);
+
+  padding: 6px 12px;
+  border-radius: 999px;
+
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-surface-dim);;
+
+  border: 1px solid rgba(255,255,255,0.6);
+
+  pointer-events: none; /* 🔥 no clickeable */
+}
+
+/* CONTENT */
+.content {
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  gap: 16px;
+}
+
+/* TEXTO */
+.textBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-on-surface); /* 🔥 negro real */
+}
+
+.description {
+  font-size: 14px;
+  color: var(--color-on-surface); /* o si quieres jerarquía: #4b5563 */
+}
+
+/* BOTÓN */
+.button {
+  width: 100%;
+  padding: 12px;
+ 
+  border-radius: 12px;
+
+  background: white;
+
+  color: var(--color-primary-container); /* 🫐 texto azul arándano */
+  font-weight: 500;
+
+  cursor: pointer;
+
+  border: 1px solid var(--color-primary-container); /* 🫐 borde igual */
+
+  transition: all 0.25s ease;
+}
+
+/* 🔥 HOVER BOTÓN */
+.button:hover {
+  background: var(--color-surface-dim); /* azul oscuro */
+  color: white;
+  border-color: var(--color-surface-dim);
+}
+
+/* CLICK */
+.button:active {
+  transform: scale(0.97);
+}
+

@@ -1,0 +1,60 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .section {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+}
+
+.title {
+  font-size: 32px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  color: var(--color-primary-container);
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--color-on-surface-variant);
+  max-width: 28rem;
+}
+
+.badge {
+  background-color: var(--color-primary-container);
+  color: var(--color-on-primary-container);
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+  align-self: flex-start;
+}
+
+@media (min-width: 768px) {
+  .badge {
+    align-self: auto;
+  }
+}
+
+.badgeIcon {
+  font-size: 1rem;
+}
+
+.badgeText {
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}

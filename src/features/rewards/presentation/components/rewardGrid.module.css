@@ -1,0 +1,85 @@
+/* SECCIÓN */
+.section {
+  margin-top: 16px;
+  padding: 0 5px; /* 🔹 margen pequeño izquierda/derecha */
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+/* TITLE */
+.title {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--ui-text);
+}
+
+/* FILTROS */
+.filters {
+  display: flex;
+  gap: 8px;
+}
+
+/* BOTÓN BASE (SIN FONDO) */
+.filter {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--text-soft);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+/* 🟣 HOVER (SUAVE) */
+.filter:hover {
+  background: rgba(113, 42, 226, 0.08);
+  color: var(--primary);
+}
+
+/* 🟣 ACTIVO (MÁS FUERTE) */
+.active {
+  background: rgba(40, 6, 94, 0.948);
+  color: var(--primary);
+  font-weight: 500;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  gap: 24px;
+}
+
+/* RESPONSIVE */
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* SKELETON */
+.skeleton {
+  height: 280px;
+  border-radius: 16px;
+  background: var(--color-surface-container-low);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}

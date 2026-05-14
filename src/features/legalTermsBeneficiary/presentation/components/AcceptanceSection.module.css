@@ -1,0 +1,106 @@
+.section {
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+  text-align: center;
+}
+
+.box {
+  background-color: rgba(255, 255, 255, 0.923);
+  padding: 2.5rem;
+  border-radius: 1.5rem;
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--color-outline-variant);
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  margin-bottom: 1rem;
+  color: var(--color-on-surface);
+}
+
+.description {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-on-surface-variant);
+  margin-bottom: 2rem;
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.acceptedBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-success);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  background-color: var(--color-success-container);
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .actions {
+    flex-direction: row;
+  }
+}
+
+.primaryBtn {
+  background-color: var(--color-primary);
+  color: var(--color-surface-container-lowest);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  padding: 1rem 2.5rem;
+  border-radius: 9999px;
+  box-shadow: 0 10px 25px rgba(53, 37, 205, 0.25);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.primaryBtn:hover:not(:disabled) {
+  transform: scale(1.02);
+}
+
+.primaryBtn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.primaryBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.secondaryBtn {
+  border: 1px solid var(--color-outline-variant);
+  color: var(--color-on-surface);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  padding: 1rem 2.5rem;
+  border-radius: 9999px;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.secondaryBtn:hover {
+  background-color: var(--color-surface-container);
+}

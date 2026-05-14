@@ -50,6 +50,19 @@
   background-color: var(--color-surface-container-lowest);
 }
 
+/* ─── DARK MODE: inputs más claros para mejor legibilidad ─── */
+@media (prefers-color-scheme: dark) {
+  .input,
+  .select {
+    background-color: var(--color-surface-container);
+  }
+
+  .input:focus,
+  .select:focus {
+    background-color: var(--color-surface-container);
+  }
+}
+
 /* ERROR */
 .error {
   color: var(--color-error);

@@ -1,0 +1,66 @@
+.bar {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scrollbar-width: none;
+}
+
+.bar::-webkit-scrollbar {
+  display: none;
+}
+
+.btnActive {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background-color: var(--color-primary-container);
+  color: var(--color-surface-container-lowest);
+  border-radius: 9999px;
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+  white-space: nowrap;
+  transition: transform 0.1s;
+}
+
+.btnActive:active {
+  transform: scale(0.95);
+}
+
+.btnInactive {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background-color: var(--color-surface-container-lowest);
+  color: var(--color-on-surface-variant);
+  border-radius: 9999px;
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  border: 1px solid var(--color-outline-variant);
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  white-space: nowrap;
+  transition: background-color 0.15s, transform 0.1s;
+}
+
+.btnInactive:hover {
+  background-color: var(--color-outline-variant);
+}
+
+.btnInactive:active {
+  transform: scale(0.95);
+}
+
+.filterIcon {
+  font-size: 1.125rem;
+}
