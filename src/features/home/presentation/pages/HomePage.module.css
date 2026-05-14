@@ -43,7 +43,7 @@
   background: none;
   border: none;
   font-size: 1rem;
-  color: var(--color-on-surface);
+  color: var(--color-primary);
   cursor: pointer;
   position: relative;
   padding-bottom: 5px;
@@ -227,11 +227,11 @@
 }
 
 .sobreBtn {
-  background: rgba(255,255,255,0.25);
+  background: white;
   border: none;
   padding: 0.6rem 1.4rem;
   border-radius: 25px;
-  color: white;
+  color: black;
   cursor: pointer;
   transition: all 0.3s ease;
 }
