@@ -17,12 +17,12 @@
 .topBar {
   background: var(--color-primary);
   text-align: center;
-  padding: 0.1rem;
+  padding: 0.5rem;
 }
 
 /* LOGO */
 .logo {
-  color: white;
+  color: var(--color-on-primary);
   font-size: 2rem;
   letter-spacing: 4px;
   font-weight: 300;
@@ -38,7 +38,7 @@
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
-/* BOTONES */
+/* BOTONES NAV */
 .navButton {
   background: none;
   border: none;
@@ -47,9 +47,10 @@
   cursor: pointer;
   position: relative;
   padding-bottom: 5px;
+  font-weight: 500;
 }
 
-/* EFECTO HOVER */
+/* EFECTO HOVER — underline animado */
 .navButton::after {
   content: "";
   position: absolute;
@@ -64,6 +65,7 @@
 .navButton:hover::after {
   width: 100%;
 }
+
 /* HERO CON IMAGEN DE FONDO */
 .hero {
   height: 70vh;
@@ -85,31 +87,35 @@
 
 /* TEXTO HERO */
 .heroTitle {
-  color: var(--color-primary);
+  color: var(--color-on-primary);
   font-size: 2rem;
+  font-weight: 700;
 }
 
-
 .callout {
-  color: var(--color-primary);
+  color: var(--color-on-primary);
   font-size: 1.25rem;
 }
 
-/* BOTÓN */
+/* BOTÓN CTA — Indigo sólido con hover */
 .ctaButton {
   background: var(--color-primary);
   font-size: 1rem;
-  color: white;
+  color: var(--color-on-primary);
   padding: 1rem 2.2rem;
   border-radius: 30px;
   border: none;
   cursor: pointer;
-  transition: 0.3s;
+  font-weight: 700;
+  transition: all 0.3s ease;
   margin-top: 2rem;
+  box-shadow: 0 4px 14px rgba(53, 37, 205, 0.35);
 }
 
 .ctaButton:hover {
   background: var(--color-primary-container);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(53, 37, 205, 0.45);
 }
 
 /* SECTION */
@@ -139,7 +145,7 @@
 /* FOOTER */
 .footer {
   background: var(--color-primary);
-  color: white;
+  color: var(--color-on-primary);
   text-align: center;
   padding: 1rem;
 }

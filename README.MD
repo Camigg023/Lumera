@@ -179,21 +179,21 @@ Cada rol tiene su propio dashboard con navegación y funcionalidades específica
 
 ## 🎨 Sistema de Diseño
 
-### Paleta Stitch Design (Tailwind CSS 4 `@theme`)
+### Paleta de Colores — Luminous Impact (Tailwind CSS 4 `@theme`)
 
 | Categoría | Variable | Hex | Uso |
 |---|---|---|---|
-| **Primario** | `--color-primary` | `#3525cd` | Botones principales, enlaces, acentos |
-| **Primario contenedor** | `--color-primary-container` | `#4f46e5` | Hover, backgrounds secundarios |
-| **Secundario** | `--color-secondary` | `#712ae2` | Acentos secundarios |
-| **Error** | `--color-error` | `#ba1a1a` | Errores, validaciones |
-| **Superficie** | `--color-surface` | `#faf8ff` | Fondos de tarjetas |
-| **Texto** | `--color-on-surface` | `#131b2e` | Texto principal |
-| **Texto variante** | `--color-on-surface-variant` | `#464555` | Texto secundario |
-| **Borde** | `--color-outline` | `#777587` | Bordes |
-| **Borde variante** | `--color-outline-variant` | `#c7c4d8` | Bordes suaves |
-| **Acento Lumera** | `--color-accent` | `#F28C33` | Color naranja de marca |
-| **Éxito** | `--color-success` | `#4CAF50` | Estados completados |
+| **Primario** 🔵 | `--color-primary` | `#3525cd` | Indigo profundo — botones, enlaces, acentos principales |
+| **Contenedor primario** | `--color-primary-container` | `#4f46e5` | Hover, backgrounds secundarios |
+| **Secundario** 🟣 | `--color-secondary` | `#712ae2` | Purple vibrante — acentos secundarios, badges |
+| **Error** ❌ | `--color-error` | `#ba1a1a` | Errores, validaciones, alertas |
+| **Éxito** ✅ | `--color-success` | `#4CAF50` | Estados completados, checkmarks |
+| **Superficie** | `--color-surface` | `#faf8ff` | Fondo de tarjetas y contenedores |
+| **Texto principal** 📝 | `--color-on-surface` | `#131b2e` | Slate oscuro — texto body, títulos, nav |
+| **Texto variante** | `--color-on-surface-variant` | `#464555` | Texto secundario, subtítulos |
+| **Borde** | `--color-outline` | `#777587` | Bordes de componentes |
+| **Borde variante** | `--color-outline-variant` | `#c7c4d8` | Bordes suaves, dividers |
+| **Acento** 🟠 | `--color-accent` | `#F28C33` | Naranja de marca Lumera para destaques |
 
 ### Tipografía
 
@@ -218,9 +218,11 @@ Cada rol tiene su propio dashboard con navegación y funcionalidades específica
 ### Dark Mode
 
 Soporte automático vía `@media (prefers-color-scheme: dark)`. En modo oscuro:
-- Fondos cambian a tonos oscuros (`#0d1117` a `#30363d`)
+- Fondos cambian a tonos oscuros slate (`#0d1117` a `#30363d`)
 - Texto cambia a claro (`#e6e6e6`)
+- Primario se aclara (`#c3c0ff`) para mantener contraste
 - Bordes se atenúan (`#30363d`)
+- Errores usan `#ffb4ab` (rojo claro) para mejor legibilidad
 
 ---
 
