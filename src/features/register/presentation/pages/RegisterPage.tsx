@@ -8,7 +8,7 @@ export type RegisterPageProps = {
   onRegisterSuccess?: (role?: string) => void;
 };
 
-/* ─── Mapa de roles a contenido (solo texto, el fondo no cambia) ─── */
+/* ─── Mapa de roles a contenido ─── */
 const ROLE_VISUALS: Record<RoleType, {
   icon: string;
   title: string;
@@ -35,37 +35,23 @@ export const RegisterPage = ({ onBackToHome, onNavigateToLogin, onRegisterSucces
   const [role, setRole] = useState<RoleType>("donador");
   const visual = ROLE_VISUALS[role];
 
-  const steps = ['donador', 'empresa', 'beneficiario'] as const;
-
   return (
     <div className={styles.page}>
 
-      {/* ─── LEFT: HERO VISUAL (fondo fijo, solo texto cambia) ─── */}
-      <div className={styles.imageSide}>
-        {/* Indicador de pasos */}
-        <div className={styles.stepsIndicator}>
-          {steps.map((s) => (
-            <div
-              key={s}
-              className={`${styles.stepDot} ${s === role ? styles.stepDotActive : ''}`}
-            />
-          ))}
-        </div>
+      <div className={styles.container}>
 
-        {/* Panel inferior glass */}
-        <div className={styles.imageOverlay}>
+        {/* ─── OVERLAY DE ROL ─── */}
+        <div className={styles.roleHeader}>
           <div className={styles.roleBadge}>
-            <span className={styles.roleBadgeIcon}>{visual.icon}</span>
+            <span>{visual.icon}</span>
             {role === 'donador' ? 'DONANTE INDIVIDUAL' : role === 'empresa' ? 'ENTIDAD CORPORATIVA' : 'ORGANIZACIÓN SOCIAL'}
           </div>
           <h2 className={styles.roleTitle}>{visual.title}</h2>
           <p className={styles.roleDescription}>{visual.description}</p>
         </div>
-      </div>
 
-      {/* ─── RIGHT: FORMULARIO ─── */}
-      <div className={styles.formSide}>
-        <div className={styles.formContainer}>
+        {/* ─── FORMULARIO ─── */}
+        <div className={styles.formSection}>
 
           {onBackToHome && (
             <button onClick={onBackToHome} className={styles.backLink}>
@@ -85,6 +71,7 @@ export const RegisterPage = ({ onBackToHome, onNavigateToLogin, onRegisterSucces
           </div>
 
         </div>
+
       </div>
 
     </div>
