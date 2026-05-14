@@ -23,8 +23,9 @@ export const PasswordRecoveryForm = ({ onSuccess }: PasswordRecoveryFormProps) =
   if (success) {
     return (
       <div className={styles.successMessage}>
-        <h3>✅ Email enviado</h3>
-        <p>Revisa tu bandeja de entrada para restablecer tu contraseña.</p>
+        <div className="text-4xl mb-4">✉️</div>
+        <h3>Revisa tu correo</h3>
+        <p>Te hemos enviado un enlace para restablecer tu contraseña.</p>
       </div>
     );
   }
@@ -49,7 +50,7 @@ export const PasswordRecoveryForm = ({ onSuccess }: PasswordRecoveryFormProps) =
         disabled={isLoading}
         className={styles.button}
       >
-        {isLoading ? 'Enviando...' : 'ENVIAR ENLACE DE RECUPERACIÓN'}
+        {isLoading ? 'Enviando...' : 'Enviar enlace de recuperación'}
       </button>
     </form>
   );
