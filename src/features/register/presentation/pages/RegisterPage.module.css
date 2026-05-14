@@ -64,11 +64,11 @@
 }
 
 /* ══════════════════════════════════════
-   PANEL INFERIOR — GLASS CARD
+   PANEL SUPERIOR — GLASS CARD
    ══════════════════════════════════════ */
 .imageOverlay {
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   right: 0;
   z-index: 2;
@@ -77,11 +77,11 @@
   -webkit-backdrop-filter: blur(16px);
   background: linear-gradient(
     180deg,
-    transparent 0%,
-    var(--role-overlay, rgba(53, 37, 205, 0.2)) 30%,
-    var(--role-overlay, rgba(53, 37, 205, 0.6)) 100%
+    var(--role-overlay, rgba(53, 37, 205, 0.6)) 0%,
+    var(--role-overlay, rgba(53, 37, 205, 0.2)) 60%,
+    transparent 100%
   );
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* ─── Chip de badge ─── */
@@ -176,11 +176,12 @@
 .formSide {
   flex: 0.9;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   background: var(--color-surface-container-lowest);
   padding: 2rem;
   position: relative;
+  overflow-y: auto;
 }
 
 /* ─── Marca de agua Lumera ─── */
@@ -200,6 +201,7 @@
   width: 100%;
   max-width: 420px;
   animation: fadeSlideUp 0.5s ease-out;
+  padding: 1rem 0 3rem;
 }
 
 /* BOTÓN VOLVER */
@@ -280,11 +282,11 @@
 
 @media (max-width: 768px) {
   .page {
-    flex-direction: column-reverse;
+    flex-direction: column;
   }
 
   .imageSide {
-    height: 280px;
+    height: 200px;
     flex: none;
     background-size: cover;
     background-position: center 30%;
@@ -295,49 +297,7 @@
   }
 
   .imageOverlay {
-    padding: 1.5rem;
-  }
-
-  .roleTitle {
-    font-size: 1.5rem;
-  }
-
-  .roleDescription {
-    font-size: 0.9rem;
-    max-width: 100%;
-  }
-
-  .stepsIndicator {
-    top: 1rem;
-    left: 1rem;
-  }
-
-  .formSide {
-    padding: 1.5rem;
-  }
-
-  .formSide::before {
-    display: none;
-  }
-
-  .title {
-    font-size: 1.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .imageSide {
-    height: 220px;
-  }
-
-  .imageOverlay {
-    padding: 1rem 1.25rem;
-  }
-
-  .roleBadge {
-    font-size: 0.65rem;
-    padding: 0.3rem 0.75rem 0.3rem 0.5rem;
-    margin-bottom: 0.5rem;
+    padding: 1.25rem 1.5rem;
   }
 
   .roleTitle {
@@ -345,7 +305,59 @@
     margin-bottom: 0.25rem;
   }
 
+  .roleDescription {
+    font-size: 0.85rem;
+    max-width: 100%;
+  }
+
+  .stepsIndicator {
+    display: none;
+  }
+
+  .roleBadge {
+    margin-bottom: 0.5rem;
+    font-size: 0.65rem;
+  }
+
   .formSide {
     padding: 1.25rem;
+    flex: 1;
+  }
+
+  .formSide::before {
+    display: none;
+  }
+
+  .title {
+    font-size: 1.35rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .imageSide {
+    height: 160px;
+  }
+
+  .imageOverlay {
+    padding: 0.75rem 1rem;
+  }
+
+  .roleBadge {
+    font-size: 0.6rem;
+    padding: 0.25rem 0.6rem 0.25rem 0.4rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .roleTitle {
+    font-size: 1rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .roleDescription {
+    display: none;
+  }
+
+  .formSide {
+    padding: 1rem;
   }
 }
