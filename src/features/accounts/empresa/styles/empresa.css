@@ -1,23 +1,23 @@
 /* =============================================
    LUMERA — EMPRESA MODULE STYLES
-   Integrado con paleta Stitch de index.css
+   Alineado con Lumera Design System (@theme en src/index.css)
    ============================================= */
 
 /* Layout principal */
 .empresa-layout {
   display: flex;
   min-height: 100vh;
-  background: #f4f6ff;
-  color: #131b2e;
-  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  background: var(--color-surface-container-low);
+  color: var(--color-on-surface);
+  font-family: var(--font-sans);
 }
 
 /* ── SIDEBAR ──────────────────────────────── */
 .empresa-sidebar {
   width: 260px;
   min-height: 100vh;
-  background: #ffffff;
-  border-right: 1px solid #e2e7ff;
+  background: var(--color-surface-container-lowest);
+  border-right: 1px solid var(--color-surface-container-high);
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -32,18 +32,18 @@
   align-items: center;
   gap: 10px;
   padding: 24px 20px 20px;
-  border-bottom: 1px solid #eaedff;
+  border-bottom: 1px solid var(--color-surface-container);
 }
 
 .empresa-sidebar-logo-icon {
   width: 38px;
   height: 38px;
-  background: linear-gradient(135deg, #3525cd, #712ae2);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--color-on-primary);
   font-size: 18px;
   flex-shrink: 0;
 }
@@ -51,7 +51,7 @@
 .empresa-sidebar-logo-text {
   font-size: 20px;
   font-weight: 700;
-  background: linear-gradient(135deg, #3525cd, #712ae2);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -60,8 +60,8 @@
 
 .empresa-sidebar-logo-badge {
   font-size: 10px;
-  background: #eaedff;
-  color: #4f46e5;
+  background: var(--color-surface-container);
+  color: var(--color-primary-container);
   padding: 2px 7px;
   border-radius: 99px;
   font-weight: 600;
@@ -80,7 +80,7 @@
 .empresa-nav-section-label {
   font-size: 10px;
   font-weight: 700;
-  color: #94a3b8;
+  color: var(--color-outline);
   text-transform: uppercase;
   letter-spacing: 1px;
   padding: 12px 8px 4px;
@@ -95,7 +95,7 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  color: #464555;
+  color: var(--color-on-surface-variant);
   transition: all 0.15s ease;
   border: none;
   background: none;
@@ -104,18 +104,18 @@
 }
 
 .empresa-nav-item:hover {
-  background: #f2f3ff;
-  color: #3525cd;
+  background: var(--color-surface-container-low);
+  color: var(--color-primary);
 }
 
 .empresa-nav-item.active {
-  background: linear-gradient(135deg, #eaedff, #e0e7ff);
-  color: #3525cd;
+  background: linear-gradient(135deg, var(--color-surface-container), var(--color-surface-container-high));
+  color: var(--color-primary);
   font-weight: 600;
 }
 
 .empresa-nav-item.active svg {
-  color: #4f46e5;
+  color: var(--color-primary-container);
 }
 
 .empresa-nav-item svg {
@@ -126,7 +126,7 @@
 
 .empresa-sidebar-footer {
   padding: 16px 12px;
-  border-top: 1px solid #eaedff;
+  border-top: 1px solid var(--color-surface-container);
 }
 
 .empresa-logout-btn {
@@ -139,14 +139,14 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  color: #ba1a1a;
+  color: var(--color-error);
   background: none;
   border: none;
   transition: background 0.15s;
 }
 
 .empresa-logout-btn:hover {
-  background: #ffdad6;
+  background: var(--color-error-container);
 }
 
 /* ── MAIN CONTENT ──────────────────────────── */
@@ -165,7 +165,7 @@
   z-index: 40;
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid #e2e7ff;
+  border-bottom: 1px solid var(--color-surface-container-high);
   padding: 0 28px;
   height: 64px;
   display: flex;
@@ -187,26 +187,26 @@
 }
 
 .empresa-header-search input {
-  background: #f2f3ff;
-  border: 1px solid #dae2fd;
+  background: var(--color-surface-container-low);
+  border: 1px solid var(--color-surface-variant);
   border-radius: 10px;
   padding: 8px 16px 8px 38px;
   font-size: 13px;
-  color: #131b2e;
+  color: var(--color-on-surface);
   width: 220px;
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .empresa-header-search input:focus {
-  border-color: #4f46e5;
+  border-color: var(--color-primary-container);
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
 }
 
 .empresa-header-search svg {
   position: absolute;
   left: 10px;
-  color: #94a3b8;
+  color: var(--color-outline);
   width: 16px;
   height: 16px;
 }
@@ -219,7 +219,7 @@
 
 .empresa-header-date {
   font-size: 12px;
-  color: #64748b;
+  color: var(--color-on-surface-variant);
   font-weight: 500;
   white-space: nowrap;
 }
@@ -228,20 +228,20 @@
   width: 36px;
   height: 36px;
   border-radius: 9px;
-  background: #f2f3ff;
+  background: var(--color-surface-container-low);
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #464555;
+  color: var(--color-on-surface-variant);
   transition: background 0.15s, color 0.15s;
   position: relative;
 }
 
 .empresa-header-icon-btn:hover {
-  background: #eaedff;
-  color: #3525cd;
+  background: var(--color-surface-container);
+  color: var(--color-primary);
 }
 
 .empresa-header-badge {
@@ -250,35 +250,35 @@
   right: 6px;
   width: 8px;
   height: 8px;
-  background: #712ae2;
+  background: var(--color-secondary);
   border-radius: 50%;
-  border: 2px solid white;
+  border: 2px solid var(--color-on-primary);
 }
 
 .empresa-header-avatar {
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #3525cd, #712ae2);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--color-on-primary);
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
-  border: 2px solid #e0e7ff;
+  border: 2px solid var(--color-surface-container-high);
   transition: border-color 0.15s;
 }
 
 .empresa-header-avatar:hover {
-  border-color: #4f46e5;
+  border-color: var(--color-primary-container);
 }
 
 .empresa-header-name {
   font-size: 13px;
   font-weight: 600;
-  color: #131b2e;
+  color: var(--color-on-surface);
   max-width: 140px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -295,14 +295,14 @@
 .empresa-page-title {
   font-size: 22px;
   font-weight: 700;
-  color: #131b2e;
+  color: var(--color-on-surface);
   letter-spacing: -0.3px;
   margin: 0 0 4px;
 }
 
 .empresa-page-subtitle {
   font-size: 13px;
-  color: #64748b;
+  color: var(--color-on-surface-variant);
   margin: 0 0 24px;
 }
 
@@ -315,8 +315,8 @@
 }
 
 .empresa-kpi-card {
-  background: #ffffff;
-  border: 1px solid #e2e7ff;
+  background: var(--color-surface-container-lowest);
+  border: 1px solid var(--color-surface-container-high);
   border-radius: 16px;
   padding: 20px;
   transition: box-shadow 0.2s, transform 0.2s;
@@ -324,7 +324,7 @@
 }
 
 .empresa-kpi-card:hover {
-  box-shadow: 0 8px 24px rgba(53, 37, 205, 0.1);
+  box-shadow: var(--shadow-lg);
   transform: translateY(-2px);
 }
 
@@ -352,19 +352,19 @@
 }
 
 .empresa-kpi-trend.up {
-  background: #ecfdf5;
-  color: #047857;
+  background: var(--color-success-container);
+  color: var(--color-on-success-container);
 }
 
 .empresa-kpi-trend.down {
-  background: #ffdad6;
-  color: #ba1a1a;
+  background: var(--color-error-container);
+  color: var(--color-error);
 }
 
 .empresa-kpi-value {
   font-size: 28px;
   font-weight: 800;
-  color: #131b2e;
+  color: var(--color-on-surface);
   letter-spacing: -0.5px;
   line-height: 1;
   margin-bottom: 4px;
@@ -372,7 +372,7 @@
 
 .empresa-kpi-label {
   font-size: 12px;
-  color: #64748b;
+  color: var(--color-on-surface-variant);
   font-weight: 500;
 }
 
@@ -392,8 +392,8 @@
 
 /* ── CARDS GENÉRICAS ──────────────────────────── */
 .empresa-card {
-  background: #ffffff;
-  border: 1px solid #e2e7ff;
+  background: var(--color-surface-container-lowest);
+  border: 1px solid var(--color-surface-container-high);
   border-radius: 16px;
   padding: 20px;
 }
@@ -408,12 +408,12 @@
 .empresa-card-title {
   font-size: 15px;
   font-weight: 700;
-  color: #131b2e;
+  color: var(--color-on-surface);
 }
 
 .empresa-card-action {
   font-size: 12px;
-  color: #4f46e5;
+  color: var(--color-primary-container);
   font-weight: 600;
   background: none;
   border: none;
@@ -424,7 +424,7 @@
 }
 
 .empresa-card-action:hover {
-  background: #eaedff;
+  background: var(--color-surface-container);
 }
 
 /* ── TABLE ──────────────────────────── */
@@ -439,16 +439,16 @@
   padding: 8px 12px;
   font-size: 11px;
   font-weight: 700;
-  color: #94a3b8;
+  color: var(--color-outline);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  border-bottom: 1px solid #eaedff;
+  border-bottom: 1px solid var(--color-surface-container);
 }
 
 .empresa-table td {
   padding: 12px 12px;
-  border-bottom: 1px solid #f2f3ff;
-  color: #464555;
+  border-bottom: 1px solid var(--color-surface-container-low);
+  color: var(--color-on-surface-variant);
   vertical-align: middle;
 }
 
@@ -457,7 +457,7 @@
 }
 
 .empresa-table tr:hover td {
-  background: #fafbff;
+  background: var(--color-surface-bright);
 }
 
 /* ── BADGES ──────────────────────────── */
@@ -472,38 +472,38 @@
 }
 
 .empresa-badge.pendiente {
-  background: #fef9c3;
-  color: #854d0e;
+  background: var(--color-warning-container);
+  color: var(--color-warning);
 }
 
 .empresa-badge.transito {
-  background: #e0e7ff;
-  color: #3730a3;
+  background: var(--color-surface-container);
+  color: var(--color-primary);
 }
 
 .empresa-badge.entregada {
-  background: #ecfdf5;
-  color: #047857;
+  background: var(--color-success-container);
+  color: var(--color-on-success-container);
 }
 
 .empresa-badge.cancelada {
-  background: #ffdad6;
-  color: #ba1a1a;
+  background: var(--color-error-container);
+  color: var(--color-error);
 }
 
 .empresa-badge.bajo {
-  background: #ffdad6;
-  color: #ba1a1a;
+  background: var(--color-error-container);
+  color: var(--color-error);
 }
 
 .empresa-badge.normal {
-  background: #fef9c3;
-  color: #854d0e;
+  background: var(--color-warning-container);
+  color: var(--color-warning);
 }
 
 .empresa-badge.alto {
-  background: #ecfdf5;
-  color: #047857;
+  background: var(--color-success-container);
+  color: var(--color-on-success-container);
 }
 
 /* ── ACTIVITY FEED ──────────────────────────── */
@@ -512,7 +512,7 @@
   align-items: flex-start;
   gap: 12px;
   padding: 10px 0;
-  border-bottom: 1px solid #f2f3ff;
+  border-bottom: 1px solid var(--color-surface-container-low);
 }
 
 .empresa-activity-item:last-child {
@@ -536,14 +536,14 @@
 
 .empresa-activity-text {
   font-size: 13px;
-  color: #131b2e;
+  color: var(--color-on-surface);
   font-weight: 500;
   margin: 0 0 2px;
 }
 
 .empresa-activity-time {
   font-size: 11px;
-  color: #94a3b8;
+  color: var(--color-outline);
 }
 
 /* ── INVENTORY CARDS ──────────────────────────── */
@@ -554,21 +554,21 @@
 }
 
 .empresa-inventory-card {
-  background: #ffffff;
-  border: 1px solid #e2e7ff;
+  background: var(--color-surface-container-lowest);
+  border: 1px solid var(--color-surface-container-high);
   border-radius: 14px;
   padding: 16px;
   transition: box-shadow 0.2s, transform 0.2s;
 }
 
 .empresa-inventory-card:hover {
-  box-shadow: 0 6px 20px rgba(53, 37, 205, 0.09);
+  box-shadow: var(--shadow-md);
   transform: translateY(-1px);
 }
 
 .empresa-stock-bar {
   height: 6px;
-  background: #eaedff;
+  background: var(--color-surface-container);
   border-radius: 99px;
   overflow: hidden;
   margin: 10px 0 6px;
@@ -588,8 +588,8 @@
 }
 
 .empresa-employee-card {
-  background: #ffffff;
-  border: 1px solid #e2e7ff;
+  background: var(--color-surface-container-lowest);
+  border: 1px solid var(--color-surface-container-high);
   border-radius: 14px;
   padding: 20px 16px;
   text-align: center;
@@ -597,7 +597,7 @@
 }
 
 .empresa-employee-card:hover {
-  box-shadow: 0 6px 20px rgba(53, 37, 205, 0.09);
+  box-shadow: var(--shadow-md);
 }
 
 .empresa-employee-avatar {
@@ -610,19 +610,19 @@
   font-size: 20px;
   font-weight: 700;
   margin: 0 auto 12px;
-  color: white;
+  color: var(--color-on-primary);
 }
 
 .empresa-employee-name {
   font-size: 14px;
   font-weight: 700;
-  color: #131b2e;
+  color: var(--color-on-surface);
   margin-bottom: 2px;
 }
 
 .empresa-employee-role {
   font-size: 11px;
-  color: #64748b;
+  color: var(--color-on-surface-variant);
   margin-bottom: 10px;
 }
 
@@ -631,15 +631,15 @@
   display: flex;
   gap: 14px;
   padding: 16px;
-  background: #ffffff;
-  border: 1px solid #e2e7ff;
+  background: var(--color-surface-container-lowest);
+  border: 1px solid var(--color-surface-container-high);
   border-radius: 14px;
   margin-bottom: 10px;
   transition: box-shadow 0.2s;
 }
 
 .empresa-logistics-item:hover {
-  box-shadow: 0 4px 14px rgba(53, 37, 205, 0.08);
+  box-shadow: var(--shadow-md);
 }
 
 .empresa-logistics-timeline {
@@ -654,14 +654,14 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #4f46e5;
+  background: var(--color-primary-container);
   flex-shrink: 0;
 }
 
 .empresa-timeline-line {
   width: 2px;
   flex: 1;
-  background: #e2e7ff;
+  background: var(--color-surface-container-high);
   margin: 2px 0;
   min-height: 30px;
 }
@@ -678,7 +678,7 @@
 .empresa-chart-bar {
   flex: 1;
   border-radius: 6px 6px 0 0;
-  background: linear-gradient(180deg, #4f46e5, #712ae2);
+  background: linear-gradient(180deg, var(--color-primary-container), var(--color-secondary));
   opacity: 0.85;
   transition: opacity 0.15s;
   min-width: 0;
@@ -689,7 +689,7 @@
 }
 
 .empresa-chart-bar.secondary {
-  background: linear-gradient(180deg, #c7d2fe, #ddd6fe);
+  background: linear-gradient(180deg, var(--color-outline-variant), var(--color-secondary-fixed));
 }
 
 .empresa-chart-labels {
@@ -701,14 +701,14 @@
 .empresa-chart-label {
   flex: 1;
   font-size: 10px;
-  color: #94a3b8;
+  color: var(--color-outline);
   text-align: center;
   font-weight: 500;
 }
 
 /* ── MAP PLACEHOLDER ──────────────────────── */
 .empresa-map-placeholder {
-  background: linear-gradient(135deg, #eaedff 0%, #f2f3ff 50%, #e0e7ff 100%);
+  background: linear-gradient(135deg, var(--color-surface-container) 0%, var(--color-surface-container-low) 50%, var(--color-surface-container-high) 100%);
   border-radius: 12px;
   height: 180px;
   display: flex;
@@ -723,8 +723,8 @@
   position: absolute;
   inset: 0;
   background: 
-    repeating-linear-gradient(0deg, transparent, transparent 29px, #c7d2fe 29px, #c7d2fe 30px),
-    repeating-linear-gradient(90deg, transparent, transparent 29px, #c7d2fe 29px, #c7d2fe 30px);
+    repeating-linear-gradient(0deg, transparent, transparent 29px, var(--color-outline-variant) 29px, var(--color-outline-variant) 30px),
+    repeating-linear-gradient(90deg, transparent, transparent 29px, var(--color-outline-variant) 29px, var(--color-outline-variant) 30px);
   opacity: 0.4;
 }
 
@@ -733,8 +733,8 @@
   z-index: 1;
   font-size: 13px;
   font-weight: 600;
-  color: #4f46e5;
-  background: white;
+  color: var(--color-primary-container);
+  background: var(--color-surface-container-lowest);
   padding: 8px 16px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(79, 70, 229, 0.2);
@@ -749,7 +749,7 @@
   display: block;
   font-size: 12px;
   font-weight: 600;
-  color: #464555;
+  color: var(--color-on-surface-variant);
   margin-bottom: 6px;
   text-transform: uppercase;
   letter-spacing: 0.4px;
@@ -758,23 +758,23 @@
 .empresa-input {
   width: 100%;
   padding: 10px 14px;
-  border: 1px solid #dae2fd;
+  border: 1px solid var(--color-surface-variant);
   border-radius: 10px;
   font-size: 14px;
-  color: #131b2e;
-  background: #faf8ff;
+  color: var(--color-on-surface);
+  background: var(--color-surface);
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .empresa-input:focus {
-  border-color: #4f46e5;
+  border-color: var(--color-primary-container);
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
 }
 
 .empresa-btn-primary {
-  background: linear-gradient(135deg, #3525cd, #4f46e5);
-  color: white;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-container));
+  color: var(--color-on-primary);
   padding: 10px 22px;
   border-radius: 10px;
   font-size: 14px;
@@ -793,8 +793,8 @@
 }
 
 .empresa-btn-secondary {
-  background: #eaedff;
-  color: #3525cd;
+  background: var(--color-surface-container);
+  color: var(--color-primary);
   padding: 10px 22px;
   border-radius: 10px;
   font-size: 14px;
@@ -808,7 +808,7 @@
 }
 
 .empresa-btn-secondary:hover {
-  background: #e0e7ff;
+  background: var(--color-surface-container-high);
 }
 
 /* ── SEARCH BAR ──────────────────────────── */
@@ -822,23 +822,23 @@
 .empresa-search-bar input {
   width: 100%;
   padding: 10px 14px 10px 40px;
-  border: 1px solid #dae2fd;
+  border: 1px solid var(--color-surface-variant);
   border-radius: 10px;
   font-size: 13px;
-  color: #131b2e;
-  background: #faf8ff;
+  color: var(--color-on-surface);
+  background: var(--color-surface);
   outline: none;
   transition: border-color 0.15s;
 }
 
 .empresa-search-bar input:focus {
-  border-color: #4f46e5;
+  border-color: var(--color-primary-container);
 }
 
 .empresa-search-bar svg {
   position: absolute;
   left: 12px;
-  color: #94a3b8;
+  color: var(--color-outline);
   width: 16px;
   height: 16px;
 }
@@ -858,10 +858,10 @@
   border-radius: 8px;
   font-size: 12px;
   font-weight: 600;
-  border: 1px solid #e2e7ff;
-  background: white;
+  border: 1px solid var(--color-surface-container-high);
+  background: var(--color-surface-container-lowest);
   cursor: pointer;
-  color: #464555;
+  color: var(--color-on-surface-variant);
   transition: all 0.15s;
   display: flex;
   align-items: center;
@@ -870,9 +870,9 @@
 
 .empresa-page-btn:hover,
 .empresa-page-btn.active {
-  background: #3525cd;
-  color: white;
-  border-color: #3525cd;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  border-color: var(--color-primary);
 }
 
 /* ── MODAL ──────────────────────────── */
@@ -889,12 +889,12 @@
 }
 
 .empresa-modal {
-  background: white;
+  background: var(--color-surface-container-lowest);
   border-radius: 20px;
   padding: 28px;
   width: 100%;
   max-width: 480px;
-  box-shadow: 0 24px 60px rgba(53, 37, 205, 0.18);
+  box-shadow: var(--shadow-xl);
   animation: modalIn 0.2s ease-out;
 }
 
@@ -908,8 +908,8 @@
   position: fixed;
   bottom: 24px;
   right: 24px;
-  background: #131b2e;
-  color: white;
+  background: var(--color-inverse-surface);
+  color: var(--color-inverse-on-surface);
   padding: 12px 20px;
   border-radius: 12px;
   font-size: 13px;
@@ -918,7 +918,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  box-shadow: var(--shadow-xl);
   animation: toastIn 0.25s ease-out;
 }
 
@@ -929,7 +929,7 @@
 
 /* ── SKELETON ──────────────────────────── */
 .empresa-skeleton {
-  background: linear-gradient(90deg, #eaedff 25%, #f2f3ff 50%, #eaedff 75%);
+  background: linear-gradient(90deg, var(--color-surface-container) 25%, var(--color-surface-container-low) 50%, var(--color-surface-container) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 8px;
@@ -946,8 +946,8 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: white;
-  border-bottom: 1px solid #e2e7ff;
+  background: var(--color-surface-container-lowest);
+  border-bottom: 1px solid var(--color-surface-container-high);
   padding: 12px 16px;
   align-items: center;
   justify-content: space-between;

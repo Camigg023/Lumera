@@ -1,9 +1,18 @@
+/*
+ * ═══════════════════════════════════════════════════════
+ *  COLLECTION POINTS PAGE — Alineado con Lumera Design System
+ *  ═══════════════════════════════════════════════════════
+ *  Todas las variables referencian al @theme de
+ *  Tailwind definido en src/index.css.
+ * ═══════════════════════════════════════════════════════
+ */
+
 .page {
-  background-color: #faf8ff;
-  color: #131b2e;
+  background-color: var(--color-background);
+  color: var(--color-on-surface);
   min-height: 100dvh;
   padding-bottom: 6rem;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-sans);
 }
 
 @media (min-width: 768px) {
@@ -52,14 +61,14 @@
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.2;
-  color: #131b2e;
+  color: var(--color-on-surface);
   margin-bottom: 0.5rem;
 }
 
 .subheading {
   font-size: 16px;
   line-height: 1.5;
-  color: #464555;
+  color: var(--color-on-surface-variant);
 }
 
 /* ── Card list ── */
@@ -71,7 +80,7 @@
   overflow-y: auto;
   padding-right: 0.5rem;
   scrollbar-width: thin;
-  scrollbar-color: #c7c4d8 transparent;
+  scrollbar-color: var(--color-outline-variant) transparent;
 }
 
 .cardList::-webkit-scrollbar {
@@ -79,24 +88,24 @@
 }
 
 .cardList::-webkit-scrollbar-thumb {
-  background: #c7c4d8;
+  background: var(--color-outline-variant);
   border-radius: 9999px;
 }
 
 /* ── State messages ── */
 .stateMsg {
   text-align: center;
-  color: #777587;
+  color: var(--color-outline);
   padding: 2rem;
   font-size: 14px;
 }
 
 .errorMsg {
   text-align: center;
-  color: #ba1a1a;
+  color: var(--color-error);
   padding: 2rem;
   font-size: 14px;
-  background: #fff0f0;
+  background: var(--color-error-container);
   border-radius: 0.75rem;
 }
 
@@ -107,15 +116,15 @@
   right: 1.5rem;
   width: 4rem;
   height: 4rem;
-  background: linear-gradient(135deg, #3525cd, #712ae2);
-  color: #ffffff;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  color: var(--color-on-primary);
   border: none;
   border-radius: 9999px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 24px rgba(53, 37, 205, 0.4);
+  box-shadow: var(--shadow-xl);
   transition: transform 0.2s, box-shadow 0.2s;
   z-index: 40;
 }

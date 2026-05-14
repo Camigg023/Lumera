@@ -1,80 +1,115 @@
+/*
+ * ═══════════════════════════════════════════════════════
+ *  REGISTER PAGE — Lumera Design System
+ *  ═══════════════════════════════════════════════════════
+ *  Single column: role header + formulario.
+ * ═══════════════════════════════════════════════════════
+ */
+
 .page {
-  display: flex;
   min-height: 100vh;
   width: 100%;
-  background-color: var(--color-surface);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
-/* IZQUIERDA - IMAGEN */
-.imageSide {
-  flex: 1;
-  background-image: url("/img/crearcuenta.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  position: relative;
-  overflow: hidden;
-}
-
-.imageSide::before {
-  content: '';
-  position: absolute;
-  width: 150%;
-  height: 150%;
-  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-  top: -25%;
-  left: -25%;
-  animation: rotate 20s linear infinite;
-}
-
-@keyframes rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-/* DERECHA */
-.formSide {
-  flex: 1;
   display: flex;
-  align-items: center;
   justify-content: center;
-  background: var(--color-surface-container-lowest);
-  padding: 2rem;
+  background: var(--color-surface-container-low);
+  font-family: var(--font-sans);
 }
 
-.formContainer {
+.container {
   width: 100%;
-  max-width: 420px;
+  max-width: 480px;
+  padding: 2.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-/* BOTÓN VOLVER */
+/* ══════════════════════════════════════
+   ROLE HEADER — overlay sobre el form
+   ══════════════════════════════════════ */
+.roleHeader {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-container));
+  border-radius: 16px;
+  padding: 1.5rem 1.5rem;
+  color: var(--color-on-primary);
+  box-shadow: 0 8px 32px rgba(53, 37, 205, 0.2);
+  margin: 0.25rem 0 0.25rem;
+}
+
+.roleBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.35rem 0.9rem 0.35rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.08em;
+  margin-bottom: 1rem;
+  width: max-content;
+}
+
+.roleTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.4rem;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.roleDescription {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  max-width: 360px;
+}
+
+/* ══════════════════════════════════════
+   FORMULARIO
+   ══════════════════════════════════════ */
+
 .backLink {
   background: none;
   border: none;
   color: var(--color-outline);
   cursor: pointer;
-  font-size: 0.9rem;
-  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  padding: 0.25rem 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: color 0.2s;
+  width: max-content;
 }
 
 .backLink:hover {
   color: var(--color-primary);
 }
 
-/* TÍTULO */
 .title {
-  text-align: center;
-  font-size: 2rem;
-  font-weight: 500;
-  color: var(--color-primary);
-  margin-bottom: 2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--color-on-surface);
+  margin: 0 0 0.15rem;
 }
 
-/* LINKS */
+.subtitle {
+  font-size: 0.85rem;
+  color: var(--color-on-surface-variant);
+  margin: 0 0 1.25rem;
+}
+
 .links {
   text-align: center;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
 }
 
 .link {
@@ -82,22 +117,35 @@
   border: none;
   color: var(--color-outline);
   cursor: pointer;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.25rem;
+  transition: color 0.2s;
 }
 
 .link:hover {
-  color: var(--color-primary-container);
+  color: var(--color-primary);
 }
 
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .page {
-    flex-direction: column;
+/* ══════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════ */
+@media (max-width: 480px) {
+  .container {
+    padding: 1.5rem 1rem;
+    gap: 1.25rem;
   }
 
-  .imageSide {
-    height: 250px;
-    background-size: 80%;
-    background-position: center;
+  .roleHeader {
+    padding: 1.5rem 1.25rem;
+    border-radius: 16px;
+  }
+
+  .roleTitle {
+    font-size: 1.35rem;
+  }
+
+  .roleDescription {
+    font-size: 0.8rem;
   }
 }

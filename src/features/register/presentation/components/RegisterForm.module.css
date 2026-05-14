@@ -1,131 +1,169 @@
+/*
+ * ═══════════════════════════════════════════════════════
+ *  REGISTER FORM — Lumera Design System
+ *  ═══════════════════════════════════════════════════════
+ *  Estilos limpios y modernos para el formulario de registro.
+ * ═══════════════════════════════════════════════════════
+ */
+
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
+/* ─── INPUT GROUP ─── */
 .inputGroup {
   display: flex;
   flex-direction: column;
-  position: relative;
+  gap: 0.375rem;
 }
 
+/* ─── LABEL ─── */
+.label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-on-surface);
+  letter-spacing: 0.01em;
+}
+
+/* ─── INPUT ─── */
 .input, .select {
   width: 100%;
-  padding: 0.875rem 1.125rem;
-  font-size: 0.95rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.925rem;
+  font-weight: 400;
+  line-height: 1.5;
   border: 1.5px solid var(--color-outline-variant);
-  border-radius: 12px;
+  border-radius: 10px;
   outline: none;
-  background-color: var(--color-surface-container-low);
+  background: var(--color-surface);
   color: var(--color-on-surface);
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   box-sizing: border-box;
 }
 
 .input::placeholder {
   color: var(--color-outline);
-  opacity: 0.7;
+  opacity: 0.6;
 }
 
 .input:focus {
   border-color: var(--color-primary);
-  background-color: var(--color-surface-container-lowest);
-  box-shadow: 0 0 0 4px var(--color-primary-fixed);
+  background: var(--color-surface-container-lowest);
+  box-shadow: 0 0 0 3px rgba(53, 37, 205, 0.08);
 }
 
+.select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23777587' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+.select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(53, 37, 205, 0.08);
+}
+
+/* ─── SELECTOR DE ROLES ─── */
+.roles {
+  display: flex;
+  gap: 0.625rem;
+  margin-bottom: 0.25rem;
+}
+
+.roleCard {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.85rem 0.4rem;
+  border-radius: 12px;
+  border: 2px solid var(--color-outline-variant);
+  background: var(--color-surface);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.roleCard span {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--color-on-surface-variant);
+  transition: color 0.2s;
+}
+
+.roleCard:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-fixed);
+}
+
+.roleCard:hover span {
+  color: var(--color-primary);
+}
+
+.roleCard.active {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+}
+
+.roleCard.active span {
+  color: var(--color-on-primary);
+}
+
+.roleCard.active::after {
+  content: '✓';
+  position: absolute;
+  top: 0.3rem;
+  right: 0.5rem;
+  font-size: 0.6rem;
+  color: var(--color-on-primary);
+  opacity: 0.7;
+}
+
+/* ─── ERROR ─── */
 .error {
   color: var(--color-error);
   font-size: 0.8rem;
-  margin: -0.75rem 0 0 0.25rem;
+  margin: -0.25rem 0 0;
   font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  background: var(--color-error-container);
+  border-radius: 8px;
 }
 
+/* ─── BOTÓN PRINCIPAL ─── */
 .button {
   background: var(--color-primary);
   color: var(--color-on-primary);
   border: none;
-  border-radius: 12px;
-  padding: 1rem;
-  font-size: 1rem;
+  border-radius: 10px;
+  padding: 0.85rem 1.25rem;
+  min-height: 48px;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
 }
 
 .button:hover:not(:disabled) {
   background: var(--color-primary-container);
   transform: translateY(-1px);
-  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
-}
-
-.button:active {
-  transform: translateY(0);
+  box-shadow: 0 8px 24px rgba(53, 37, 205, 0.2);
 }
 
 .button:disabled {
   background: var(--color-outline-variant);
-  color: var(--color-outline);
-  box-shadow: none;
-  cursor: not-allowed;
-}
-
-/* ROLES */
-.roles {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 0.5rem;
-}
-
-.roleCard {
-  flex: 1;
-  border: 1.5px solid var(--color-outline-variant);
-  border-radius: 16px;
-  padding: 1rem 0.5rem;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  background: var(--color-surface-container-low);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.roleCard span {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   color: var(--color-on-surface-variant);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
-
-.roleCard:hover {
-  border-color: var(--color-primary-fixed-dim);
-  background: var(--color-surface-container-high);
-}
-
-.active {
-  border-color: var(--color-primary);
-  background: var(--color-primary-fixed);
-  box-shadow: 0 4px 12px var(--color-primary-fixed-dim);
-}
-
-.active span {
-  color: var(--color-primary);
-}
-
-/* LABEL */
-.label {
-  font-weight: 700;
-  font-size: 0.75rem;
-  color: var(--color-outline);
-  letter-spacing: 0.1em;
-  margin-top: 0.75rem;
-  text-transform: uppercase;
-}
-

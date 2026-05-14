@@ -17,12 +17,12 @@
 .topBar {
   background: var(--color-primary);
   text-align: center;
-  padding: 0.1rem;
+  padding: 0.5rem;
 }
 
 /* LOGO */
 .logo {
-  color: white;
+  color: var(--color-on-primary);
   font-size: 2rem;
   letter-spacing: 4px;
   font-weight: 300;
@@ -33,12 +33,12 @@
   display: flex;
   justify-content: center;
   gap: 2.5rem;
-  background: white;
+  background: var(--color-surface);
   padding: 1rem;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
-/* BOTONES */
+/* BOTONES NAV */
 .navButton {
   background: none;
   border: none;
@@ -47,9 +47,10 @@
   cursor: pointer;
   position: relative;
   padding-bottom: 5px;
+  font-weight: 500;
 }
 
-/* EFECTO HOVER */
+/* EFECTO HOVER — underline animado */
 .navButton::after {
   content: "";
   position: absolute;
@@ -64,6 +65,7 @@
 .navButton:hover::after {
   width: 100%;
 }
+
 /* HERO CON IMAGEN DE FONDO */
 .hero {
   height: 70vh;
@@ -75,72 +77,108 @@
   position: relative;
 }
 
-/* CAPA OSCURA */
+/* OVERLAY — fondo semitransparente para legibilidad del texto sobre la imagen */
 .overlay {
-  background: none;
-  max-width: 500px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  max-width: 520px;
   margin-left: 5%;
+  padding: 2rem 2.5rem;
+  border-radius: var(--radius-lg);
   text-align: left;
+}
+
+/* En dark mode: overlay blanco con texto oscuro para evitar el fondo negro pesado */
+@media (prefers-color-scheme: dark) {
+  .overlay {
+    background: rgba(255, 255, 255, 0.88);
+  }
+
+  .heroTitle,
+  .callout {
+    color: var(--color-inverse-on-surface);
+  }
 }
 
 /* TEXTO HERO */
 .heroTitle {
-  color: var(--color-primary);
+  color: var(--color-on-primary);
   font-size: 2rem;
+  font-weight: 700;
 }
 
-
 .callout {
-  color: var(--color-primary);
+  color: var(--color-on-primary);
   font-size: 1.25rem;
 }
 
-/* BOTÓN */
+/* BOTÓN CTA — Indigo sólido con hover */
 .ctaButton {
   background: var(--color-primary);
   font-size: 1rem;
-  color: white;
+  color: var(--color-on-primary);
   padding: 1rem 2.2rem;
   border-radius: 30px;
   border: none;
   cursor: pointer;
-  transition: 0.3s;
+  font-weight: 700;
+  transition: all 0.3s ease;
   margin-top: 2rem;
+  box-shadow: 0 4px 14px rgba(53, 37, 205, 0.35);
 }
 
 .ctaButton:hover {
   background: var(--color-primary-container);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(53, 37, 205, 0.45);
 }
 
 /* SECTION */
 .section {
-  padding: 2rem;
+  padding: 3rem 2rem;
   text-align: center;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-on-surface);
+  margin-bottom: 2rem;
 }
 
 /* STATS */
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
+  gap: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .statCard {
-  background: white;
-  padding: 1rem;
-  border-radius: 10px;
-  color: var(--color-primary);
+  background: var(--color-surface);
+  padding: 1.5rem 1rem;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .statValue {
   font-size: 1.8rem;
+  font-weight: 700;
   color: var(--color-primary);
+  margin: 0 0 0.25rem;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  color: var(--color-on-surface-variant);
+  margin: 0;
 }
 
 /* FOOTER */
 .footer {
   background: var(--color-primary);
-  color: white;
+  color: var(--color-on-primary);
   text-align: center;
   padding: 1rem;
 }
