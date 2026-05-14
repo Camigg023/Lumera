@@ -40,7 +40,7 @@
   align-items: center;
   justify-content: center;
   background: var(--color-surface-container-lowest);
-  padding: 2rem;
+  padding: 1.5rem;
 }
 
 .formContainer {
@@ -55,7 +55,7 @@
   color: var(--color-outline);
   cursor: pointer;
   font-size: 0.9rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .backLink:hover {
@@ -65,16 +65,18 @@
 /* TÍTULO */
 .title {
   text-align: center;
-  font-size: 2rem;
-  font-weight: 500;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
   color: var(--color-primary);
-  margin-bottom: 2rem;
+  margin-bottom: 1.25rem;
 }
 
 /* LINKS */
 .links {
   text-align: center;
-  margin-top: 2rem;
+  margin-top: 1.25rem;
 }
 
 .link {

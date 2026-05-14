@@ -39,17 +39,14 @@ export const RegisterForm = ({ onSuccess }: any) => {
       ...(role === "beneficiario" && { cedula }),
     };
 
-    console.log("DATA ENVIADA:", data);
-
     await signUp(data);
-
     onSuccess?.(role);
   };
 
   return (
     <form onSubmit={onSubmit} className={styles.form}>
 
-      {/* ROLES */}
+      {/* ─── SELECTOR DE ROLES ─── */}
       <div className={styles.roles}>
         <div
           className={`${styles.roleCard} ${role === "donador" ? styles.active : ""}`}
@@ -76,86 +73,115 @@ export const RegisterForm = ({ onSuccess }: any) => {
         </div>
       </div>
 
-      <p className={styles.label}>INFORMACIÓN PERSONAL</p>
-
       {/* NOMBRE */}
-      <input
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder={role === "empresa" ? "Nombre de la empresa" : "Nombre completo"}
-        className={styles.input}
-      />
+      <div className={styles.inputGroup}>
+        <label className={styles.label}>
+          {role === "empresa" ? "Nombre de la empresa" : "Nombre completo"}
+        </label>
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder={role === "empresa" ? "Ej: Mi Empresa S.A.S." : "Ej: Juan Pérez"}
+          className={styles.input}
+        />
+      </div>
 
       {/* EMPRESA */}
       {role === "empresa" && (
         <>
-          <input
-            value={nit}
-            onChange={(e) => setNit(e.target.value)}
-            placeholder="NIT"
-            className={styles.input}
-          />
+          <div className={styles.inputGroup}>
+            <label className={styles.label}>NIT</label>
+            <input
+              value={nit}
+              onChange={(e) => setNit(e.target.value)}
+              placeholder="Ej: 900.123.456-7"
+              className={styles.input}
+            />
+          </div>
 
-          <input
-            value={capacidad}
-            onChange={(e) => setCapacidad(e.target.value)}
-            placeholder="Capacidad logística"
-            className={styles.input}
-          />
+          <div className={styles.inputGroup}>
+            <label className={styles.label}>Capacidad logística</label>
+            <input
+              value={capacidad}
+              onChange={(e) => setCapacidad(e.target.value)}
+              placeholder="Ej: 500 kg/mes"
+              className={styles.input}
+            />
+          </div>
         </>
       )}
 
       {/* BENEFICIARIO */}
       {role === "beneficiario" && (
-        <input
-          value={cedula}
-          onChange={(e) => setCedula(e.target.value)}
-          placeholder="Cédula"
-          className={styles.input}
-        />
+        <div className={styles.inputGroup}>
+          <label className={styles.label}>Cédula / Identificación</label>
+          <input
+            value={cedula}
+            onChange={(e) => setCedula(e.target.value)}
+            placeholder="Ej: 1.234.567"
+            className={styles.input}
+          />
+        </div>
       )}
 
-      {/* COMUNES */}
-      <input
-        value={telefono}
-        onChange={(e) => setTelefono(e.target.value)}
-        placeholder="Teléfono"
-        className={styles.input}
-      />
+      {/* TELÉFONO */}
+      <div className={styles.inputGroup}>
+        <label className={styles.label}>Teléfono</label>
+        <input
+          value={telefono}
+          onChange={(e) => setTelefono(e.target.value)}
+          placeholder="Ej: +57 300 123 4567"
+          className={styles.input}
+        />
+      </div>
 
-      <input
-        value={direccion}
-        onChange={(e) => setDireccion(e.target.value)}
-        placeholder="Dirección"
-        className={styles.input}
-      />
+      <div className={styles.inputGroup}>
+        <label className={styles.label}>Dirección</label>
+        <input
+          value={direccion}
+          onChange={(e) => setDireccion(e.target.value)}
+          placeholder="Ej: Cra 50 #10-20"
+          className={styles.input}
+        />
+      </div>
 
-      <input
-        value={ciudad}
-        onChange={(e) => setCiudad(e.target.value)}
-        placeholder="Ciudad"
-        className={styles.input}
-      />
+      <div className={styles.inputGroup}>
+        <label className={styles.label}>Ciudad</label>
+        <input
+          value={ciudad}
+          onChange={(e) => setCiudad(e.target.value)}
+          placeholder="Ej: Medellín"
+          className={styles.input}
+        />
+      </div>
 
-      <input
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Correo"
-        className={styles.input}
-      />
+      {/* CORREO */}
+      <div className={styles.inputGroup}>
+        <label className={styles.label}>Correo electrónico</label>
+        <input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          type="email"
+          placeholder="Ej: usuario@correo.com"
+          className={styles.input}
+        />
+      </div>
 
-      <input
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        type="password"
-        placeholder="Contraseña"
-        className={styles.input}
-      />
+      <div className={styles.inputGroup}>
+        <label className={styles.label}>Contraseña</label>
+        <input
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          type="password"
+          placeholder="Mínimo 6 caracteres"
+          className={styles.input}
+        />
+      </div>
 
       {error && <p className={styles.error}>{error}</p>}
 
-      <button type="submit" className={styles.button}>
-        {isLoading ? 'Registrando...' : 'Registrar'}
+      <button type="submit" className={styles.button} disabled={isLoading}>
+        {isLoading ? 'Registrando...' : 'Crear cuenta'}
       </button>
 
     </form>
