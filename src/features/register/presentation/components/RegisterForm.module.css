@@ -1,7 +1,7 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 .inputGroup {
@@ -12,71 +12,63 @@
 
 .input, .select {
   width: 100%;
-  padding: 1rem 1.2rem;
-  font-size: 1rem;
-  border: 1px solid #e0e0e0;
+  padding: 0.875rem 1.125rem;
+  font-size: 0.95rem;
+  border: 1.5px solid var(--color-outline-variant);
   border-radius: 12px;
   outline: none;
-  background-color: #fcfcfc;
+  background-color: var(--color-surface-container-low);
   color: var(--color-on-surface);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s ease;
   box-sizing: border-box;
+}
+
+.input::placeholder {
+  color: var(--color-outline);
+  opacity: 0.7;
 }
 
 .input:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(53, 37, 205, 0.15);
-}
-
-.select {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  border: 1px solid var(--color-outline-variant);
-  border-radius: 8px;
-  outline: none;
-  background-color: #FFFFFF;
-  color: var(--color-on-surface);
-  cursor: pointer;
-  box-sizing: border-box;
-}
-
-.select:focus {
-  border-color: var(--color-primary-container);
-  background-color: white;
-  box-shadow: 0 10px 20px rgba(79, 70, 229, 0.1), 0 0 0 4px rgba(79, 70, 229, 0.05);
-  transform: translateY(-2px);
+  background-color: var(--color-surface-container-lowest);
+  box-shadow: 0 0 0 4px var(--color-primary-fixed);
 }
 
 .error {
   color: var(--color-error);
-  font-size: 0.85rem;
-  margin: -0.5rem 0 0 0.5rem;
+  font-size: 0.8rem;
+  margin: -0.75rem 0 0 0.25rem;
   font-weight: 500;
 }
 
 .button {
   background: var(--color-primary);
-  color: white;
+  color: var(--color-on-primary);
   border: none;
   border-radius: 12px;
-  padding: 1.1rem;
+  padding: 1rem;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
-  box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
-  letter-spacing: 0.5px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  margin-top: 0.5rem;
 }
 
 .button:hover:not(:disabled) {
   background: var(--color-primary-container);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+}
+
+.button:active {
+  transform: translateY(0);
 }
 
 .button:disabled {
   background: var(--color-outline-variant);
-  color: #aaa;
+  color: var(--color-outline);
   box-shadow: none;
   cursor: not-allowed;
 }
@@ -85,39 +77,55 @@
 .roles {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .roleCard {
   flex: 1;
-  border: 2px solid var(--color-primary);
-  border-radius: 12px;
-  padding: 1rem;
+  border: 1.5px solid var(--color-outline-variant);
+  border-radius: 16px;
+  padding: 1rem 0.5rem;
   text-align: center;
   cursor: pointer;
-  transition: 0.3s;
-  background: #fff;
-  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  background: var(--color-surface-container-low);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .roleCard span {
-  display: block;
-  margin-top: 0.3rem;
-  font-weight: 500;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-on-surface-variant);
 }
 
 .roleCard:hover {
-  background: var(--color-surface-container-low);
+  border-color: var(--color-primary-fixed-dim);
+  background: var(--color-surface-container-high);
 }
 
 .active {
-  background: var(--color-primary);
-  color: white;
+  border-color: var(--color-primary);
+  background: var(--color-primary-fixed);
+  box-shadow: 0 4px 12px var(--color-primary-fixed-dim);
+}
+
+.active span {
+  color: var(--color-primary);
 }
 
 /* LABEL */
 .label {
-  font-weight: 600;
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: var(--color-outline);
+  letter-spacing: 0.1em;
+  margin-top: 0.75rem;
+  text-transform: uppercase;
 }
+

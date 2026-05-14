@@ -56,14 +56,21 @@ export const guardarDonacion = async (
     const haceUnaHora = new Date();
     haceUnaHora.setHours(haceUnaHora.getHours() - 1);
 
+    // Bypassing composite index by filtering in-memory
     const q = query(
       collection(db, 'donations'),
-      where('userId', '==', userId),
-      where('createdAt', '>=', haceUnaHora)
+      where('userId', '==', userId)
     );
-    const recentDocs = await getDocs(q);
+    const snapshot = await getDocs(q);
+    
+    const recentCount = snapshot.docs.filter(doc => {
+      const data = doc.data();
+      if (!data.createdAt) return false;
+      const date = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
+      return date >= haceUnaHora;
+    }).length;
 
-    if (recentDocs.size >= 10) {
+    if (recentCount >= 10) {
       throw new Error('Has alcanzado el límite de 10 donaciones por hora. Intenta más tarde.');
     }
   }
@@ -92,20 +99,51 @@ export const guardarDonacion = async (
  */
 export const obtenerDonacionesPorUsuario = async (userId: string): Promise<Donacion[]> => {
   try {
+    // Bypassing composite index by sorting in-memory
     const q = query(
       collection(db, 'donations'),
-      where('userId', '==', userId),
-      orderBy('createdAt', 'desc'),
-      limit(50)
+      where('userId', '==', userId)
     );
     const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({
+    const docs = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     })) as Donacion[];
+
+    // Sort by createdAt descending
+    docs.sort((a, b) => {
+      const timeA = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : (a.createdAt?.seconds ? a.createdAt.seconds * 1000 : 0);
+      const timeB = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : (b.createdAt?.seconds ? b.createdAt.seconds * 1000 : 0);
+      return timeB - timeA;
+    });
+
+    return docs.slice(0, 50);
   } catch (error) {
     console.error('[donationService] Error al obtener donaciones:', error);
-    // Si falta el índice compuesto en Firestore, Firebase arrojará un error con un link para crearlo.
     throw error;
   }
+};
+
+/**
+ * Busca una donación por su código único (LMR-XXXX-XXXX).
+ */
+export const buscarDonacionPorCodigo = async (codigo: string): Promise<Donacion | null> => {
+  const q = query(collection(db, 'donations'), where('codigoUnico', '==', codigo), limit(1));
+  const snapshot = await getDocs(q);
+  if (snapshot.empty) return null;
+  const doc = snapshot.docs[0];
+  return { id: doc.id, ...doc.data() } as Donacion;
+};
+
+/**
+ * Actualiza el estado de una donación a 'entregado'.
+ */
+import { updateDoc, doc as firestoreDoc } from 'firebase/firestore';
+
+export const marcarDonacionComoEntregada = async (id: string): Promise<void> => {
+  const docRef = firestoreDoc(db, 'donations', id);
+  await updateDoc(docRef, {
+    estado: 'entregado',
+    entregadoAt: serverTimestamp()
+  });
 };

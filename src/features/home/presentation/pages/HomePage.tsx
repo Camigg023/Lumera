@@ -54,7 +54,7 @@ export function HomePage({ onNavigateToLogin }: any) {
                 Con Lumera, tu donación sí llega, sí importa y sí transforma.
               </p>
 
-              <button className={styles.ctaButton}>
+              <button className={styles.ctaButton} onClick={onNavigateToLogin}>
                 QUIERO DONAR
               </button>
 

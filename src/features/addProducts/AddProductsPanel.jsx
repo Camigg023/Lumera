@@ -11,7 +11,7 @@ import CodeDisplay from '../codeValidation/components/CodeDisplay';
  * Permite agregar productos uno por uno, ver la lista, eliminar productos
  * y enviar todo a Firebase.
  */
-export default function AddProductsPanel() {
+export default function AddProductsPanel({ onSuccess }) {
   const [productos, setProductos] = useState([]);
   const [guardando, setGuardando] = useState(false);
   const [mensaje, setMensaje] = useState(null); // { tipo: 'exito' | 'error', texto: string }
@@ -37,8 +37,19 @@ export default function AddProductsPanel() {
     try {
       const userId = auth.currentUser?.uid;
       const { id, codigoUnico } = await guardarDonacion(productos, userId);
-      setMensaje({ tipo: 'exito', texto: `Donación registrada exitosamente.`, codigo: codigoUnico });
+      const donationSummary = { 
+        totalProductos: productos.reduce((acc, p) => acc + p.cantidad, 0),
+        items: [...productos]
+      };
+
+      // Navigate to the success/traceability screen immediately
+      if (onSuccess) {
+        onSuccess(codigoUnico, donationSummary);
+      }
+      
+      // Reset local state (though the component will likely unmount)
       setProductos([]);
+      setMensaje({ tipo: 'exito', texto: `Donación registrada exitosamente.`, codigo: codigoUnico });
     } catch (err) {
       console.error('[AddProductsPanel] Error al guardar:', err);
       setMensaje({ tipo: 'error', texto: err.message || 'Error al guardar la donación. Intenta de nuevo.' });
@@ -160,7 +171,7 @@ export default function AddProductsPanel() {
           <button
             onClick={guardarProductos}
             disabled={guardando}
-            className="w-full h-14 bg-[#FF8000] hover:bg-[#e67300] text-white font-bold text-body-md rounded-2xl shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#FF8000]"
+            className="w-full h-14 bg-primary hover:bg-primary-container text-white font-bold text-body-md rounded-2xl shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-primary"
           >
             {guardando ? (
               <>
