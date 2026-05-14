@@ -52,7 +52,6 @@ export const RegisterForm = ({ role, onRoleChange, onSuccess }: { role: RoleType
           className={`${styles.roleCard} ${role === "donador" ? styles.active : ""}`}
           onClick={() => onRoleChange("donador")}
         >
-          🤝
           <span>Donador</span>
         </div>
 
@@ -60,7 +59,6 @@ export const RegisterForm = ({ role, onRoleChange, onSuccess }: { role: RoleType
           className={`${styles.roleCard} ${role === "empresa" ? styles.active : ""}`}
           onClick={() => onRoleChange("empresa")}
         >
-          🏢
           <span>Empresa</span>
         </div>
 
@@ -68,7 +66,6 @@ export const RegisterForm = ({ role, onRoleChange, onSuccess }: { role: RoleType
           className={`${styles.roleCard} ${role === "beneficiario" ? styles.active : ""}`}
           onClick={() => onRoleChange("beneficiario")}
         >
-          👨‍👩‍👧
           <span>Beneficiario</span>
         </div>
       </div>

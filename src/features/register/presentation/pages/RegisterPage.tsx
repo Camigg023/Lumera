@@ -8,30 +8,34 @@ export type RegisterPageProps = {
   onRegisterSuccess?: (role?: string) => void;
 };
 
-/* ─── Mapa de roles a imagen/info ─── */
+/* ─── Mapa de roles a contenido visual ─── */
 const ROLE_VISUALS: Record<RoleType, {
   icon: string;
   title: string;
   description: string;
-  gradient: string;
+  overlayColor: string;
+  glowColor: string;
 }> = {
   donador: {
     icon: '🤝',
     title: 'Donador',
     description: 'Conecta tu generosidad con quienes más lo necesitan.',
-    gradient: 'linear-gradient(135deg, rgba(53,37,205,0.85), rgba(79,70,229,0.6))',
+    overlayColor: 'rgba(53, 37, 205, 0.55)',
+    glowColor: 'rgba(53, 37, 205, 0.2)',
   },
   empresa: {
     icon: '🏢',
     title: 'Empresa',
     description: 'Transforma tu excedente en impacto social medible.',
-    gradient: 'linear-gradient(135deg, rgba(242,140,51,0.85), rgba(242,140,51,0.5))',
+    overlayColor: 'rgba(242, 140, 51, 0.55)',
+    glowColor: 'rgba(242, 140, 51, 0.2)',
   },
   beneficiario: {
     icon: '👨‍👩‍👧',
     title: 'Beneficiario',
     description: 'Accede a alimentos frescos y ayuda comunitaria.',
-    gradient: 'linear-gradient(135deg, rgba(113,42,226,0.85), rgba(138,76,252,0.5))',
+    overlayColor: 'rgba(113, 42, 226, 0.55)',
+    glowColor: 'rgba(113, 42, 226, 0.2)',
   },
 };
 
@@ -39,32 +43,53 @@ export const RegisterPage = ({ onBackToHome, onNavigateToLogin, onRegisterSucces
   const [role, setRole] = useState<RoleType>("donador");
   const visual = ROLE_VISUALS[role];
 
+  const steps = ['donador', 'empresa', 'beneficiario'] as const;
+
   return (
     <div className={styles.page}>
 
-      {/* LEFT - IMAGEN COMPLETA CON OVERLAY POR ROL */}
+      {/* ─── LEFT: HERO VISUAL ─── */}
       <div
         className={styles.imageSide}
-        style={{ '--role-gradient': visual.gradient } as React.CSSProperties}
+        style={{
+          '--role-overlay': visual.overlayColor,
+          '--role-glow': visual.glowColor,
+        } as React.CSSProperties}
       >
+        {/* Indicador de pasos */}
+        <div className={styles.stepsIndicator}>
+          {steps.map((s) => (
+            <div
+              key={s}
+              className={`${styles.stepDot} ${s === role ? styles.stepDotActive : ''}`}
+            />
+          ))}
+        </div>
+
+        {/* Panel inferior glass */}
         <div className={styles.imageOverlay}>
-          <span className={styles.roleIcon}>{visual.icon}</span>
+          <div className={styles.roleBadge}>
+            <span className={styles.roleBadgeIcon}>{visual.icon}</span>
+            {role === 'donador' ? 'Donante individual' : role === 'empresa' ? 'Entidad corporativa' : 'Organización social'}
+          </div>
           <h2 className={styles.roleTitle}>{visual.title}</h2>
           <p className={styles.roleDescription}>{visual.description}</p>
         </div>
       </div>
 
-      {/* RIGHT - FORMULARIO */}
+      {/* ─── RIGHT: FORMULARIO ─── */}
       <div className={styles.formSide}>
         <div className={styles.formContainer}>
 
           {onBackToHome && (
             <button onClick={onBackToHome} className={styles.backLink}>
-              ← Volver al inicio
+              ← Volver
             </button>
           )}
 
-          <h1 className={styles.title}>Crear Cuenta</h1>
+          <h1 className={styles.title}>Crear cuenta</h1>
+          <p className={styles.subtitle}>Completa tus datos para empezar a donar</p>
+
           <RegisterForm role={role} onRoleChange={setRole} onSuccess={onRegisterSuccess} />
 
           <div className={styles.links}>
