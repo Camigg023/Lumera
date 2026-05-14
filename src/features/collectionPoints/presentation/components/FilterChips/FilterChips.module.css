@@ -1,3 +1,12 @@
+/*
+ * ═══════════════════════════════════════════════════════
+ *  FILTER CHIPS — Alineado con Lumera Design System
+ *  ═══════════════════════════════════════════════════════
+ *  Todas las variables referencian al @theme de
+ *  Tailwind definido en src/index.css.
+ * ═══════════════════════════════════════════════════════
+ */
+
 .container {
   display: flex;
   flex-wrap: wrap;
@@ -16,13 +25,13 @@
   letter-spacing: 0.05em;
   border: none;
   cursor: pointer;
-  background-color: #e2e7ff;
-  color: #464555;
+  background-color: var(--color-surface-container-high);
+  color: var(--color-on-surface-variant);
   transition: background-color 0.15s, transform 0.1s;
 }
 
 .chip:hover {
-  background-color: #dae2fd;
+  background-color: var(--color-surface-container-highest);
 }
 
 .chip:active {
@@ -30,10 +39,9 @@
 }
 
 .chipActive {
-  color-scheme: chip;
-  background-color: #3525cd;
-  color: #ffffff;
-  box-shadow: 0 4px 12px rgba(53, 37, 205, 0.3);
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  box-shadow: var(--shadow-md);
 }
 
 .icon {
