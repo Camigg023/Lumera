@@ -33,7 +33,7 @@
   display: flex;
   justify-content: center;
   gap: 2.5rem;
-  background: white;
+  background: var(--color-surface);
   padding: 1rem;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
@@ -77,12 +77,27 @@
   position: relative;
 }
 
-/* CAPA OSCURA */
+/* OVERLAY — fondo semitransparente para legibilidad del texto sobre la imagen */
 .overlay {
-  background: none;
-  max-width: 500px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  max-width: 520px;
   margin-left: 5%;
+  padding: 2rem 2.5rem;
+  border-radius: var(--radius-lg);
   text-align: left;
+}
+
+/* En dark mode: overlay blanco con texto oscuro para evitar el fondo negro pesado */
+@media (prefers-color-scheme: dark) {
+  .overlay {
+    background: rgba(255, 255, 255, 0.88);
+  }
+
+  .heroTitle,
+  .callout {
+    color: var(--color-inverse-on-surface);
+  }
 }
 
 /* TEXTO HERO */
@@ -120,26 +135,44 @@
 
 /* SECTION */
 .section {
-  padding: 2rem;
+  padding: 3rem 2rem;
   text-align: center;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-on-surface);
+  margin-bottom: 2rem;
 }
 
 /* STATS */
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
+  gap: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .statCard {
-  background: white;
-  padding: 1rem;
-  border-radius: 10px;
+  background: var(--color-surface);
+  padding: 1.5rem 1rem;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .statValue {
   font-size: 1.8rem;
+  font-weight: 700;
   color: var(--color-primary);
+  margin: 0 0 0.25rem;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  color: var(--color-on-surface-variant);
+  margin: 0;
 }
 
 /* FOOTER */

@@ -156,7 +156,7 @@ function App() {
 
     // Home (público)
     if (appState === "home") {
-      return <HomePage onNavigateToLogin={goToLogin} />;
+      return <HomePage onNavigateToLogin={goToLogin} onNavigateToRegister={goToRegister} />;
     }
 
     // Login
@@ -205,7 +205,7 @@ function App() {
     }
 
     // Fallback
-    return <HomePage onNavigateToLogin={goToLogin} />;
+    return <HomePage onNavigateToLogin={goToLogin} onNavigateToRegister={goToRegister} />;
   }
 }
 
