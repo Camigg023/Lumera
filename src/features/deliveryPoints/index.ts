@@ -5,7 +5,7 @@ export * from './domain/usecases/index';
 
 //data
 export * from './data/datasources/DeliveryPointDatasource';
-export * from './data/repositories/DeliveryPointRepositoryImpl';
+export * from './data/repositories/deliveryPointRepositoryImpl';
 
 //presentation
 export * from './presentation/components/BottomNav';
