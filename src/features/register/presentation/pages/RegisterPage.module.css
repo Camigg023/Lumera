@@ -29,10 +29,11 @@
    ══════════════════════════════════════ */
 .roleHeader {
   background: linear-gradient(135deg, var(--color-primary), var(--color-primary-container));
-  border-radius: 20px;
-  padding: 2rem 1.75rem;
+  border-radius: 16px;
+  padding: 1.5rem 1.5rem;
   color: var(--color-on-primary);
   box-shadow: 0 8px 32px rgba(53, 37, 205, 0.2);
+  margin: 0.25rem 0 0.25rem;
 }
 
 .roleBadge {
@@ -70,11 +71,6 @@
 /* ══════════════════════════════════════
    FORMULARIO
    ══════════════════════════════════════ */
-.formSection {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
 
 .backLink {
   background: none;

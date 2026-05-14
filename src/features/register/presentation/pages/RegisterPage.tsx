@@ -35,41 +35,42 @@ export const RegisterPage = ({ onBackToHome, onNavigateToLogin, onRegisterSucces
   const [role, setRole] = useState<RoleType>("donador");
   const visual = ROLE_VISUALS[role];
 
+  const roleHeader = (
+    <div className={styles.roleHeader}>
+      <div className={styles.roleBadge}>
+        <span>{visual.icon}</span>
+        {role === 'donador' ? 'DONANTE INDIVIDUAL' : role === 'empresa' ? 'ENTIDAD CORPORATIVA' : 'ORGANIZACIÓN SOCIAL'}
+      </div>
+      <h2 className={styles.roleTitle}>{visual.title}</h2>
+      <p className={styles.roleDescription}>{visual.description}</p>
+    </div>
+  );
+
   return (
     <div className={styles.page}>
 
       <div className={styles.container}>
 
-        {/* ─── OVERLAY DE ROL ─── */}
-        <div className={styles.roleHeader}>
-          <div className={styles.roleBadge}>
-            <span>{visual.icon}</span>
-            {role === 'donador' ? 'DONANTE INDIVIDUAL' : role === 'empresa' ? 'ENTIDAD CORPORATIVA' : 'ORGANIZACIÓN SOCIAL'}
-          </div>
-          <h2 className={styles.roleTitle}>{visual.title}</h2>
-          <p className={styles.roleDescription}>{visual.description}</p>
-        </div>
+        {onBackToHome && (
+          <button onClick={onBackToHome} className={styles.backLink}>
+            ← Volver
+          </button>
+        )}
 
-        {/* ─── FORMULARIO ─── */}
-        <div className={styles.formSection}>
+        <h1 className={styles.title}>Crear cuenta</h1>
+        <p className={styles.subtitle}>Completa tus datos para empezar a donar</p>
 
-          {onBackToHome && (
-            <button onClick={onBackToHome} className={styles.backLink}>
-              ← Volver
-            </button>
-          )}
+        <RegisterForm
+          role={role}
+          onRoleChange={setRole}
+          onSuccess={onRegisterSuccess}
+          roleHeader={roleHeader}
+        />
 
-          <h1 className={styles.title}>Crear cuenta</h1>
-          <p className={styles.subtitle}>Completa tus datos para empezar a donar</p>
-
-          <RegisterForm role={role} onRoleChange={setRole} onSuccess={onRegisterSuccess} />
-
-          <div className={styles.links}>
-            <button onClick={onNavigateToLogin} className={styles.link}>
-              ¿Ya tienes cuenta? Inicia sesión
-            </button>
-          </div>
-
+        <div className={styles.links}>
+          <button onClick={onNavigateToLogin} className={styles.link}>
+            ¿Ya tienes cuenta? Inicia sesión
+          </button>
         </div>
 
       </div>

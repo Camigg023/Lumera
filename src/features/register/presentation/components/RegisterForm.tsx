@@ -4,7 +4,7 @@ import styles from './RegisterForm.module.css';
 
 export type RoleType = "donador" | "empresa" | "beneficiario";
 
-export const RegisterForm = ({ role, onRoleChange, onSuccess }: { role: RoleType; onRoleChange: (r: RoleType) => void; onSuccess?: any }) => {
+export const RegisterForm = ({ role, onRoleChange, onSuccess, roleHeader }: { role: RoleType; onRoleChange: (r: RoleType) => void; onSuccess?: any; roleHeader?: React.ReactNode }) => {
   const { signUp, isLoading, error } = useRegister();
 
   // 🔹 CAMPOS GENERALES
@@ -69,6 +69,9 @@ export const RegisterForm = ({ role, onRoleChange, onSuccess }: { role: RoleType
           <span>Beneficiario</span>
         </div>
       </div>
+
+      {/* ─── OVERLAY DE ROL (debajo del selector) ─── */}
+      {roleHeader}
 
       {/* NOMBRE */}
       <div className={styles.inputGroup}>
