@@ -12,12 +12,6 @@ export const PasswordRecoveryPage = ({ onBackToHome, onNavigateToLogin, onRecove
     <div className={styles.page}>
       <div className={styles.container}>
 
-        {onBackToHome && (
-          <button onClick={onBackToHome} className={styles.backLink}>
-            ← Volver
-          </button>
-        )}
-
         <h1 className={styles.title}>Recuperar contraseña</h1>
         <p className={styles.subtitle}>
           Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.
