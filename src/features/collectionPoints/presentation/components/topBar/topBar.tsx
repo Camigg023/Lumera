@@ -1,5 +1,5 @@
 // import { href } from 'react-router-dom';
-import styles from './TopBar.module.css';
+import styles from './topBar.module.css';
 
 interface TopBarProps {
   userAvatarUrl?: string;

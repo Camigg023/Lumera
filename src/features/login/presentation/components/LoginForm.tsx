@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 import { useLogin } from '../hooks/useLogin';
 import styles from './LoginForm.module.css';
+import { validEmail, validPassword } from '../../../../utils/validators';
 
 export type LoginFormProps = {
   onSuccess?: (role?: string) => void;
@@ -10,9 +12,26 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const { signIn, isLoading, error } = useLogin();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({});
+
+  const validateField = (field: 'email' | 'password', value: string) => {
+    const error =
+      field === 'email' ? validEmail(value) :
+      field === 'password' && value ? validPassword(value) : null;
+    setFieldErrors((prev) => ({ ...prev, [field]: error || undefined }));
+  };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validar antes de enviar
+    const emailErr = validEmail(email);
+    const passErr = password ? null : 'La contraseña es obligatoria.';
+    setFieldErrors({ email: emailErr || undefined, password: passErr || undefined });
+
+    if (emailErr || passErr) return;
+
     try {
       const user = await signIn(email, password);
       onSuccess?.(user?.role);
@@ -24,25 +43,48 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   return (
     <form onSubmit={onSubmit} className={styles.form}>
       <div className={styles.inputGroup}>
+        <label className={styles.label}>Correo electrónico</label>
         <input
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            if (fieldErrors.email) validateField('email', e.target.value);
+          }}
+          onBlur={(e) => validateField('email', e.target.value)}
           type="email"
-          placeholder="Email"
-          className={styles.input}
+          placeholder="tu@email.com"
+          className={`${styles.input} ${fieldErrors.email ? styles.inputError : ''}`}
           required
         />
+        {fieldErrors.email && <p className={styles.fieldError}>{fieldErrors.email}</p>}
       </div>
 
       <div className={styles.inputGroup}>
-        <input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          type="password"
-          placeholder="Password"
-          className={styles.input}
-          required
-        />
+        <label className={styles.label}>Contraseña</label>
+        <div className={styles.passwordWrapper}>
+          <input
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              if (fieldErrors.password) validateField('password', e.target.value);
+            }}
+            onBlur={(e) => e.target.value && validateField('password', e.target.value)}
+            type={showPassword ? 'text' : 'password'}
+            placeholder="••••••••"
+            className={`${styles.input} ${styles.inputPassword} ${fieldErrors.password ? styles.inputError : ''}`}
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className={styles.togglePassword}
+            aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+            tabIndex={-1}
+          >
+            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+          </button>
+        </div>
+        {fieldErrors.password && <p className={styles.fieldError}>{fieldErrors.password}</p>}
       </div>
 
       {error && <p className={styles.error}>{error}</p>}

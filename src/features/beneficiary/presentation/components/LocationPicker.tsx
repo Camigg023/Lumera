@@ -67,40 +67,41 @@ export function LocationPicker({ latitude, longitude, onLocationChange }: Locati
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-4 space-y-3">
+    <div className="bg-surface-container-lowest rounded-lg border border-outline-variant p-5 space-y-4 shadow-sm">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-semibold text-gray-800">
+        <label className="text-label-sm font-bold text-on-surface uppercase tracking-wider">
           📍 Ubicación de residencia
         </label>
         {hasLocation && (
-          <span className="text-xs text-green-600 font-medium flex items-center gap-1">
-            <span className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+          <span className="text-xs text-success font-medium flex items-center gap-1">
+            <span className="w-1.5 h-1.5 bg-success rounded-full" />
             Ubicación capturada
           </span>
         )}
       </div>
 
-      <p className="text-xs text-gray-500">
+      <p className="text-body-md text-on-surface-variant">
         Capture su ubicación actual para encontrar los puntos de entrega más cercanos.
       </p>
 
       {/* Coordenadas actuales */}
       {hasLocation && latitude && longitude && (
-        <div className="flex items-center gap-3 p-2 bg-gray-50 rounded-lg text-xs text-gray-600">
-          <span>📍</span>
-          <span>
-            Lat: <strong>{latitude.toFixed(6)}</strong>
-          </span>
-          <span>|</span>
-          <span>
-            Lng: <strong>{longitude.toFixed(6)}</strong>
-          </span>
+        <div className="flex items-center gap-4 p-3 bg-surface-container rounded-md text-xs text-on-surface-variant border border-outline-variant/30">
+          <span className="text-lg">📍</span>
+          <div className="flex flex-col">
+            <span className="text-[10px] uppercase font-bold opacity-50">Coordenadas</span>
+            <div className="flex gap-3">
+              <span>Lat: <strong>{latitude.toFixed(6)}</strong></span>
+              <span>Lng: <strong>{longitude.toFixed(6)}</strong></span>
+            </div>
+          </div>
         </div>
       )}
 
       {/* Error de geolocalización */}
       {locationError && (
-        <div className="p-2 bg-red-50 text-red-700 text-xs rounded-lg border border-red-200">
+        <div className="p-3 bg-error-container text-on-error-container text-xs rounded-md border border-error/20 flex items-center gap-2">
+          <span>⚠️</span>
           {locationError}
         </div>
       )}
@@ -110,10 +111,10 @@ export function LocationPicker({ latitude, longitude, onLocationChange }: Locati
         onClick={getCurrentLocation}
         disabled={gettingLocation}
         className={`
-          w-full py-2.5 px-4 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2
+          w-full py-3 px-6 rounded-md text-label-sm font-bold transition-all flex items-center justify-center gap-2 shadow-sm
           ${gettingLocation
-            ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-            : 'bg-orange-500 text-white hover:bg-orange-600 active:scale-[0.98] cursor-pointer'
+            ? 'bg-outline-variant text-on-surface-variant cursor-not-allowed opacity-50'
+            : 'bg-accent text-white hover:brightness-110 active:scale-[0.98] cursor-pointer hover:shadow-md'
           }
         `}
       >
@@ -125,12 +126,12 @@ export function LocationPicker({ latitude, longitude, onLocationChange }: Locati
         ) : hasLocation ? (
           <>
             <span>🔄</span>
-            Actualizar ubicación
+            Actualizar mi ubicación
           </>
         ) : (
           <>
             <span>📌</span>
-            Capturar ubicación
+            Capturar mi ubicación
           </>
         )}
       </button>

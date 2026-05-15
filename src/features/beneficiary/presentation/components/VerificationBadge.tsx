@@ -16,24 +16,24 @@ interface VerificationBadgeProps {
 const STATUS_CONFIG = {
   pending: {
     label: 'Pendiente',
-    bg: 'bg-amber-50',
-    text: 'text-amber-800',
-    border: 'border-amber-200',
-    dot: 'bg-amber-400',
+    bg: 'bg-warning-container',
+    text: 'text-on-surface',
+    border: 'border-warning/20',
+    dot: 'bg-warning',
   },
   verified: {
     label: 'Verificado',
-    bg: 'bg-green-50',
-    text: 'text-green-800',
-    border: 'border-green-200',
-    dot: 'bg-green-500',
+    bg: 'bg-success-container',
+    text: 'text-on-success-container',
+    border: 'border-success/20',
+    dot: 'bg-success',
   },
   rejected: {
     label: 'Rechazado',
-    bg: 'bg-red-50',
-    text: 'text-red-800',
-    border: 'border-red-200',
-    dot: 'bg-red-500',
+    bg: 'bg-error-container',
+    text: 'text-on-error-container',
+    border: 'border-error/20',
+    dot: 'bg-error',
   },
 };
 

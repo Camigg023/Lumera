@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './navbar.module.css';
+import styles from './navBar.module.css';
 
 const NAV_LINKS = ['Explore', 'Donate', 'Impact', 'Profile'] as const;
 type NavLink = (typeof NAV_LINKS)[number];

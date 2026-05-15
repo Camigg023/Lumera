@@ -5,13 +5,15 @@ import {
   serverTimestamp,
   query,
   where,
-  orderBy,
   getDocs,
   limit,
+  updateDoc,
+  doc as firestoreDoc,
 } from 'firebase/firestore';
+import { storageService } from './storageService';
 
 /**
- * Interfaz que representa un producto individual dentro de una donación.
+ * Interfaz que representa un producto individual dentro de una donacion.
  */
 export interface Producto {
   codigoBarras: string;
@@ -21,7 +23,7 @@ export interface Producto {
 }
 
 /**
- * Interfaz que representa una donación completa.
+ * Interfaz que representa una donacion completa, incluyendo evidencia de entrega.
  */
 export interface Donacion {
   id?: string;
@@ -31,10 +33,20 @@ export interface Donacion {
   codigoUnico?: string;
   estado?: string;
   userId?: string;
+  /** URL de la foto de evidencia de recepcion (Firebase Storage) */
+  evidenciaFotoUrl?: string;
+  /** URL de la firma digital de recepcion (Firebase Storage) */
+  evidenciaFirmaUrl?: string;
+  /** Ruta en Storage de la foto (para eliminacion) */
+  evidenciaFotoPath?: string;
+  /** Ruta en Storage de la firma (para eliminacion) */
+  evidenciaFirmaPath?: string;
+  /** Marca de tiempo de cuando se entrego */
+  entregadoAt?: any;
 }
 
 /**
- * Genera un código único alfanumérico para la donación.
+ * Genera un codigo unico alfanumerico para la donacion.
  * Formato: LMR-XXXX-XXXX
  */
 const generarCodigoUnico = (): string => {
@@ -44,19 +56,18 @@ const generarCodigoUnico = (): string => {
 };
 
 /**
- * Guarda una lista de productos como una nueva donación en Firestore.
- * Aplica rate limiting (máximo 10 donaciones por hora).
+ * Guarda una lista de productos como una nueva donacion en Firestore.
+ * Aplica rate limiting (maximo 10 donaciones por hora).
  */
 export const guardarDonacion = async (
   productos: Producto[],
   userId?: string
 ): Promise<{ id: string; codigoUnico: string }> => {
   if (userId) {
-    // Validar rate limiting: máximo 10 en la última hora
+    // Validar rate limiting: maximo 10 en la ultima hora
     const haceUnaHora = new Date();
     haceUnaHora.setHours(haceUnaHora.getHours() - 1);
 
-    // Bypassing composite index by filtering in-memory
     const q = query(
       collection(db, 'donations'),
       where('userId', '==', userId)
@@ -71,7 +82,7 @@ export const guardarDonacion = async (
     }).length;
 
     if (recentCount >= 10) {
-      throw new Error('Has alcanzado el límite de 10 donaciones por hora. Intenta más tarde.');
+      throw new Error('Has alcanzado el limite de 10 donaciones por hora. Intenta mas tarde.');
     }
   }
 
@@ -95,11 +106,10 @@ export const guardarDonacion = async (
 };
 
 /**
- * Obtiene el historial de donaciones de un usuario específico.
+ * Obtiene el historial de donaciones de un usuario especifico.
  */
 export const obtenerDonacionesPorUsuario = async (userId: string): Promise<Donacion[]> => {
   try {
-    // Bypassing composite index by sorting in-memory
     const q = query(
       collection(db, 'donations'),
       where('userId', '==', userId)
@@ -125,7 +135,7 @@ export const obtenerDonacionesPorUsuario = async (userId: string): Promise<Donac
 };
 
 /**
- * Busca una donación por su código único (LMR-XXXX-XXXX).
+ * Busca una donacion por su codigo unico (LMR-XXXX-XXXX).
  */
 export const buscarDonacionPorCodigo = async (codigo: string): Promise<Donacion | null> => {
   const q = query(collection(db, 'donations'), where('codigoUnico', '==', codigo), limit(1));
@@ -136,14 +146,68 @@ export const buscarDonacionPorCodigo = async (codigo: string): Promise<Donacion 
 };
 
 /**
- * Actualiza el estado de una donación a 'entregado'.
+ * Marca una donacion como entregada y guarda la evidencia (foto + firma).
+ * 
+ * @param id - ID del documento en Firestore
+ * @param evidencePhoto - Archivo de foto de evidencia (opcional)
+ * @param evidenceSignature - Archivo de firma digital (opcional)
  */
-import { updateDoc, doc as firestoreDoc } from 'firebase/firestore';
+export const marcarDonacionComoEntregada = async (
+  id: string,
+  evidencePhoto?: File,
+  evidenceSignature?: File
+): Promise<void> => {
+  const updateData: any = {
+    estado: 'entregado',
+    entregadoAt: serverTimestamp(),
+  };
 
-export const marcarDonacionComoEntregada = async (id: string): Promise<void> => {
+  // Subir foto de evidencia a Firebase Storage si se proporciona
+  if (evidencePhoto) {
+    try {
+      const result = await storageService.upload({
+        folder: 'donations',
+        ownerId: id,
+        docType: 'evidence_photo',
+        file: evidencePhoto,
+      });
+      updateData.evidenciaFotoUrl = result.downloadUrl;
+      updateData.evidenciaFotoPath = result.storagePath;
+    } catch (error) {
+      console.error('[donationService] Error al subir foto de evidencia:', error);
+      throw new Error('Error al subir la foto de evidencia. Intente de nuevo.');
+    }
+  }
+
+  // Subir firma digital a Firebase Storage si se proporciona
+  if (evidenceSignature) {
+    try {
+      const result = await storageService.upload({
+        folder: 'donations',
+        ownerId: id,
+        docType: 'evidence_signature',
+        file: evidenceSignature,
+      });
+      updateData.evidenciaFirmaUrl = result.downloadUrl;
+      updateData.evidenciaFirmaPath = result.storagePath;
+    } catch (error) {
+      console.error('[donationService] Error al subir firma digital:', error);
+      throw new Error('Error al subir la firma digital. Intente de nuevo.');
+    }
+  }
+
+  // Actualizar en Firestore
+  const docRef = firestoreDoc(db, 'donations', id);
+  await updateDoc(docRef, updateData);
+};
+
+/**
+ * Valida una donacion en el centro de acopio (cambia estado a "validado").
+ */
+export const validarDonacion = async (id: string): Promise<void> => {
   const docRef = firestoreDoc(db, 'donations', id);
   await updateDoc(docRef, {
-    estado: 'entregado',
-    entregadoAt: serverTimestamp()
+    estado: 'validado',
+    validadoAt: serverTimestamp(),
   });
 };

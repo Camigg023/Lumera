@@ -1,7 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BeneficiaryType, BENEFICIARY_TYPE_LABELS } from '../../domain/entities/Beneficiary';
 import { DocumentUploader } from './DocumentUploader';
 import { LocationPicker } from './LocationPicker';
+import {
+  validName,
+  validDocumentId,
+  validPhone,
+  validAddress,
+  required,
+} from '../../../../utils/validators';
 
 /**
  * Props para el formulario de registro de beneficiario (persona natural).
@@ -37,6 +44,8 @@ interface BeneficiaryRegisterFormProps {
     latitude?: number;
     longitude?: number;
   };
+  /** Documentos ya subidos para mostrar estado */
+  existingDocuments?: any[];
 }
 
 /**
@@ -53,6 +62,7 @@ export function BeneficiaryRegisterForm({
   isUploading = false,
   isEditMode = false,
   initialData,
+  existingDocuments = [],
 }: BeneficiaryRegisterFormProps) {
   // Estado del formulario principal
   const [formData, setFormData] = useState({
@@ -70,8 +80,33 @@ export function BeneficiaryRegisterForm({
     lng: initialData?.longitude,
   });
 
+  // Sincronizar datos iniciales si cambian (ej: cuando cargan asíncronamente)
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        fullName: initialData.fullName || '',
+        documentId: initialData.documentId || '',
+        address: initialData.address || '',
+        city: initialData.city || '',
+        phone: initialData.phone || '',
+        beneficiaryType: (initialData.beneficiaryType || 'persona_natural') as BeneficiaryType,
+      });
+      setLocation({
+        lat: initialData.latitude,
+        lng: initialData.longitude,
+      });
+    }
+  }, [initialData]);
+
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string | null>>({
+    fullName: null,
+    documentId: null,
+    address: null,
+    city: null,
+    phone: null,
+  });
 
   // Lista de ciudades comunes de Colombia
   const CITIES = [
@@ -84,9 +119,29 @@ export function BeneficiaryRegisterForm({
   /**
    * Actualiza un campo del formulario.
    */
+  /** Validación en tiempo real por campo */
+  const validateField = (field: string, value: string): string | null => {
+    const validators: Record<string, (v: string) => string | null> = {
+      fullName: (v) => validName(v, 'El nombre completo'),
+      documentId: (v) => validDocumentId(v, 'La cédula'),
+      address: (v) => validAddress(v),
+      city: (v) => required(v, 'La ciudad'),
+      phone: (v) => validPhone(v),
+    };
+    return validators[field]?.(value) ?? null;
+  };
+
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     setFormError(null);
+
+    // Validar en tiempo real cuando el campo tiene valor
+    if (value.trim()) {
+      const error = validateField(field, value);
+      setFieldErrors((prev) => ({ ...prev, [field]: error }));
+    } else {
+      setFieldErrors((prev) => ({ ...prev, [field]: null }));
+    }
   };
 
   /**
@@ -100,29 +155,20 @@ export function BeneficiaryRegisterForm({
    * Valida los campos obligatorios antes de guardar.
    */
   const validateForm = (): boolean => {
-    if (!formData.fullName.trim()) {
-      setFormError('El nombre completo es obligatorio.');
-      return false;
-    }
-    if (!formData.documentId.trim()) {
-      setFormError('El número de cédula es obligatorio.');
-      return false;
-    }
-    const cedulaClean = formData.documentId.replace(/[.\s-]/g, '');
-    if (!/^\d{6,10}$/.test(cedulaClean)) {
-      setFormError('La cédula debe tener entre 6 y 10 dígitos.');
-      return false;
-    }
-    if (!formData.address.trim()) {
-      setFormError('La dirección es obligatoria.');
-      return false;
-    }
-    if (!formData.city.trim()) {
-      setFormError('La ciudad es obligatoria.');
-      return false;
-    }
-    if (!formData.phone.trim()) {
-      setFormError('El teléfono es obligatorio.');
+    // Validar todos los campos
+    const newErrors: Record<string, string | null> = {
+      fullName: validateField('fullName', formData.fullName),
+      documentId: validateField('documentId', formData.documentId),
+      address: validateField('address', formData.address),
+      city: validateField('city', formData.city),
+      phone: validateField('phone', formData.phone),
+    };
+
+    setFieldErrors(newErrors);
+
+    const firstError = Object.values(newErrors).find((v) => v !== null);
+    if (firstError) {
+      setFormError(firstError);
       return false;
     }
     return true;
@@ -155,11 +201,11 @@ export function BeneficiaryRegisterForm({
   return (
     <form onSubmit={handleSubmit} className="animate-fade-in">
       {/* Título */}
-      <div className="mb-6">
-        <h2 className="text-xl font-bold text-gray-900">
+      <div className="mb-8">
+        <h2 className="text-h2 text-on-surface">
           {isEditMode ? 'Editar mi Perfil' : 'Completa tu registro como Beneficiario'}
         </h2>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-body-md text-on-surface-variant mt-2">
           Diligencia tus datos personales, ubica tu residencia y sube los documentos
           para validar tu identidad. Una vez verificado podrás reclamar mercados.
         </p>
@@ -180,53 +226,68 @@ export function BeneficiaryRegisterForm({
       {/* ─── GRID: IZQUIERDA (DATOS) + DERECHA (UBICACIÓN + DOCS) ─── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* ═══════ COLUMNA IZQUIERDA: DATOS PERSONALES ═══════ */}
-        <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-4 h-fit">
-          <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-2">
+        <div className="bg-surface-container-lowest rounded-lg border border-outline-variant p-6 space-y-5 h-fit shadow-sm">
+          <h3 className="text-h3 text-on-surface flex items-center gap-2">
             <span>👤</span> Datos personales
           </h3>
 
           {/* Nombre completo */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nombre completo <span className="text-red-500">*</span>
+            <label className="block text-label-sm text-on-surface-variant mb-1.5">
+              Nombre completo <span className="text-error">*</span>
             </label>
             <input
               type="text"
               value={formData.fullName}
               onChange={(e) => handleChange('fullName', e.target.value)}
               placeholder="Ej: María Andrea López Gómez"
-              className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] outline-none transition"
+              className={`w-full px-4 py-3 border rounded-md text-body-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition ${
+                fieldErrors.fullName ? 'border-error bg-error-container/20' : 'border-outline'
+              }`}
               required
             />
+            {fieldErrors.fullName && (
+              <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                <span>⚠️</span> {fieldErrors.fullName}
+              </p>
+            )}
           </div>
 
           {/* Número de cédula */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Número de cédula <span className="text-red-500">*</span>
+            <label className="block text-label-sm text-on-surface-variant mb-1.5">
+              Número de cédula <span className="text-error">*</span>
             </label>
             <input
               type="text"
               value={formData.documentId}
               onChange={(e) => handleChange('documentId', e.target.value)}
               placeholder="Ej: 1.234.567.890"
-              className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] outline-none transition"
+              className={`w-full px-4 py-3 border rounded-md text-body-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition ${
+                fieldErrors.documentId ? 'border-error bg-error-container/20' : 'border-outline'
+              }`}
               required
             />
-            <p className="text-xs text-gray-400 mt-1">
-              Ingrese su número de documento sin espacios.
-            </p>
+            {fieldErrors.documentId ? (
+              <p className="text-xs text-error mt-1.5 flex items-center gap-1">
+                <span>⚠️</span> {fieldErrors.documentId}
+              </p>
+            ) : (
+              <p className="text-xs text-on-surface-variant/60 mt-1.5">
+                Ingrese su número de documento sin puntos ni espacios.
+              </p>
+            )}
           </div>
 
           {/* Tipo de beneficiario */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              ¿A qué grupo pertenece? <span className="text-red-500">*</span>
+            <label className="block text-label-sm text-on-surface-variant mb-1.5">
+              ¿A qué grupo pertenece? <span className="text-error">*</span>
             </label>
             <select
               value={formData.beneficiaryType}
               onChange={(e) => handleChange('beneficiaryType', e.target.value)}
-              className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] outline-none transition bg-white"
+              className="w-full px-4 py-3 border border-outline rounded-md text-body-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition bg-white"
               required
             >
               {Object.entries(BENEFICIARY_TYPE_LABELS).map(([value, label]) => (
@@ -239,28 +300,37 @@ export function BeneficiaryRegisterForm({
 
           {/* Dirección de residencia */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Dirección de residencia <span className="text-red-500">*</span>
+            <label className="block text-label-sm text-on-surface-variant mb-1.5">
+              Dirección de residencia <span className="text-error">*</span>
             </label>
             <input
               type="text"
               value={formData.address}
               onChange={(e) => handleChange('address', e.target.value)}
               placeholder="Ej: Carrera 50 # 25-30, Centro"
-              className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] outline-none transition"
+              className={`w-full px-4 py-3 border rounded-md text-body-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition ${
+                fieldErrors.address ? 'border-error bg-error-container/20' : 'border-outline'
+              }`}
               required
             />
+            {fieldErrors.address && (
+              <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                <span>⚠️</span> {fieldErrors.address}
+              </p>
+            )}
           </div>
 
           {/* Ciudad */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Ciudad <span className="text-red-500">*</span>
+            <label className="block text-label-sm text-on-surface-variant mb-1.5">
+              Ciudad <span className="text-error">*</span>
             </label>
             <select
               value={formData.city}
               onChange={(e) => handleChange('city', e.target.value)}
-              className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] outline-none transition bg-white"
+              className={`w-full px-4 py-3 border rounded-md text-body-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition bg-white ${
+                fieldErrors.city ? 'border-error bg-error-container/20' : 'border-outline'
+              }`}
               required
             >
               <option value="">Seleccione una ciudad</option>
@@ -271,12 +341,17 @@ export function BeneficiaryRegisterForm({
               ))}
               <option value="otra">Otra (especifique abajo)</option>
             </select>
+            {fieldErrors.city && (
+              <p className="text-xs text-error mt-1.5 flex items-center gap-1">
+                <span>⚠️</span> {fieldErrors.city}
+              </p>
+            )}
             {formData.city === 'otra' && (
               <input
                 type="text"
                 onChange={(e) => handleChange('city', e.target.value)}
                 placeholder="Escriba el nombre de la ciudad"
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] outline-none transition mt-2"
+                className="w-full px-4 py-3 border border-outline rounded-md text-body-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition mt-3"
                 required
               />
             )}
@@ -284,98 +359,105 @@ export function BeneficiaryRegisterForm({
 
           {/* Teléfono */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Teléfono de contacto <span className="text-red-500">*</span>
+            <label className="block text-label-sm text-on-surface-variant mb-1.5">
+              Teléfono de contacto <span className="text-error">*</span>
             </label>
             <input
               type="tel"
               value={formData.phone}
               onChange={(e) => handleChange('phone', e.target.value)}
               placeholder="Ej: 300 123 4567"
-              className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] outline-none transition"
+              className={`w-full px-4 py-3 border rounded-md text-body-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition ${
+                fieldErrors.phone ? 'border-error bg-error-container/20' : 'border-outline'
+              }`}
               required
             />
+            {fieldErrors.phone && (
+              <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                <span>⚠️</span> {fieldErrors.phone}
+              </p>
+            )}
           </div>
         </div>
 
         {/* ═══════ COLUMNA DERECHA: UBICACIÓN + DOCUMENTOS ═══════ */}
         <div className="space-y-6">
           {/* ─── UBICACIÓN ─── */}
-          {!isEditMode && (
-            <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-4">
-              <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-2">
-                <span>📍</span> Ubicación de residencia
-              </h3>
-              <LocationPicker
-                latitude={location.lat}
-                longitude={location.lng}
-                onLocationChange={handleLocationChange}
-              />
-            </div>
-          )}
+          <div className="bg-surface-container-lowest rounded-lg border border-outline-variant p-6 space-y-4 shadow-sm">
+            <h3 className="text-h3 text-on-surface flex items-center gap-2">
+              <span>📍</span> Ubicación de residencia
+            </h3>
+            <LocationPicker
+              latitude={location.lat}
+              longitude={location.lng}
+              onLocationChange={handleLocationChange}
+            />
+          </div>
 
           {/* ─── DOCUMENTOS DE VALIDACIÓN ─── */}
-          {!isEditMode && (
-            <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-4">
-              <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-2">
-                <span>📄</span> Documentos de validación
-              </h3>
-              <p className="text-xs text-gray-500">
-                Sube los siguientes documentos para validar tu identidad y domicilio.
-                Formatos: JPG, PNG. Máx. 10 MB c/u.
-              </p>
+          <div className="bg-surface-container-lowest rounded-lg border border-outline-variant p-6 space-y-4 shadow-sm">
+            <h3 className="text-h3 text-on-surface flex items-center gap-2">
+              <span>📄</span> Documentos de validación
+            </h3>
+            <p className="text-label-sm text-on-surface-variant">
+              Sube los siguientes documentos para validar tu identidad y domicilio.
+              Formatos: JPG, PNG, PDF. Máx. 10 MB c/u.
+            </p>
 
-              <div className="grid grid-cols-1 gap-3">
-                <DocumentUploader
-                  docType="cedula_frontal"
-                  label="Cédula (Parte Frontal)"
-                  description="Foto legible de la parte frontal de tu cédula"
-                  onUpload={(file) => onUploadDocument(file, 'cedula_frontal')}
-                  isUploading={isUploading}
-                />
-                <DocumentUploader
-                  docType="cedula_posterior"
-                  label="Cédula (Parte Posterior)"
-                  description="Foto legible de la parte posterior de tu cédula"
-                  onUpload={(file) => onUploadDocument(file, 'cedula_posterior')}
-                  isUploading={isUploading}
-                />
-                <DocumentUploader
-                  docType="cuenta_servicios"
-                  label="Cuenta de Servicios"
-                  description="Recibo de luz, agua o gas (últimos 3 meses)"
-                  onUpload={(file) => onUploadDocument(file, 'cuenta_servicios')}
-                  isUploading={isUploading}
-                />
-                <DocumentUploader
-                  docType="foto_perfil"
-                  label="Foto de Perfil"
-                  description="Selfi o foto tipo documento"
-                  onUpload={(file) => onUploadDocument(file, 'foto_perfil')}
-                  isUploading={isUploading}
-                />
-              </div>
+            <div className="grid grid-cols-1 gap-3">
+              <DocumentUploader
+                docType="cedula_frontal"
+                label="Cédula (Parte Frontal)"
+                description="Foto legible de la parte frontal de tu cédula"
+                existingDoc={existingDocuments.find(d => d.type === 'cedula_frontal')}
+                onUpload={(file) => onUploadDocument(file, 'cedula_frontal')}
+                isUploading={isUploading}
+              />
+              <DocumentUploader
+                docType="cedula_posterior"
+                label="Cédula (Parte Posterior)"
+                description="Foto legible de la parte posterior de tu cédula"
+                existingDoc={existingDocuments.find(d => d.type === 'cedula_posterior')}
+                onUpload={(file) => onUploadDocument(file, 'cedula_posterior')}
+                isUploading={isUploading}
+              />
+              <DocumentUploader
+                docType="cuenta_servicios"
+                label="Cuenta de Servicios"
+                description="Recibo de luz, agua o gas (últimos 3 meses)"
+                existingDoc={existingDocuments.find(d => d.type === 'cuenta_servicios')}
+                onUpload={(file) => onUploadDocument(file, 'cuenta_servicios')}
+                isUploading={isUploading}
+              />
+              <DocumentUploader
+                docType="foto_perfil"
+                label="Foto de Perfil"
+                description="Selfie o foto tipo documento"
+                existingDoc={existingDocuments.find(d => d.type === 'foto_perfil')}
+                onUpload={(file) => onUploadDocument(file, 'foto_perfil')}
+                isUploading={isUploading}
+              />
             </div>
-          )}
+          </div>
         </div>
       </div>
 
       {/* Botón de guardar (ocupa todo el ancho) */}
-      <div className="mt-6">
+      <div className="mt-8">
         <button
           type="submit"
           disabled={isSaving}
           className={`
-            w-full py-3 px-6 rounded-xl text-base font-bold transition-all
+            w-full min-h-[48px] py-4 px-6 rounded-md text-label-sm font-bold transition-all
             ${isSaving
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-primary text-on-primary hover:bg-primary-container active:scale-[0.98] shadow-lg shadow-primary/20 cursor-pointer'
+              ? 'bg-outline-variant text-on-surface-variant cursor-not-allowed opacity-50'
+              : 'bg-primary text-on-primary hover:bg-primary-container active:scale-[0.98] shadow-md hover:shadow-lg transition-all cursor-pointer'
             }
           `}
         >
           {isSaving ? (
             <span className="flex items-center justify-center gap-2">
-              <span className="inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <span className="inline-block w-5 h-5 border-2 border-on-primary border-t-transparent rounded-full animate-spin" />
               Guardando...
             </span>
           ) : isEditMode ? (
