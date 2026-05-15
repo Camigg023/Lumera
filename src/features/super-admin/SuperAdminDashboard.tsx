@@ -11,6 +11,11 @@ import {
   Clock,
   AlertTriangle,
   FileText,
+  ArrowLeft,
+  Phone,
+  MapPin,
+  Calendar,
+  Camera,
 } from 'lucide-react';
 import { BeneficiaryDataSource } from '../../features/beneficiary/data/datasources/BeneficiaryDataSource';
 import { BeneficiaryRepositoryImpl } from '../../features/beneficiary/data/repositories/BeneficiaryRepositoryImpl';
@@ -43,6 +48,7 @@ export function SuperAdminDashboard({ onLogout }: { onLogout?: () => void }) {
   const [activeTab, setActiveTab] = useState<TabType>('pending');
   const [searchQuery, setSearchQuery] = useState('');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [selectedBeneficiary, setSelectedBeneficiary] = useState<Beneficiary | null>(null);
 
   // Leer desde Firestore si ya cambió la contraseña
   useEffect(() => {
@@ -219,6 +225,17 @@ export function SuperAdminDashboard({ onLogout }: { onLogout?: () => void }) {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Vista detalle cuando se selecciona un beneficiario */}
+        {selectedBeneficiary && (
+          <BeneficiaryDetail
+            beneficiary={selectedBeneficiary}
+            onBack={() => setSelectedBeneficiary(null)}
+            onVerify={handleVerify}
+            actionLoading={actionLoading}
+          />
+        )}
+        {/* Lista de beneficiarios (oculta cuando hay detalle) */}
+        <div style={{ display: selectedBeneficiary ? 'none' : 'block' }}>
         {/* Stats Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
           {[
@@ -440,7 +457,141 @@ export function SuperAdminDashboard({ onLogout }: { onLogout?: () => void }) {
             )}
           </div>
         </div>
+        </div>
       </main>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════
+//  VISTA DETALLE DEL BENEFICIARIO
+// ═══════════════════════════════════════════════════════════
+
+interface BeneficiaryDetailProps {
+  beneficiary: Beneficiary;
+  onBack: () => void;
+  onVerify: (userId: string, status: VerificationStatus, notes?: string) => Promise<void>;
+  actionLoading: string | null;
+}
+
+/**
+ * Vista detalle de un beneficiario con toda su información,
+ * documentos subidos y botones para aprobar/rechazar.
+ */
+function BeneficiaryDetail({
+  beneficiary,
+  onBack,
+  onVerify,
+  actionLoading,
+}: BeneficiaryDetailProps) {
+  const [previewDoc, setPreviewDoc] = useState<string | null>(null);
+
+  const statusCfg = STATUS_CONFIG[beneficiary.verificationStatus];
+  const docs = beneficiary.documents || [];
+
+  const typeLabels: Record<string, string> = {
+    persona_natural: 'Persona Natural',
+    cabeza_familia: 'Cabeza de Familia',
+    adulto_mayor: 'Adulto Mayor',
+    otro: 'Otro',
+  };
+
+  return (
+    <div className="animate-fade-in">
+      <div className="flex items-center gap-3 mb-6">
+        <button onClick={onBack} className="p-2 rounded-xl hover:bg-surface-container transition-colors cursor-pointer text-on-surface-variant" aria-label="Volver">
+          <ArrowLeft size={20} />
+        </button>
+        <div className="flex-1">
+          <div className="flex items-center gap-3">
+            <h2 className="text-xl font-bold text-on-surface">{beneficiary.fullName}</h2>
+            <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${statusCfg.bg} ${statusCfg.color}`}>
+              {beneficiary.verificationStatus === 'pending' && <Clock size={12} />}
+              {beneficiary.verificationStatus === 'verified' && <CheckCircle size={12} />}
+              {beneficiary.verificationStatus === 'rejected' && <XCircle size={12} />}
+              {statusCfg.label}
+            </span>
+          </div>
+          <p className="text-sm text-on-surface-variant">CC: {beneficiary.documentId || '\u2014'} &middot; {beneficiary.city || '\u2014'}</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-5">
+          <div className="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant">
+            <h3 className="text-sm font-semibold text-on-surface-variant uppercase tracking-wide mb-4 flex items-center gap-2"><ShieldCheck size={16} /> Informaci\u00f3n personal</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div><p className="text-xs text-on-surface-variant">Nombre completo</p><p className="text-sm font-medium text-on-surface">{beneficiary.fullName || '\u2014'}</p></div>
+              <div><p className="text-xs text-on-surface-variant">C\u00e9dula</p><p className="text-sm font-medium text-on-surface">{beneficiary.documentId || '\u2014'}</p></div>
+              <div><p className="text-xs text-on-surface-variant">Tipo</p><p className="text-sm font-medium text-on-surface">{typeLabels[beneficiary.beneficiaryType] || beneficiary.beneficiaryType || '\u2014'}</p></div>
+              <div><p className="text-xs text-on-surface-variant"><Phone size={12} className="inline mr-1" /> Tel\u00e9fono</p><p className="text-sm font-medium text-on-surface">{beneficiary.phone || '\u2014'}</p></div>
+              <div className="sm:col-span-2"><p className="text-xs text-on-surface-variant"><MapPin size={12} className="inline mr-1" /> Direcci\u00f3n</p><p className="text-sm font-medium text-on-surface">{beneficiary.address || '\u2014'}</p></div>
+              <div><p className="text-xs text-on-surface-variant"><MapPin size={12} className="inline mr-1" /> Ciudad</p><p className="text-sm font-medium text-on-surface">{beneficiary.city || '\u2014'}</p></div>
+              <div><p className="text-xs text-on-surface-variant"><Calendar size={12} className="inline mr-1" /> Registro</p><p className="text-sm font-medium text-on-surface">{beneficiary.createdAt ? new Date(beneficiary.createdAt).toLocaleDateString('es-CO') : '\u2014'}</p></div>
+            </div>
+            {beneficiary.verificationNotes && (
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-xs font-semibold text-red-700">Motivo de rechazo:</p>
+                <p className="text-sm text-red-600">{beneficiary.verificationNotes}</p>
+              </div>
+            )}
+          </div>
+
+          <div className="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant">
+            <h3 className="text-sm font-semibold text-on-surface-variant uppercase tracking-wide mb-4 flex items-center gap-2"><FileText size={16} /> Documentos de validaci\u00f3n</h3>
+            {docs.length === 0 ? (
+              <div className="text-center py-6"><FileText size={28} className="text-outline/50 mx-auto mb-2" /><p className="text-sm text-on-surface-variant">No ha subido documentos a\u00fan.</p></div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">{docs.map((doc) => <DocCard key={doc.id} doc={doc} />)}</div>
+            )}
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div className="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant">
+            <h3 className="text-sm font-semibold text-on-surface-variant uppercase tracking-wide mb-4">Acciones</h3>
+            {beneficiary.verificationStatus === 'pending' && (
+              <div className="space-y-3">
+                <p className="text-sm text-on-surface-variant">Revisa los documentos antes de decidir.</p>
+                <button onClick={() => onVerify(beneficiary.id, 'verified')} disabled={actionLoading === beneficiary.id} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-success text-white rounded-xl text-sm font-semibold hover:brightness-110 transition cursor-pointer disabled:opacity-50">
+                  {actionLoading === beneficiary.id ? <RefreshCw size={16} className="animate-spin" /> : <CheckCircle size={18} />}
+                  Aprobar beneficiario
+                </button>
+                <button onClick={() => { const notes = prompt('Motivo del rechazo (obligatorio):'); if (notes && notes.trim()) onVerify(beneficiary.id, 'rejected', notes.trim()); }} disabled={actionLoading === beneficiary.id} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-error text-white rounded-xl text-sm font-semibold hover:brightness-110 transition cursor-pointer disabled:opacity-50">
+                  <XCircle size={18} />
+                  Rechazar beneficiario
+                </button>
+              </div>
+            )}
+            {beneficiary.verificationStatus === 'verified' && (
+              <div className="space-y-3">
+                <div className="p-3 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2"><CheckCircle size={16} className="text-green-600 shrink-0" /><p className="text-sm text-green-700">Beneficiario verificado.</p></div>
+                <button onClick={() => { const notes = prompt('Motivo de la revocaci\u00f3n (obligatorio):'); if (notes && notes.trim()) onVerify(beneficiary.id, 'rejected', notes.trim()); }} disabled={actionLoading === beneficiary.id} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-error/10 text-error rounded-xl text-sm font-semibold hover:bg-error/20 transition cursor-pointer disabled:opacity-50">
+                  <XCircle size={18} />
+                  Revocar verificaci\u00f3n
+                </button>
+              </div>
+            )}
+            {beneficiary.verificationStatus === 'rejected' && (
+              <div className="space-y-3">
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg">{beneficiary.verificationNotes && <p className="text-sm text-red-600">{beneficiary.verificationNotes}</p>}</div>
+                <button onClick={() => onVerify(beneficiary.id, 'verified')} disabled={actionLoading === beneficiary.id} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-success/10 text-success rounded-xl text-sm font-semibold hover:bg-success/20 transition cursor-pointer disabled:opacity-50">
+                  <CheckCircle size={18} />
+                  Re-verificar
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant">
+            <h3 className="text-sm font-semibold text-on-surface-variant uppercase tracking-wide mb-3">Documentos</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-surface-container-low p-3 rounded-lg text-center"><p className="text-lg font-bold text-primary">{docs.length}</p><p className="text-[10px] text-on-surface-variant font-medium uppercase tracking-wider">Subidos</p></div>
+              <div className="bg-surface-container-low p-3 rounded-lg text-center"><p className="text-lg font-bold text-primary">{docs.filter((d) => d.storageUrl).length}</p><p className="text-[10px] text-on-surface-variant font-medium uppercase tracking-wider">Con imagen</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
