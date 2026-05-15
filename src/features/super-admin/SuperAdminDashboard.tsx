@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { auth, db } from '../../config/firebase';
+import { doc, getDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import {
   Shield,
   RefreshCw,
@@ -14,7 +16,8 @@ import { BeneficiaryDataSource } from '../../features/beneficiary/data/datasourc
 import { BeneficiaryRepositoryImpl } from '../../features/beneficiary/data/repositories/BeneficiaryRepositoryImpl';
 import { ListBeneficiaries } from '../../features/beneficiary/domain/usecases/ListBeneficiaries';
 import { VerifyBeneficiary } from '../../features/beneficiary/domain/usecases/VerifyBeneficiary';
-import type { Beneficiary, VerificationStatus } from '../../features/beneficiary/domain/entities/Beneficiary';
+import type { Beneficiary, VerificationStatus, BeneficiaryDocument } from '../../features/beneficiary/domain/entities/Beneficiary';
+import { DOCUMENT_TYPE_LABELS } from '../../features/beneficiary/domain/entities/Beneficiary';
 import { ForcePasswordChange } from './components/ForcePasswordChange';
 
 type TabType = 'pending' | 'verified' | 'rejected' | 'all';
@@ -31,10 +34,60 @@ const STATUS_CONFIG: Record<VerificationStatus, { label: string; color: string; 
 };
 
 export function SuperAdminDashboard({ onLogout }: { onLogout?: () => void }) {
-  // ─── VERIFICAR CAMBIO DE CONTRASEÑA ───
-  const [needsPasswordChange, setNeedsPasswordChange] = useState(
-    () => sessionStorage.getItem('super_admin_password_changed') !== 'true'
-  );
+  // ═══ TODOS LOS HOOKS AL INICIO (siempre mismo orden) ═══
+  const [needsPasswordChange, setNeedsPasswordChange] = useState(true);
+  const [checkingPassword, setCheckingPassword] = useState(true);
+  const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [activeTab, setActiveTab] = useState<TabType>('pending');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
+
+  // Leer desde Firestore si ya cambió la contraseña
+  useEffect(() => {
+    const checkPasswordChange = async () => {
+      try {
+        const user = auth.currentUser;
+        if (!user) {
+          setNeedsPasswordChange(false);
+          setCheckingPassword(false);
+          return;
+        }
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          // Si passwordChange es true, ya cambió la contraseña antes
+          setNeedsPasswordChange(data.passwordChange !== true);
+        }
+      } catch (err) {
+        console.error('[SuperAdmin] Error al verificar passwordChange:', err);
+        setNeedsPasswordChange(false);
+      } finally {
+        setCheckingPassword(false);
+      }
+    };
+    checkPasswordChange();
+  }, []);
+
+  // Cargar beneficiarios
+  useEffect(() => {
+    loadBeneficiaries();
+  }, []);
+
+  // ═══ EARLY RETURNS (después de todos los hooks) ═══
+
+  // Mostrar loading mientras verificamos
+  if (checkingPassword) {
+    return (
+      <div className="min-h-screen bg-surface-container-low flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-on-surface-variant">Verificando seguridad...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (needsPasswordChange) {
     return (
@@ -43,24 +96,54 @@ export function SuperAdminDashboard({ onLogout }: { onLogout?: () => void }) {
       />
     );
   }
-
-  const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [activeTab, setActiveTab] = useState<TabType>('pending');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [actionLoading, setActionLoading] = useState<string | null>(null);
-
-  useEffect(() => {
-    loadBeneficiaries();
-  }, []);
-
   async function loadBeneficiaries() {
     setLoading(true);
     setError('');
     try {
+      // 1. Obtener beneficiarios con perfil completo desde /beneficiaries
       const list = await listUseCase.execute();
-      setBeneficiaries(list);
+      const profileUserIds = new Set(list.map((b) => b.id));
+
+      // 2. Obtener usuarios registrados como beneficiario desde /users
+      //    que aun no tienen perfil en /beneficiaries
+      const usersQuery = query(
+        collection(db, 'users'),
+        where('role', '==', 'beneficiario')
+      );
+      const usersSnapshot = await getDocs(usersQuery);
+
+      const mergedList = [...list];
+
+      for (const userDoc of usersSnapshot.docs) {
+        const uid = userDoc.id;
+        // Solo agregar si no tiene perfil en /beneficiaries
+        if (!profileUserIds.has(uid)) {
+          const userData = userDoc.data();
+          mergedList.push({
+            id: uid,
+            userId: uid,
+            fullName: userData.name || userData.fullName || '',
+            documentId: userData.documentId || userData.cedula || '',
+            address: userData.direccion || '',
+            city: userData.ciudad || '',
+            phone: userData.telefono || '',
+            beneficiaryType: 'otro',
+            documents: [],
+            verificationStatus: 'pending',
+            createdAt: userData.createdAt || new Date().toISOString(),
+            updatedAt: userData.updatedAt || new Date().toISOString(),
+          } as Beneficiary);
+        }
+      }
+
+      // Ordenar por fecha de creacion descendente
+      mergedList.sort((a, b) => {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return dateB - dateA;
+      });
+
+      setBeneficiaries(mergedList);
     } catch (err) {
       console.error('[SuperAdmin] Error al cargar beneficiarios:', err);
       setError('No se pudieron cargar los beneficiarios.');
@@ -231,47 +314,75 @@ export function SuperAdminDashboard({ onLogout }: { onLogout?: () => void }) {
               <div className="space-y-3">
                 {filtered.map((beneficiary) => {
                   const statusCfg = STATUS_CONFIG[beneficiary.verificationStatus];
+                  const docs = beneficiary.documents || [];
+                  const hasDocuments = docs.length > 0;
+
                   return (
                     <div
                       key={beneficiary.id}
-                      className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl border border-outline-variant bg-surface hover:bg-surface-container-low transition"
+                      className="flex flex-col gap-4 p-4 rounded-xl border border-outline-variant bg-surface hover:bg-surface-container-low transition"
                     >
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-semibold text-on-surface truncate">
-                            {beneficiary.fullName || 'Sin nombre'}
-                          </h3>
-                          <span
-                            className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${statusCfg.bg} ${statusCfg.color}`}
-                          >
-                            {beneficiary.verificationStatus === 'pending' && <Clock size={12} />}
-                            {beneficiary.verificationStatus === 'verified' && <CheckCircle size={12} />}
-                            {beneficiary.verificationStatus === 'rejected' && <XCircle size={12} />}
-                            {statusCfg.label}
-                          </span>
-                        </div>
-                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-on-surface-variant">
-                          <span>CC: {beneficiary.documentId || '—'}</span>
-                          <span>📱 {beneficiary.phone || '—'}</span>
-                          <span>📍 {beneficiary.city || '—'}</span>
-                          {beneficiary.verificationNotes && (
-                            <span className="text-error italic w-full mt-1">
-                              Motivo: {beneficiary.verificationNotes}
+                      {/* Fila superior: informacion + acciones */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="font-semibold text-on-surface truncate">
+                              {beneficiary.fullName || 'Sin nombre'}
+                            </h3>
+                            <span
+                              className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${statusCfg.bg} ${statusCfg.color}`}
+                            >
+                              {beneficiary.verificationStatus === 'pending' && <Clock size={12} />}
+                              {beneficiary.verificationStatus === 'verified' && <CheckCircle size={12} />}
+                              {beneficiary.verificationStatus === 'rejected' && <XCircle size={12} />}
+                              {statusCfg.label}
                             </span>
-                          )}
+                            {hasDocuments && (
+                              <span className="text-xs text-on-surface-variant">
+                                ({docs.length} doc{docs.length > 1 ? 's' : ''})
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-on-surface-variant">
+                            <span>CC: {beneficiary.documentId || '—'}</span>
+                            <span>{'📱'} {beneficiary.phone || '—'}</span>
+                            <span>{'📍'} {beneficiary.city || '—'}</span>
+                            {beneficiary.verificationNotes && (
+                              <span className="text-error italic w-full mt-1">
+                                Motivo: {beneficiary.verificationNotes}
+                              </span>
+                            )}
+                          </div>
                         </div>
-                      </div>
 
-                      {beneficiary.verificationStatus === 'pending' && (
-                        <div className="flex gap-2 shrink-0">
-                          <button
-                            onClick={() => handleVerify(beneficiary.id, 'verified')}
-                            disabled={actionLoading === beneficiary.id}
-                            className="flex items-center gap-1.5 px-4 py-2 bg-success text-on-success rounded-xl text-sm font-semibold hover:brightness-110 transition cursor-pointer disabled:opacity-50"
-                          >
-                            <CheckCircle size={16} />
-                            Aprobar
-                          </button>
+                        {/* Acciones segun estado */}
+                        {beneficiary.verificationStatus === 'pending' && (
+                          <div className="flex gap-2 shrink-0">
+                            <button
+                              onClick={() => handleVerify(beneficiary.id, 'verified')}
+                              disabled={actionLoading === beneficiary.id}
+                              className="flex items-center gap-1.5 px-4 py-2 bg-success text-on-success rounded-xl text-sm font-semibold hover:brightness-110 transition cursor-pointer disabled:opacity-50"
+                            >
+                              <CheckCircle size={16} />
+                              Aprobar
+                            </button>
+                            <button
+                              onClick={() => {
+                                const notes = prompt('Motivo del rechazo:');
+                                if (notes && notes.trim()) {
+                                  handleVerify(beneficiary.id, 'rejected', notes.trim());
+                                }
+                              }}
+                              disabled={actionLoading === beneficiary.id}
+                              className="flex items-center gap-1.5 px-4 py-2 bg-error text-on-error rounded-xl text-sm font-semibold hover:brightness-110 transition cursor-pointer disabled:opacity-50"
+                            >
+                              <XCircle size={16} />
+                              Rechazar
+                            </button>
+                          </div>
+                        )}
+
+                        {beneficiary.verificationStatus === 'verified' && (
                           <button
                             onClick={() => {
                               const notes = prompt('Motivo del rechazo:');
@@ -279,39 +390,48 @@ export function SuperAdminDashboard({ onLogout }: { onLogout?: () => void }) {
                                 handleVerify(beneficiary.id, 'rejected', notes.trim());
                               }
                             }}
-                            disabled={actionLoading === beneficiary.id}
-                            className="flex items-center gap-1.5 px-4 py-2 bg-error text-on-error rounded-xl text-sm font-semibold hover:brightness-110 transition cursor-pointer disabled:opacity-50"
+                            className="flex items-center gap-1.5 px-4 py-2 bg-error/10 text-error rounded-xl text-sm font-semibold hover:bg-error/20 transition cursor-pointer shrink-0"
                           >
                             <XCircle size={16} />
-                            Rechazar
+                            Revocar
                           </button>
+                        )}
+
+                        {beneficiary.verificationStatus === 'rejected' && (
+                          <button
+                            onClick={() => handleVerify(beneficiary.id, 'verified')}
+                            disabled={actionLoading === beneficiary.id}
+                            className="flex items-center gap-1.5 px-4 py-2 bg-success/10 text-success rounded-xl text-sm font-semibold hover:bg-success/20 transition cursor-pointer shrink-0"
+                          >
+                            <CheckCircle size={16} />
+                            Re-verificar
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Documentos subidos (solo si tiene) */}
+                      {hasDocuments && (
+                        <div className="border-t border-outline-variant/50 pt-3 mt-1">
+                          <p className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                            <FileText size={12} />
+                            Documentos de validacion
+                          </p>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+                            {docs.map((doc) => (
+                              <DocCard key={doc.id} doc={doc} />
+                            ))}
+                          </div>
                         </div>
                       )}
 
-                      {beneficiary.verificationStatus === 'verified' && (
-                        <button
-                          onClick={() => {
-                            const notes = prompt('Motivo del rechazo:');
-                            if (notes && notes.trim()) {
-                              handleVerify(beneficiary.id, 'rejected', notes.trim());
-                            }
-                          }}
-                          className="flex items-center gap-1.5 px-4 py-2 bg-error/10 text-error rounded-xl text-sm font-semibold hover:bg-error/20 transition cursor-pointer shrink-0"
-                        >
-                          <XCircle size={16} />
-                          Revocar
-                        </button>
-                      )}
-
-                      {beneficiary.verificationStatus === 'rejected' && (
-                        <button
-                          onClick={() => handleVerify(beneficiary.id, 'verified')}
-                          disabled={actionLoading === beneficiary.id}
-                          className="flex items-center gap-1.5 px-4 py-2 bg-success/10 text-success rounded-xl text-sm font-semibold hover:bg-success/20 transition cursor-pointer shrink-0"
-                        >
-                          <CheckCircle size={16} />
-                          Re-verificar
-                        </button>
+                      {/* Sin documentos (solo pendientes) */}
+                      {!hasDocuments && beneficiary.verificationStatus === 'pending' && (
+                        <div className="border-t border-outline-variant/50 pt-3 mt-1">
+                          <p className="text-xs text-amber-600 flex items-center gap-1.5">
+                            <AlertTriangle size={12} />
+                            Este beneficiario aun no ha subido ningun documento de validacion.
+                          </p>
+                        </div>
                       )}
                     </div>
                   );
@@ -322,5 +442,85 @@ export function SuperAdminDashboard({ onLogout }: { onLogout?: () => void }) {
         </div>
       </main>
     </div>
+  );
+}
+
+// ─── COMPONENTE INTERNO: DocCard ───
+
+/**
+ * Tarjeta individual que muestra un documento subido con enlace directo a Firebase Storage.
+ * Renderiza un icono segun el tipo de archivo (imagen con vista previa, PDF con icono).
+ */
+function DocCard({ doc }: { doc: BeneficiaryDocument }) {
+  const [previewOpen, setPreviewOpen] = useState(false);
+
+  const isImage = doc.storageUrl.match(/\.(jpg|jpeg|png|webp|gif)(\?|$)/i);
+  const docLabel = DOCUMENT_TYPE_LABELS[doc.type as keyof typeof DOCUMENT_TYPE_LABELS] || doc.type;
+  const uploadedDate = new Date(doc.uploadedAt).toLocaleDateString('es-CO', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+
+  return (
+    <>
+      <div className="flex items-start gap-2 p-2 rounded-lg bg-surface-container-low border border-outline-variant/40 hover:border-primary/40 transition group">
+        {/* Icono / miniatura */}
+        <div className="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center shrink-0 overflow-hidden">
+          {isImage ? (
+            <img
+              src={doc.storageUrl}
+              alt={docLabel}
+              className="w-full h-full object-cover cursor-pointer"
+              onClick={() => setPreviewOpen(true)}
+            />
+          ) : (
+            <FileText size={16} className="text-primary" />
+          )}
+        </div>
+
+        {/* Info del documento */}
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-medium text-on-surface truncate" title={doc.fileName}>
+            {docLabel}
+          </p>
+          <p className="text-[10px] text-on-surface-variant">{uploadedDate}</p>
+        </div>
+
+        {/* Enlace para abrir/descargar */}
+        <a
+          href={doc.storageUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="shrink-0 p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-primary-container transition opacity-0 group-hover:opacity-100"
+          title="Abrir documento"
+        >
+          <ExternalLink size={14} />
+        </a>
+      </div>
+
+      {/* Modal de previsualizacion de imagen */}
+      {previewOpen && isImage && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
+          onClick={() => setPreviewOpen(false)}
+        >
+          <div className="relative max-w-2xl max-h-[90vh]">
+            <button
+              onClick={() => setPreviewOpen(false)}
+              className="absolute -top-10 right-0 text-white text-sm font-medium hover:text-gray-300 cursor-pointer"
+            >
+              X Cerrar
+            </button>
+            <img
+              src={doc.storageUrl}
+              alt={docLabel}
+              className="max-w-full max-h-[85vh] rounded-lg shadow-2xl"
+            />
+            <p className="text-white text-sm text-center mt-2">{docLabel} - {doc.fileName}</p>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

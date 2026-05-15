@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { auth } from '../../../config/firebase';
+import { auth, db } from '../../../config/firebase';
+import { doc, updateDoc } from 'firebase/firestore';
 import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
 import { Shield, Eye, EyeOff, CheckCircle, AlertCircle, Loader } from 'lucide-react';
 import { validPassword, passwordsMatch, differentPassword, required } from '../../../utils/validators';
@@ -61,9 +62,11 @@ export function ForcePasswordChange({ onComplete }: ForcePasswordChangeProps) {
       // Actualizar contraseña
       await updatePassword(user, newPassword);
 
-      // Marcar como completado en sessionStorage
-      // (persiste solo durante la sesión del navegador)
-      sessionStorage.setItem('super_admin_password_changed', 'true');
+      // Marcar como completado en Firestore (persiste entre sesiones)
+      // El campo passwordChange: true evita que se muestre de nuevo
+      await updateDoc(doc(db, 'users', user.uid), {
+        passwordChange: true,
+      });
 
       setSuccess(true);
 
@@ -141,9 +144,18 @@ export function ForcePasswordChange({ onComplete }: ForcePasswordChangeProps) {
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 placeholder="Ingresa la contraseña actual"
-                className="w-full px-4 py-3 pr-10 bg-surface text-on-surface border border-outline-variant rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+                className="w-full px-4 py-3 pr-12 bg-surface text-on-surface border border-outline-variant rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
                 autoFocus
               />
+              <button
+                type="button"
+                onClick={() => setShowPasswords(!showPasswords)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition cursor-pointer p-1"
+                tabIndex={-1}
+                aria-label={showPasswords ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+              >
+                {showPasswords ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
           </div>
 
@@ -158,13 +170,14 @@ export function ForcePasswordChange({ onComplete }: ForcePasswordChangeProps) {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Mínimo 6 caracteres"
-                className="w-full px-4 py-3 pr-10 bg-surface text-on-surface border border-outline-variant rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+                className="w-full px-4 py-3 pr-12 bg-surface text-on-surface border border-outline-variant rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
               />
               <button
                 type="button"
                 onClick={() => setShowPasswords(!showPasswords)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface cursor-pointer"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition cursor-pointer p-1"
                 tabIndex={-1}
+                aria-label={showPasswords ? 'Ocultar contraseña' : 'Mostrar contraseña'}
               >
                 {showPasswords ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -182,21 +195,18 @@ export function ForcePasswordChange({ onComplete }: ForcePasswordChangeProps) {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Repite la nueva contraseña"
-                className="w-full px-4 py-3 pr-10 bg-surface text-on-surface border border-outline-variant rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+                className="w-full px-4 py-3 pr-12 bg-surface text-on-surface border border-outline-variant rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
               />
+              <button
+                type="button"
+                onClick={() => setShowPasswords(!showPasswords)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition cursor-pointer p-1"
+                tabIndex={-1}
+                aria-label={showPasswords ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+              >
+                {showPasswords ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
-          </div>
-
-          {/* Botón de mostrar/ocultar */}
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setShowPasswords(!showPasswords)}
-              className="text-xs text-on-surface-variant hover:text-on-surface transition cursor-pointer flex items-center gap-1"
-            >
-              {showPasswords ? <EyeOff size={14} /> : <Eye size={14} />}
-              {showPasswords ? 'Ocultar' : 'Mostrar'} contraseñas
-            </button>
           </div>
 
           {/* Submit */}
