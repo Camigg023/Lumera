@@ -339,19 +339,66 @@ export function BeneficiarioDashboard({ onLogout }) {
                 </div>
                 <div className="relative">
                   <span className="text-sm font-semibold px-4 py-1.5 rounded-full" style={{backgroundColor: 'var(--color-surface-container)', color: 'var(--color-primary)'}}>
-                    {activeRequest ? '🚚 Solicitud Activa' : isVerified ? '✅ Beneficiario Verificado' : '⏳ Perfil en Revisión'}
+                    {activeRequest ? '🚚 Solicitud Activa' : isVerified ? '✅ Beneficiario Verificado' : '⏳ Documentación Pendiente'}
                   </span>
 
                   <h2 className="text-3xl font-bold mt-4" style={{color: 'var(--color-on-surface)'}}>
                     {activeRequest ? `${activeRequest.totalKg}kg de Alimentos` : `Bienvenido, ${beneficiary.fullName.split(' ')[0]}`}
                   </h2>
-                  <p className="mt-2" style={{color: 'var(--color-on-surface-variant)'}}>
-                    {activeRequest
-                      ? `Estado: ${activeRequest.status.replace('_', ' ')} · Creada el ${new Date(activeRequest.createdAt).toLocaleDateString()}`
-                      : isVerified
-                        ? 'Puedes solicitar ayuda cuando lo necesites. Tu próxima entrega aparecerá aquí.'
-                        : 'Estamos revisando tu documentación. Pronto podrás acceder a todos los beneficios.'}
-                  </p>
+
+                  {isPending && (
+                    <div className="mt-4 p-5 rounded-2xl border" style={{backgroundColor: '#fffbeb', borderColor: '#fde68a'}}>
+                      <p className="text-sm font-semibold" style={{color: '#92400e'}}>📋 Para completar tu registro necesitas subir:</p>
+                      <ul className="mt-3 space-y-2">
+                        {[
+                          { type: 'cedula_frontal', label: 'Cédula (parte frontal)', uploaded: beneficiary.documents?.some(d => d.type === 'cedula_frontal') },
+                          { type: 'cedula_posterior', label: 'Cédula (parte posterior)', uploaded: beneficiary.documents?.some(d => d.type === 'cedula_posterior') },
+                          { type: 'cuenta_servicios', label: 'Cuenta de servicios (luz, agua o gas)', uploaded: beneficiary.documents?.some(d => d.type === 'cuenta_servicios') },
+                          { type: 'foto_perfil', label: 'Foto de perfil / selfie', uploaded: beneficiary.documents?.some(d => d.type === 'foto_perfil') },
+                        ].map((doc) => (
+                          <li key={doc.type} className="flex items-center gap-2 text-sm">
+                            {doc.uploaded
+                              ? <span className="text-green-600 font-bold">✅</span>
+                              : <span className="text-amber-500">⬜</span>
+                            }
+                            <span style={{color: doc.uploaded ? '#166534' : '#92400e'}}>
+                              {doc.label}
+                            </span>
+                            {doc.uploaded && <span className="text-xs text-green-600">(subido)</span>}
+                          </li>
+                        ))}
+                      </ul>
+                      <button
+                        onClick={() => setView('registro')}
+                        className="mt-4 w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all cursor-pointer"
+                        style={{backgroundColor: 'var(--color-primary)'}}
+                      >
+                        Subir documentos faltantes
+                      </button>
+                    </div>
+                  )}
+
+                  {isRejected && (
+                    <div className="mt-4 p-4 rounded-2xl" style={{backgroundColor: '#fef2f2', border: '1px solid #fecaca'}}>
+                      <p className="text-sm font-semibold" style={{color: '#991b1b'}}>❌ Tu perfil fue rechazado</p>
+                      {beneficiary.verificationNotes && (
+                        <p className="text-sm mt-1" style={{color: '#b91c1c'}}>Motivo: {beneficiary.verificationNotes}</p>
+                      )}
+                      <button
+                        onClick={() => setView('registro')}
+                        className="mt-3 px-4 py-2 rounded-xl text-sm font-bold text-white cursor-pointer"
+                        style={{backgroundColor: '#dc2626'}}
+                      >
+                        Editar y volver a enviar
+                      </button>
+                    </div>
+                  )}
+
+                  {isVerified && !activeRequest && (
+                    <p className="mt-2" style={{color: 'var(--color-on-surface-variant)'}}>
+                      Puedes solicitar ayuda cuando lo necesites. Tu próxima entrega aparecerá aquí.
+                    </p>
+                  )}
 
                   {activeRequest && activeRequest.items && (
                     <>
@@ -493,12 +540,36 @@ export function BeneficiarioDashboard({ onLogout }) {
               {!isVerified && (
                 <div className="rounded-3xl p-5 shadow-sm border" style={{backgroundColor: 'var(--color-surface-container-lowest)', borderColor: 'var(--color-outline-variant)'}}>
                   {isPending && (
-                    <div className="flex items-start gap-3">
-                      <span className="text-lg">⏳</span>
-                      <div>
-                        <p className="font-semibold text-sm" style={{color: '#d97706'}}>Perfil en revisión</p>
-                        <p className="text-xs mt-1" style={{color: 'var(--color-on-surface-variant)'}}>Estamos verificando tus datos.</p>
+                    <div className="space-y-3">
+                      <div className="flex items-start gap-3">
+                        <span className="text-lg">⏳</span>
+                        <div>
+                          <p className="font-semibold text-sm" style={{color: '#d97706'}}>Documentación pendiente</p>
+                          <p className="text-xs mt-1" style={{color: 'var(--color-on-surface-variant)'}}>
+                            {beneficiary.documents?.length || 0} de 4 documentos subidos
+                          </p>
+                        </div>
                       </div>
+                      {/* Barra de progreso de documentos */}
+                      <div className="w-full h-2 rounded-full overflow-hidden" style={{backgroundColor: 'var(--color-surface-container-high)'}}>
+                        <div
+                          className="h-full rounded-full transition-all duration-500"
+                          style={{
+                            width: `${((beneficiary.documents?.length || 0) / 4) * 100}%`,
+                            background: 'linear-gradient(90deg, var(--color-primary), var(--color-accent))',
+                          }}
+                        />
+                      </div>
+                      <button
+                        onClick={() => setView('registro')}
+                        className="w-full py-2 rounded-xl text-xs font-bold text-white transition-all cursor-pointer"
+                        style={{backgroundColor: 'var(--color-primary)'}}
+                      >
+                        {beneficiary.documents?.length === 0
+                          ? 'Comenzar carga de documentos'
+                          : 'Completar documentos'
+                        }
+                      </button>
                     </div>
                   )}
                   {isRejected && (
@@ -507,7 +578,7 @@ export function BeneficiarioDashboard({ onLogout }) {
                       <div>
                         <p className="font-semibold text-sm" style={{color: 'var(--color-error)'}}>Perfil rechazado</p>
                         <p className="text-xs mt-1" style={{color: 'var(--color-on-surface-variant)'}}>{beneficiary.verificationNotes}</p>
-                        <button onClick={() => setView('registro')} className="mt-2 px-4 py-1.5 rounded-lg text-xs font-bold text-white cursor-pointer" style={{backgroundColor: 'var(--color-error)'}}>Editar perfil</button>
+                        <button onClick={() => setView('registro')} className="mt-2 px-4 py-1.5 rounded-lg text-xs font-bold text-white cursor-pointer" style={{backgroundColor: 'var(--color-error)'}}>Editar y re-enviar</button>
                       </div>
                     </div>
                   )}
