@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 import { useLogin } from '../hooks/useLogin';
 import styles from './LoginForm.module.css';
 import { validEmail, validPassword } from '../../../../utils/validators';
@@ -11,6 +12,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const { signIn, isLoading, error } = useLogin();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({});
 
   const validateField = (field: 'email' | 'password', value: string) => {
@@ -59,18 +61,29 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
 
       <div className={styles.inputGroup}>
         <label className={styles.label}>Contraseña</label>
-        <input
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-            if (fieldErrors.password) validateField('password', e.target.value);
-          }}
-          onBlur={(e) => e.target.value && validateField('password', e.target.value)}
-          type="password"
-          placeholder="••••••••"
-          className={`${styles.input} ${fieldErrors.password ? styles.inputError : ''}`}
-          required
-        />
+        <div className={styles.passwordWrapper}>
+          <input
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              if (fieldErrors.password) validateField('password', e.target.value);
+            }}
+            onBlur={(e) => e.target.value && validateField('password', e.target.value)}
+            type={showPassword ? 'text' : 'password'}
+            placeholder="••••••••"
+            className={`${styles.input} ${styles.inputPassword} ${fieldErrors.password ? styles.inputError : ''}`}
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className={styles.togglePassword}
+            aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+            tabIndex={-1}
+          >
+            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+          </button>
+        </div>
         {fieldErrors.password && <p className={styles.fieldError}>{fieldErrors.password}</p>}
       </div>
 
