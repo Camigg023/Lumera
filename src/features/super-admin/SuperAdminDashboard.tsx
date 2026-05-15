@@ -15,6 +15,7 @@ import { BeneficiaryRepositoryImpl } from '../../features/beneficiary/data/repos
 import { ListBeneficiaries } from '../../features/beneficiary/domain/usecases/ListBeneficiaries';
 import { VerifyBeneficiary } from '../../features/beneficiary/domain/usecases/VerifyBeneficiary';
 import type { Beneficiary, VerificationStatus } from '../../features/beneficiary/domain/entities/Beneficiary';
+import { ForcePasswordChange } from './components/ForcePasswordChange';
 
 type TabType = 'pending' | 'verified' | 'rejected' | 'all';
 
@@ -30,6 +31,19 @@ const STATUS_CONFIG: Record<VerificationStatus, { label: string; color: string; 
 };
 
 export function SuperAdminDashboard({ onLogout }: { onLogout?: () => void }) {
+  // ─── VERIFICAR CAMBIO DE CONTRASEÑA ───
+  const [needsPasswordChange, setNeedsPasswordChange] = useState(
+    () => sessionStorage.getItem('super_admin_password_changed') !== 'true'
+  );
+
+  if (needsPasswordChange) {
+    return (
+      <ForcePasswordChange
+        onComplete={() => setNeedsPasswordChange(false)}
+      />
+    );
+  }
+
   const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
