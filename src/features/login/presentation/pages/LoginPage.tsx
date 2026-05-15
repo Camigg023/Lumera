@@ -8,41 +8,38 @@ export const LoginPage = ({
   onBackToHome,
 }: any) => {
   return (
-    <div className={styles.page}>
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <div className={styles.logoContainer}>
+          <img src="/img/loginimg.png" alt="Lumera" className={styles.avatar} />
+        </div>
 
-      {/* LEFT IMAGE ONLY */}
-      <div className={styles.left}></div>
+        <h1 className={styles.title}>Bienvenido</h1>
+        <p className={styles.subtitle}>
+          Inicia sesión para continuar transformando vidas
+        </p>
 
-      {/* RIGHT LOGIN */}
-      <div className={styles.right}>
-        <div className={styles.card}>
+        <LoginForm onSuccess={onLoginSuccess} />
 
-          <h2>Bienvenido</h2>
-          <p className={styles.subtitle}>
-            Inicia sesión en tu cuenta
-          </p>
+        <div className={styles.links}>
+          <button className={styles.linkButton} onClick={onNavigateToPasswordRecovery}>
+            ¿Olvidaste tu contraseña?
+          </button>
 
-          <LoginForm onSuccess={onLoginSuccess} />
-
-          <div className={styles.links}>
-            <button onClick={onNavigateToPasswordRecovery}>
-              ¿Olvidaste tu contraseña?
+          <div className={styles.registerPrompt}>
+            <span>¿No tienes una cuenta?</span>
+            <button className={styles.secondaryAction} onClick={onNavigateToRegister}>
+              Regístrate aquí
             </button>
-
-            <button onClick={onNavigateToRegister}>
-              Crear cuenta
-            </button>
-
-            {onBackToHome && (
-              <button onClick={onBackToHome}>
-                ← Volver al inicio
-              </button>
-            )}
           </div>
 
+          {onBackToHome && (
+            <button className={styles.backButton} onClick={onBackToHome}>
+              ← Volver al inicio
+            </button>
+          )}
         </div>
       </div>
-
     </div>
   );
 };

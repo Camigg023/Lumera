@@ -24,22 +24,24 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   return (
     <form onSubmit={onSubmit} className={styles.form}>
       <div className={styles.inputGroup}>
+        <label className={styles.label}>Correo electrónico</label>
         <input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           type="email"
-          placeholder="Email"
+          placeholder="tu@email.com"
           className={styles.input}
           required
         />
       </div>
 
       <div className={styles.inputGroup}>
+        <label className={styles.label}>Contraseña</label>
         <input
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           type="password"
-          placeholder="Password"
+          placeholder="••••••••"
           className={styles.input}
           required
         />
