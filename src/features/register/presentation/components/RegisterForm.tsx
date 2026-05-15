@@ -1,11 +1,37 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRegister } from '../hooks/useRegister';
+import { roleService, Role } from '../../../../services/roleService';
 import styles from './RegisterForm.module.css';
 
 export type RoleType = "donador" | "empresa" | "beneficiario";
 
 export const RegisterForm = ({ role, onRoleChange, onSuccess, roleHeader }: { role: RoleType; onRoleChange: (r: RoleType) => void; onSuccess?: any; roleHeader?: React.ReactNode }) => {
   const { signUp, isLoading, error } = useRegister();
+  const [firestoreRoles, setFirestoreRoles] = useState<Role[]>([]);
+  const [rolesLoading, setRolesLoading] = useState(true);
+
+  // Cargar roles desde Firestore
+  useEffect(() => {
+    const loadRoles = async () => {
+      try {
+        const roles = await roleService.getAllRoles();
+        // Filtrar solo roles disponibles para registro público (excluir super-admin)
+        const publicRoles = roles.filter(r => r.id !== 'super-admin');
+        setFirestoreRoles(publicRoles);
+      } catch (err) {
+        console.error('[RegisterForm] Error al cargar roles:', err);
+        // Fallback a roles por defecto
+        setFirestoreRoles([
+          { id: 'donador', name: 'Donador', description: 'Persona que realiza donaciones', permissions: [], dashboardComponent: '', defaultView: 'inicio', level: 1, isActive: true },
+          { id: 'empresa', name: 'Empresa', description: 'Empresa que participa en la red', permissions: [], dashboardComponent: '', defaultView: 'inicio', level: 2, isActive: true },
+          { id: 'beneficiario', name: 'Beneficiario', description: 'Persona que recibe donaciones', permissions: [], dashboardComponent: '', defaultView: 'inicio', level: 3, isActive: true },
+        ]);
+      } finally {
+        setRolesLoading(false);
+      }
+    };
+    loadRoles();
+  }, []);
 
   // 🔹 CAMPOS GENERALES
   const [name, setName] = useState('');
@@ -46,28 +72,22 @@ export const RegisterForm = ({ role, onRoleChange, onSuccess, roleHeader }: { ro
   return (
     <form onSubmit={onSubmit} className={styles.form}>
 
-      {/* ─── SELECTOR DE ROLES ─── */}
+      {/* ─── SELECTOR DE ROLES (desde Firestore) ─── */}
       <div className={styles.roles}>
-        <div
-          className={`${styles.roleCard} ${role === "donador" ? styles.active : ""}`}
-          onClick={() => onRoleChange("donador")}
-        >
-          <span>Donador</span>
-        </div>
-
-        <div
-          className={`${styles.roleCard} ${role === "empresa" ? styles.active : ""}`}
-          onClick={() => onRoleChange("empresa")}
-        >
-          <span>Empresa</span>
-        </div>
-
-        <div
-          className={`${styles.roleCard} ${role === "beneficiario" ? styles.active : ""}`}
-          onClick={() => onRoleChange("beneficiario")}
-        >
-          <span>Beneficiario</span>
-        </div>
+        {rolesLoading ? (
+          <div className="text-sm text-gray-400 py-4 text-center w-full">Cargando roles...</div>
+        ) : (
+          firestoreRoles.map((r) => (
+            <div
+              key={r.id}
+              className={`${styles.roleCard} ${role === r.id ? styles.active : ''}`}
+              onClick={() => onRoleChange(r.id as RoleType)}
+            >
+              <span>{r.name}</span>
+              <small className="text-[10px] opacity-60 block mt-0.5">{r.description}</small>
+            </div>
+          ))
+        )}
       </div>
 
       {/* ─── OVERLAY DE ROL (debajo del selector) ─── */}
