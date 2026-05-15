@@ -192,6 +192,68 @@ export function SuperAdminDashboard({ onLogout }: { onLogout?: () => void }) {
     rejected: beneficiaries.filter((b) => b.verificationStatus === 'rejected').length,
   };
 
+  // ─── PÁGINA DE DETALLE DEL BENEFICIARIO ───
+  if (selectedBeneficiary) {
+    return (
+      <div className="min-h-screen bg-surface-container-low">
+        {/* Header de la página de detalle */}
+        <header className="bg-primary text-on-primary sticky top-0 z-50 shadow-lg">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-16">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setSelectedBeneficiary(null)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-on-primary/20 transition cursor-pointer"
+                >
+                  <ArrowLeft size={20} />
+                  <span className="text-sm font-medium">Volver</span>
+                </button>
+                <Shield size={24} className="text-on-primary/70" />
+                <div>
+                  <h1 className="text-lg font-bold">{selectedBeneficiary.fullName}</h1>
+                  <p className="text-xs text-on-primary/70">
+                    CC: {selectedBeneficiary.documentId || '—'} &middot; {selectedBeneficiary.city || '—'}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <span
+                  className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${
+                    selectedBeneficiary.verificationStatus === 'verified'
+                      ? 'bg-green-500/20 text-green-200'
+                      : selectedBeneficiary.verificationStatus === 'rejected'
+                      ? 'bg-red-500/20 text-red-200'
+                      : 'bg-yellow-500/20 text-yellow-200'
+                  }`}
+                >
+                  {selectedBeneficiary.verificationStatus === 'pending' && '⏳ Pendiente'}
+                  {selectedBeneficiary.verificationStatus === 'verified' && '✅ Verificado'}
+                  {selectedBeneficiary.verificationStatus === 'rejected' && '❌ Rechazado'}
+                </span>
+                <button
+                  onClick={onLogout}
+                  className="px-4 py-2 bg-on-primary/10 hover:bg-on-primary/20 rounded-xl text-sm font-medium transition cursor-pointer"
+                >
+                  Cerrar sesión
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <BeneficiaryDetail
+            beneficiary={selectedBeneficiary}
+            onBack={() => setSelectedBeneficiary(null)}
+            onVerify={handleVerify}
+            actionLoading={actionLoading}
+          />
+        </main>
+      </div>
+    );
+  }
+
+  // ─── PÁGINA DE LISTA DE BENEFICIARIOS ───
   return (
     <div className="min-h-screen bg-surface-container-low">
       {/* Header */}
@@ -201,7 +263,7 @@ export function SuperAdminDashboard({ onLogout }: { onLogout?: () => void }) {
             <div className="flex items-center gap-3">
               <Shield size={28} className="text-on-primary" />
               <h1 className="text-xl font-bold">Super Admin</h1>
-            </div>
+</div>
             <div className="flex items-center gap-4">
               <button
                 onClick={loadBeneficiaries}
@@ -225,17 +287,6 @@ export function SuperAdminDashboard({ onLogout }: { onLogout?: () => void }) {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Vista detalle cuando se selecciona un beneficiario */}
-        {selectedBeneficiary && (
-          <BeneficiaryDetail
-            beneficiary={selectedBeneficiary}
-            onBack={() => setSelectedBeneficiary(null)}
-            onVerify={handleVerify}
-            actionLoading={actionLoading}
-          />
-        )}
-        {/* Lista de beneficiarios (oculta cuando hay detalle) */}
-        <div style={{ display: selectedBeneficiary ? 'none' : 'block' }}>
         {/* Stats Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
           {[
@@ -456,7 +507,6 @@ export function SuperAdminDashboard({ onLogout }: { onLogout?: () => void }) {
               </div>
             )}
           </div>
-        </div>
         </div>
       </main>
     </div>
