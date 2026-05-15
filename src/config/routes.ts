@@ -17,7 +17,7 @@ export type ScreenDashboard = 'dashboard';
 export type Screen = ScreenPublic | ScreenDashboard;
 
 /** Roles de usuario en el sistema */
-export type UserRole = 'donador' | 'empresa' | 'beneficiario' | 'admin';
+export type UserRole = 'donador' | 'empresa' | 'beneficiario' | 'super-admin';
 
 // ─────────────────────── CONFIGURACIÓN ───────────────────────
 
@@ -49,8 +49,8 @@ export const ROLES: Record<UserRole, RoleConfig> = {
     icon: 'groups',
     defaultView: 'inicio',
   },
-  admin: {
-    label: 'Admin',
+  'super-admin': {
+    label: 'Super Admin',
     description: 'Administrador del sistema',
     icon: 'admin_panel_settings',
     defaultView: 'beneficiarios',
@@ -70,7 +70,7 @@ export const SCREENS: Record<Screen, ScreenConfig> = {
   login: { label: 'Iniciar sesión', requiresAuth: false },
   register: { label: 'Crear cuenta', requiresAuth: false },
   'password-recovery': { label: 'Recuperar contraseña', requiresAuth: false },
-  dashboard: { label: 'Dashboard', requiresAuth: true, allowedRoles: ['donador', 'empresa', 'beneficiario', 'admin'] },
+  dashboard: { label: 'Dashboard', requiresAuth: true, allowedRoles: ['donador', 'empresa', 'beneficiario', 'super-admin'] },
 };
 
 // ─────────────────────── HELPER FUNCTIONS ───────────────────────

@@ -79,8 +79,8 @@ const ROLES_DATA: RoleSeed[] = [
     isActive: true,
   },
   {
-    id: 'admin',
-    name: 'Admin',
+    id: 'super-admin',
+    name: 'Super Admin',
     description: 'Administrador del sistema con acceso completo',
     permissions: [
       'ver_beneficiarios',

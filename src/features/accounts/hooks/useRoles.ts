@@ -86,7 +86,7 @@ export function useRoles() {
       viewReports: permissions.includes('ver_reportes'),
 
       /** Verifica si el usuario es super-admin */
-      isSuperAdmin: userRole?.id === 'admin',
+      isSuperAdmin: userRole?.id === 'super-admin',
 
       /** Verifica si el usuario tiene nivel >= al solicitado */
       hasLevel: (minLevel: number): boolean => (userRole?.level || 0) >= minLevel,

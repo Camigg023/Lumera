@@ -35,7 +35,7 @@ const DASHBOARD_COMPONENTS = {
   donador: DonadorDashboard,
   empresa: EmpresaDashboard,
   beneficiario: BeneficiarioDashboard,
-  'admin': SuperAdminDashboard,
+  'super-admin': SuperAdminDashboard,
 };
 
 
