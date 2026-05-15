@@ -1,4 +1,4 @@
-import { db } from '../../../../config/firebase';
+import { db, storage } from '../../../../config/firebase';
 import {
   doc,
   getDoc,
@@ -9,7 +9,7 @@ import {
   query,
   where,
 } from 'firebase/firestore';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { Beneficiary, BeneficiaryDocument, VerificationStatus } from '../../domain/entities/Beneficiary';
 
 /**
@@ -27,7 +27,6 @@ import { Beneficiary, BeneficiaryDocument, VerificationStatus } from '../../doma
  * la migración leyendo ambos nombres y priorizando los nuevos.
  */
 export class BeneficiaryDataSource {
-  private storage = getStorage();
 
   /**
    * Obtiene un beneficiario por su userId desde Firestore.
@@ -190,7 +189,7 @@ export class BeneficiaryDataSource {
     const timestamp = Date.now();
     const safeFileName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
     const storagePath = `beneficiaries/${userId}/documents/${docType}_${timestamp}_${safeFileName}`;
-    const storageRef = ref(this.storage, storagePath);
+    const storageRef = ref(storage, storagePath);
 
     // Subir archivo
     const snapshot = await uploadBytes(storageRef, file);
