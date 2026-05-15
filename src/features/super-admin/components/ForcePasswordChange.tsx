@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { auth } from '../../../config/firebase';
 import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
 import { Shield, Eye, EyeOff, CheckCircle, AlertCircle, Loader } from 'lucide-react';
+import { validPassword, passwordsMatch, differentPassword, required } from '../../../utils/validators';
 
 interface ForcePasswordChangeProps {
   onComplete: () => void;
@@ -31,24 +32,16 @@ export function ForcePasswordChange({ onComplete }: ForcePasswordChangeProps) {
     e.preventDefault();
     setError('');
 
-    // Validaciones
-    if (!currentPassword) {
-      setError('Debes ingresar tu contraseña actual.');
-      return;
-    }
+    // Validaciones con validators reutilizables
+    const errors = [
+      required(currentPassword, 'La contraseña actual'),
+      currentPassword ? validPassword(newPassword) : null,
+      newPassword ? passwordsMatch(newPassword, confirmPassword) : null,
+      newPassword && currentPassword ? differentPassword(newPassword, currentPassword) : null,
+    ].filter(Boolean) as string[];
 
-    if (newPassword.length < 6) {
-      setError('La nueva contraseña debe tener al menos 6 caracteres.');
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      setError('Las contraseñas no coinciden.');
-      return;
-    }
-
-    if (newPassword === currentPassword) {
-      setError('La nueva contraseña debe ser diferente a la actual.');
+    if (errors.length > 0) {
+      setError(errors[0]);
       return;
     }
 

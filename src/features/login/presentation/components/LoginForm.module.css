@@ -58,6 +58,18 @@
   font-weight: 500;
 }
 
+.fieldError {
+  color: var(--color-error);
+  font-size: 0.75rem;
+  margin: 0.25rem 0 0;
+  font-weight: 500;
+}
+
+.inputError {
+  border-color: var(--color-error) !important;
+  background-color: var(--color-error-container);
+}
+
 /* BOTÓN PRINCIPAL */
 .button {
   background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));

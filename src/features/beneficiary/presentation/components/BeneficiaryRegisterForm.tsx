@@ -2,6 +2,13 @@ import { useState } from 'react';
 import { BeneficiaryType, BENEFICIARY_TYPE_LABELS } from '../../domain/entities/Beneficiary';
 import { DocumentUploader } from './DocumentUploader';
 import { LocationPicker } from './LocationPicker';
+import {
+  validName,
+  validDocumentId,
+  validPhone,
+  validAddress,
+  required,
+} from '../../../../utils/validators';
 
 /**
  * Props para el formulario de registro de beneficiario (persona natural).
@@ -72,6 +79,13 @@ export function BeneficiaryRegisterForm({
 
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string | null>>({
+    fullName: null,
+    documentId: null,
+    address: null,
+    city: null,
+    phone: null,
+  });
 
   // Lista de ciudades comunes de Colombia
   const CITIES = [
@@ -84,9 +98,29 @@ export function BeneficiaryRegisterForm({
   /**
    * Actualiza un campo del formulario.
    */
+  /** Validación en tiempo real por campo */
+  const validateField = (field: string, value: string): string | null => {
+    const validators: Record<string, (v: string) => string | null> = {
+      fullName: (v) => validName(v, 'El nombre completo'),
+      documentId: (v) => validDocumentId(v, 'La cédula'),
+      address: (v) => validAddress(v),
+      city: (v) => required(v, 'La ciudad'),
+      phone: (v) => validPhone(v),
+    };
+    return validators[field]?.(value) ?? null;
+  };
+
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     setFormError(null);
+
+    // Validar en tiempo real cuando el campo tiene valor
+    if (value.trim()) {
+      const error = validateField(field, value);
+      setFieldErrors((prev) => ({ ...prev, [field]: error }));
+    } else {
+      setFieldErrors((prev) => ({ ...prev, [field]: null }));
+    }
   };
 
   /**
@@ -100,29 +134,20 @@ export function BeneficiaryRegisterForm({
    * Valida los campos obligatorios antes de guardar.
    */
   const validateForm = (): boolean => {
-    if (!formData.fullName.trim()) {
-      setFormError('El nombre completo es obligatorio.');
-      return false;
-    }
-    if (!formData.documentId.trim()) {
-      setFormError('El número de cédula es obligatorio.');
-      return false;
-    }
-    const cedulaClean = formData.documentId.replace(/[.\s-]/g, '');
-    if (!/^\d{6,10}$/.test(cedulaClean)) {
-      setFormError('La cédula debe tener entre 6 y 10 dígitos.');
-      return false;
-    }
-    if (!formData.address.trim()) {
-      setFormError('La dirección es obligatoria.');
-      return false;
-    }
-    if (!formData.city.trim()) {
-      setFormError('La ciudad es obligatoria.');
-      return false;
-    }
-    if (!formData.phone.trim()) {
-      setFormError('El teléfono es obligatorio.');
+    // Validar todos los campos
+    const newErrors: Record<string, string | null> = {
+      fullName: validateField('fullName', formData.fullName),
+      documentId: validateField('documentId', formData.documentId),
+      address: validateField('address', formData.address),
+      city: validateField('city', formData.city),
+      phone: validateField('phone', formData.phone),
+    };
+
+    setFieldErrors(newErrors);
+
+    const firstError = Object.values(newErrors).find((v) => v !== null);
+    if (firstError) {
+      setFormError(firstError);
       return false;
     }
     return true;
@@ -195,9 +220,16 @@ export function BeneficiaryRegisterForm({
               value={formData.fullName}
               onChange={(e) => handleChange('fullName', e.target.value)}
               placeholder="Ej: María Andrea López Gómez"
-              className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] outline-none transition"
+              className={`w-full px-3 py-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] outline-none transition ${
+                fieldErrors.fullName ? 'border-red-400 bg-red-50' : 'border-gray-300'
+              }`}
               required
             />
+            {fieldErrors.fullName && (
+              <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                <span>⚠️</span> {fieldErrors.fullName}
+              </p>
+            )}
           </div>
 
           {/* Número de cédula */}
@@ -210,12 +242,20 @@ export function BeneficiaryRegisterForm({
               value={formData.documentId}
               onChange={(e) => handleChange('documentId', e.target.value)}
               placeholder="Ej: 1.234.567.890"
-              className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] outline-none transition"
+              className={`w-full px-3 py-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] outline-none transition ${
+                fieldErrors.documentId ? 'border-red-400 bg-red-50' : 'border-gray-300'
+              }`}
               required
             />
-            <p className="text-xs text-gray-400 mt-1">
-              Ingrese su número de documento sin espacios.
-            </p>
+            {fieldErrors.documentId ? (
+              <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                <span>⚠️</span> {fieldErrors.documentId}
+              </p>
+            ) : (
+              <p className="text-xs text-gray-400 mt-1">
+                Ingrese su número de documento sin espacios.
+              </p>
+            )}
           </div>
 
           {/* Tipo de beneficiario */}
@@ -247,9 +287,16 @@ export function BeneficiaryRegisterForm({
               value={formData.address}
               onChange={(e) => handleChange('address', e.target.value)}
               placeholder="Ej: Carrera 50 # 25-30, Centro"
-              className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] outline-none transition"
+              className={`w-full px-3 py-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] outline-none transition ${
+                fieldErrors.address ? 'border-red-400 bg-red-50' : 'border-gray-300'
+              }`}
               required
             />
+            {fieldErrors.address && (
+              <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                <span>⚠️</span> {fieldErrors.address}
+              </p>
+            )}
           </div>
 
           {/* Ciudad */}
@@ -260,7 +307,9 @@ export function BeneficiaryRegisterForm({
             <select
               value={formData.city}
               onChange={(e) => handleChange('city', e.target.value)}
-              className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] outline-none transition bg-white"
+              className={`w-full px-3 py-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] outline-none transition bg-white ${
+                fieldErrors.city ? 'border-red-400 bg-red-50' : 'border-gray-300'
+              }`}
               required
             >
               <option value="">Seleccione una ciudad</option>
@@ -271,6 +320,11 @@ export function BeneficiaryRegisterForm({
               ))}
               <option value="otra">Otra (especifique abajo)</option>
             </select>
+            {fieldErrors.city && (
+              <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                <span>⚠️</span> {fieldErrors.city}
+              </p>
+            )}
             {formData.city === 'otra' && (
               <input
                 type="text"
@@ -292,9 +346,16 @@ export function BeneficiaryRegisterForm({
               value={formData.phone}
               onChange={(e) => handleChange('phone', e.target.value)}
               placeholder="Ej: 300 123 4567"
-              className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] outline-none transition"
+              className={`w-full px-3 py-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] outline-none transition ${
+                fieldErrors.phone ? 'border-red-400 bg-red-50' : 'border-gray-300'
+              }`}
               required
             />
+            {fieldErrors.phone && (
+              <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                <span>⚠️</span> {fieldErrors.phone}
+              </p>
+            )}
           </div>
         </div>
 
