@@ -247,9 +247,9 @@ export function BeneficiarioDashboard({ onLogout }) {
           )}
 
           <div className="flex items-center gap-3">
-            {isPending && <span className="text-xs font-semibold px-3 py-1 rounded-full" style={{backgroundColor: 'var(--color-amber-50, #fffbeb)', color: 'var(--color-amber-700, #d97706)'}}>⏳ Pendiente</span>}
-            {isRejected && <span className="text-xs font-semibold px-3 py-1 rounded-full" style={{backgroundColor: '#fef2f2', color: '#dc2626'}}>❌ Rechazado</span>}
-            {isVerified && <span className="text-xs font-semibold px-3 py-1 rounded-full" style={{backgroundColor: '#ecfdf5', color: '#059669'}}>✅ Verificado</span>}
+            {isPending && <span className="text-xs font-semibold px-3 py-1 rounded-full bg-warning-container text-on-surface">⏳ Pendiente</span>}
+            {isRejected && <span className="text-xs font-semibold px-3 py-1 rounded-full bg-error-container text-on-error-container">❌ Rechazado</span>}
+            {isVerified && <span className="text-xs font-semibold px-3 py-1 rounded-full bg-success-container text-on-success-container">✅ Verificado</span>}
             <button className={styles.logoutIconBtn} onClick={onLogout} title="Cerrar sesión"><LogOut size={18} /></button>
           </div>
         </header>
@@ -544,26 +544,25 @@ export function BeneficiarioDashboard({ onLogout }) {
                       <div className="flex items-start gap-3">
                         <span className="text-lg">⏳</span>
                         <div>
-                          <p className="font-semibold text-sm" style={{color: '#d97706'}}>Documentación pendiente</p>
-                          <p className="text-xs mt-1" style={{color: 'var(--color-on-surface-variant)'}}>
+                          <p className="font-semibold text-sm text-warning">Documentación pendiente</p>
+                          <p className="text-xs mt-1 text-on-surface-variant">
                             {beneficiary.documents?.length || 0} de 4 documentos subidos
                           </p>
                         </div>
                       </div>
                       {/* Barra de progreso de documentos */}
-                      <div className="w-full h-2 rounded-full overflow-hidden" style={{backgroundColor: 'var(--color-surface-container-high)'}}>
+                      <div className="w-full h-2 rounded-full overflow-hidden bg-surface-container-high">
                         <div
                           className="h-full rounded-full transition-all duration-500"
                           style={{
                             width: `${((beneficiary.documents?.length || 0) / 4) * 100}%`,
-                            background: 'linear-gradient(90deg, var(--color-primary), var(--color-accent))',
+                            background: 'linear-gradient(90deg, var(--color-primary), var(--color-secondary))',
                           }}
                         />
                       </div>
                       <button
                         onClick={() => setView('registro')}
-                        className="w-full py-2 rounded-xl text-xs font-bold text-white transition-all cursor-pointer"
-                        style={{backgroundColor: 'var(--color-primary)'}}
+                        className="w-full py-2 rounded-xl text-xs font-bold text-on-primary transition-all cursor-pointer bg-primary"
                       >
                         {beneficiary.documents?.length === 0
                           ? 'Comenzar carga de documentos'
@@ -576,9 +575,9 @@ export function BeneficiarioDashboard({ onLogout }) {
                     <div className="flex items-start gap-3">
                       <span className="text-lg">❌</span>
                       <div>
-                        <p className="font-semibold text-sm" style={{color: 'var(--color-error)'}}>Perfil rechazado</p>
-                        <p className="text-xs mt-1" style={{color: 'var(--color-on-surface-variant)'}}>{beneficiary.verificationNotes}</p>
-                        <button onClick={() => setView('registro')} className="mt-2 px-4 py-1.5 rounded-lg text-xs font-bold text-white cursor-pointer" style={{backgroundColor: 'var(--color-error)'}}>Editar y re-enviar</button>
+                        <p className="font-semibold text-sm text-error">Perfil rechazado</p>
+                        <p className="text-xs mt-1 text-on-surface-variant">{beneficiary.verificationNotes}</p>
+                        <button onClick={() => setView('registro')} className="mt-2 px-4 py-1.5 rounded-lg text-xs font-bold text-on-error bg-error cursor-pointer">Editar y re-enviar</button>
                       </div>
                     </div>
                   )}
@@ -654,7 +653,10 @@ export function BeneficiarioDashboard({ onLogout }) {
                       latitude: beneficiary.latitude,
                       longitude: beneficiary.longitude,
                     }
-                  : undefined
+                  : {
+                      fullName: auth.currentUser?.displayName || '',
+                      phone: auth.currentUser?.phoneNumber || '',
+                    }
               }
             />
           </div>
