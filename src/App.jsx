@@ -23,6 +23,7 @@ const LegalTermsCompanyPage = lazy(() => import("./features/legalTermsCompany").
 const DonadorDashboard = lazy(() => import("./features/accounts/dashboard/DonadorDashboard").then(module => ({ default: module.DonadorDashboard })));
 const EmpresaDashboard = lazy(() => import("./features/accounts/dashboard/EmpresaDashboard").then(module => ({ default: module.EmpresaDashboard })));
 const BeneficiarioDashboard = lazy(() => import("./features/accounts/dashboard/BeneficiarioDashboard").then(module => ({ default: module.BeneficiarioDashboard })));
+const SuperAdminDashboard = lazy(() => import("./features/super-admin").then(module => ({ default: module.SuperAdminDashboard })));
 
 import { validateFirebaseConnection } from "./services/firebaseConnectionService";
 
@@ -34,6 +35,7 @@ const DASHBOARD_COMPONENTS = {
   donador: DonadorDashboard,
   empresa: EmpresaDashboard,
   beneficiario: BeneficiarioDashboard,
+  'super-admin': SuperAdminDashboard,
 };
 
 
