@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from "react";
+import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "./config/firebase";
@@ -35,7 +35,7 @@ const DASHBOARD_COMPONENTS = {
   donador: DonadorDashboard,
   empresa: EmpresaDashboard,
   beneficiario: BeneficiarioDashboard,
-  'super-admin': SuperAdminDashboard,
+  'admin': SuperAdminDashboard,
 };
 
 
@@ -45,6 +45,9 @@ function App() {
   const [appState, setAppState] = useState("loading");
   const [role, setRole] = useState(null);
   const [connectionOk, setConnectionOk] = useState(false);
+  // Ref para evitar que onAuthStateChanged sobreescriba el estado
+  // cuando ya hay una sesi�n activa (ej: tras cambio de contrase�a)
+  const sessionEstablished = useRef(false);
 
   // ─── 1. VALIDAR CONEXIÓN FIREBASE ───
   useEffect(() => {
@@ -65,25 +68,37 @@ function App() {
 
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        // ✅ Hay sesión activa en Firebase → leer rol desde Firestore
+        // Si ya establecimos la sesi�n anteriormente, no re-evaluar.
+        // Esto evita que el refresco de token tras updatePassword()
+        // o cualquier otro evento de auth lo sobreescriba.
+        if (sessionEstablished.current) return;
+
         try {
           const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
           const userData = userDoc.exists() ? userDoc.data() : {};
           const userRole = userData.role || "donador";
 
           if (isValidRole(userRole)) {
+            sessionEstablished.current = true;
             setRole(userRole);
             setAppState("dashboard");
           } else {
-            console.warn(`[App] Rol inválido en Firestore: "${userRole}".`);
+            console.warn(`[App] Rol inv�lido en Firestore: "${userRole}".`);
             setAppState("home");
           }
         } catch (err) {
           console.error("[App] Error al leer perfil del usuario:", err);
-          setAppState("home");
+          // Error de lectura -> no interrumpir si ya hay sesi�n
+          if (!sessionEstablished.current) {
+            setAppState("home");
+          }
         }
       } else {
-        // ❌ No hay sesión → mostrar home
+        // No hay usuario en Firebase Auth
+        if (sessionEstablished.current) {
+          console.warn("[App] Sesion cerrada inesperadamente.");
+          sessionEstablished.current = false;
+        }
         setAppState("home");
       }
     });
@@ -112,16 +127,18 @@ function App() {
    */
   const onAuthSuccess = (userRole) => {
     if (isValidRole(userRole)) {
+      sessionEstablished.current = true;
       setRole(userRole);
       setAppState("dashboard");
     } else {
-      console.warn(`[App] Rol inválido en auth success: "${userRole}"`);
+      console.warn(`[App] Rol inv�lido en auth success: "${userRole}"`);
       setAppState("dashboard");
     }
   };
 
   const onLogout = async () => {
     try {
+      sessionEstablished.current = false;
       await signOut(auth);
       setRole(null);
       setAppState("home");
