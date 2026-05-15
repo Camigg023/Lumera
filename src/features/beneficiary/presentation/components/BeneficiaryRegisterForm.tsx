@@ -44,6 +44,8 @@ interface BeneficiaryRegisterFormProps {
     latitude?: number;
     longitude?: number;
   };
+  /** Documentos ya subidos para mostrar estado */
+  existingDocuments?: any[];
 }
 
 /**
@@ -60,6 +62,7 @@ export function BeneficiaryRegisterForm({
   isUploading = false,
   isEditMode = false,
   initialData,
+  existingDocuments = [],
 }: BeneficiaryRegisterFormProps) {
   // Estado del formulario principal
   const [formData, setFormData] = useState({
@@ -362,62 +365,62 @@ export function BeneficiaryRegisterForm({
         {/* ═══════ COLUMNA DERECHA: UBICACIÓN + DOCUMENTOS ═══════ */}
         <div className="space-y-6">
           {/* ─── UBICACIÓN ─── */}
-          {!isEditMode && (
-            <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-4">
-              <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-2">
-                <span>📍</span> Ubicación de residencia
-              </h3>
-              <LocationPicker
-                latitude={location.lat}
-                longitude={location.lng}
-                onLocationChange={handleLocationChange}
-              />
-            </div>
-          )}
+          <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-4">
+            <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-2">
+              <span>📍</span> Ubicación de residencia
+            </h3>
+            <LocationPicker
+              latitude={location.lat}
+              longitude={location.lng}
+              onLocationChange={handleLocationChange}
+            />
+          </div>
 
           {/* ─── DOCUMENTOS DE VALIDACIÓN ─── */}
-          {!isEditMode && (
-            <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-4">
-              <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-2">
-                <span>📄</span> Documentos de validación
-              </h3>
-              <p className="text-xs text-gray-500">
-                Sube los siguientes documentos para validar tu identidad y domicilio.
-                Formatos: JPG, PNG. Máx. 10 MB c/u.
-              </p>
+          <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-4">
+            <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-2">
+              <span>📄</span> Documentos de validación
+            </h3>
+            <p className="text-xs text-gray-500">
+              Sube los siguientes documentos para validar tu identidad y domicilio.
+              Formatos: JPG, PNG, PDF. Máx. 10 MB c/u.
+            </p>
 
-              <div className="grid grid-cols-1 gap-3">
-                <DocumentUploader
-                  docType="cedula_frontal"
-                  label="Cédula (Parte Frontal)"
-                  description="Foto legible de la parte frontal de tu cédula"
-                  onUpload={(file) => onUploadDocument(file, 'cedula_frontal')}
-                  isUploading={isUploading}
-                />
-                <DocumentUploader
-                  docType="cedula_posterior"
-                  label="Cédula (Parte Posterior)"
-                  description="Foto legible de la parte posterior de tu cédula"
-                  onUpload={(file) => onUploadDocument(file, 'cedula_posterior')}
-                  isUploading={isUploading}
-                />
-                <DocumentUploader
-                  docType="cuenta_servicios"
-                  label="Cuenta de Servicios"
-                  description="Recibo de luz, agua o gas (últimos 3 meses)"
-                  onUpload={(file) => onUploadDocument(file, 'cuenta_servicios')}
-                  isUploading={isUploading}
-                />
-                <DocumentUploader
-                  docType="foto_perfil"
-                  label="Foto de Perfil"
-                  description="Selfi o foto tipo documento"
-                  onUpload={(file) => onUploadDocument(file, 'foto_perfil')}
-                  isUploading={isUploading}
-                />
-              </div>
+            <div className="grid grid-cols-1 gap-3">
+              <DocumentUploader
+                docType="cedula_frontal"
+                label="Cédula (Parte Frontal)"
+                description="Foto legible de la parte frontal de tu cédula"
+                existingDoc={existingDocuments.find(d => d.type === 'cedula_frontal')}
+                onUpload={(file) => onUploadDocument(file, 'cedula_frontal')}
+                isUploading={isUploading}
+              />
+              <DocumentUploader
+                docType="cedula_posterior"
+                label="Cédula (Parte Posterior)"
+                description="Foto legible de la parte posterior de tu cédula"
+                existingDoc={existingDocuments.find(d => d.type === 'cedula_posterior')}
+                onUpload={(file) => onUploadDocument(file, 'cedula_posterior')}
+                isUploading={isUploading}
+              />
+              <DocumentUploader
+                docType="cuenta_servicios"
+                label="Cuenta de Servicios"
+                description="Recibo de luz, agua o gas (últimos 3 meses)"
+                existingDoc={existingDocuments.find(d => d.type === 'cuenta_servicios')}
+                onUpload={(file) => onUploadDocument(file, 'cuenta_servicios')}
+                isUploading={isUploading}
+              />
+              <DocumentUploader
+                docType="foto_perfil"
+                label="Foto de Perfil"
+                description="Selfie o foto tipo documento"
+                existingDoc={existingDocuments.find(d => d.type === 'foto_perfil')}
+                onUpload={(file) => onUploadDocument(file, 'foto_perfil')}
+                isUploading={isUploading}
+              />
             </div>
-          )}
+          </div>
         </div>
       </div>
 

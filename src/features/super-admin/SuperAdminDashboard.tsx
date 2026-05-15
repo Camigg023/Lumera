@@ -16,6 +16,8 @@ import {
   MapPin,
   Calendar,
   Camera,
+  ShieldCheck,
+  ExternalLink,
 } from 'lucide-react';
 import { BeneficiaryDataSource } from '../../features/beneficiary/data/datasources/BeneficiaryDataSource';
 import { BeneficiaryRepositoryImpl } from '../../features/beneficiary/data/repositories/BeneficiaryRepositoryImpl';
@@ -388,7 +390,8 @@ export function SuperAdminDashboard({ onLogout }: { onLogout?: () => void }) {
                   return (
                     <div
                       key={beneficiary.id}
-                      className="flex flex-col gap-4 p-4 rounded-xl border border-outline-variant bg-surface hover:bg-surface-container-low transition"
+                      onClick={() => setSelectedBeneficiary(beneficiary)}
+                      className="flex flex-col gap-4 p-4 rounded-xl border border-outline-variant bg-surface hover:bg-surface-container-low transition cursor-pointer"
                     >
                       {/* Fila superior: informacion + acciones */}
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -427,7 +430,10 @@ export function SuperAdminDashboard({ onLogout }: { onLogout?: () => void }) {
                         {beneficiary.verificationStatus === 'pending' && (
                           <div className="flex gap-2 shrink-0">
                             <button
-                              onClick={() => handleVerify(beneficiary.id, 'verified')}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleVerify(beneficiary.id, 'verified');
+                              }}
                               disabled={actionLoading === beneficiary.id}
                               className="flex items-center gap-1.5 px-4 py-2 bg-success text-on-success rounded-xl text-sm font-semibold hover:brightness-110 transition cursor-pointer disabled:opacity-50"
                             >
@@ -435,7 +441,8 @@ export function SuperAdminDashboard({ onLogout }: { onLogout?: () => void }) {
                               Aprobar
                             </button>
                             <button
-                              onClick={() => {
+                              onClick={(e) => {
+                                e.stopPropagation();
                                 const notes = prompt('Motivo del rechazo:');
                                 if (notes && notes.trim()) {
                                   handleVerify(beneficiary.id, 'rejected', notes.trim());
@@ -452,7 +459,8 @@ export function SuperAdminDashboard({ onLogout }: { onLogout?: () => void }) {
 
                         {beneficiary.verificationStatus === 'verified' && (
                           <button
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.stopPropagation();
                               const notes = prompt('Motivo del rechazo:');
                               if (notes && notes.trim()) {
                                 handleVerify(beneficiary.id, 'rejected', notes.trim());
@@ -467,7 +475,10 @@ export function SuperAdminDashboard({ onLogout }: { onLogout?: () => void }) {
 
                         {beneficiary.verificationStatus === 'rejected' && (
                           <button
-                            onClick={() => handleVerify(beneficiary.id, 'verified')}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleVerify(beneficiary.id, 'verified');
+                            }}
                             disabled={actionLoading === beneficiary.id}
                             className="flex items-center gap-1.5 px-4 py-2 bg-success/10 text-success rounded-xl text-sm font-semibold hover:bg-success/20 transition cursor-pointer shrink-0"
                           >
@@ -673,7 +684,10 @@ function DocCard({ doc }: { doc: BeneficiaryDocument }) {
               src={doc.storageUrl}
               alt={docLabel}
               className="w-full h-full object-cover cursor-pointer"
-              onClick={() => setPreviewOpen(true)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setPreviewOpen(true);
+              }}
             />
           ) : (
             <FileText size={16} className="text-primary" />
@@ -693,6 +707,7 @@ function DocCard({ doc }: { doc: BeneficiaryDocument }) {
           href={doc.storageUrl}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
           className="shrink-0 p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-primary-container transition opacity-0 group-hover:opacity-100"
           title="Abrir documento"
         >

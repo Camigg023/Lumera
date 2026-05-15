@@ -127,7 +127,7 @@ export function DocumentUploader({
           type="file"
           accept=".jpg,.jpeg,.png,.pdf"
           onChange={handleFileSelect}
-          className="block w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100 cursor-pointer"
+          className="block w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-[var(--color-accent-bg)] file:text-[var(--color-accent)] hover:file:bg-[var(--color-accent-border)] cursor-pointer"
         />
       </div>
 
@@ -160,7 +160,7 @@ export function DocumentUploader({
             w-full py-2 px-4 rounded-lg text-sm font-semibold transition-all
             ${isUploading
               ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-              : 'bg-orange-500 text-white hover:bg-orange-600 active:scale-[0.98] cursor-pointer'
+              : 'bg-[var(--color-accent)] text-white hover:brightness-110 active:scale-[0.98] cursor-pointer'
             }
           `}
         >

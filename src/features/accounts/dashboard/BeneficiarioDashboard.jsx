@@ -641,6 +641,7 @@ export function BeneficiarioDashboard({ onLogout }) {
               onUploadDocument={handleUploadDocument}
               isSaving={beneficiaryLoading}
               isEditMode={isProfileComplete}
+              existingDocuments={beneficiary?.documents || []}
               initialData={
                 beneficiary
                   ? {
